@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
-from rest_framework.serializers import HyperlinkedModelSerializer
+from dynamic_rest.serializers import DynamicModelSerializer
+from dynamic_rest.fields import DynamicRelationField
 from .models import (
   Pegawai,
   SadProvinsi,
@@ -13,62 +14,78 @@ from .models import (
   SadPenduduk,
 )
 
-class UserSerializer(HyperlinkedModelSerializer):
+class UserSerializer(DynamicModelSerializer):
   class Meta:
     model = User
-    fields = ['url', 'id', 'username', 'email', 'groups']
+    name = 'data'
+    fields = ['id', 'username', 'email', 'groups']
 
-class GroupSerializer(HyperlinkedModelSerializer):
+class GroupSerializer(DynamicModelSerializer):
   class Meta:
     model = Group
-    fields = ['url', 'id', 'name']
+    name = 'data'
+    fields = ['id', 'name']
 
-class PegawaiSerializer(HyperlinkedModelSerializer):
+class PegawaiSerializer(DynamicModelSerializer):
   class Meta:
     model = Pegawai
-    fields = ['url', 'id', 'nama', 'jabatan']
+    name = 'data'
+    fields = ['id', 'nama', 'jabatan']
 
-class SadProvinsiSerializer(HyperlinkedModelSerializer):
+class SadProvinsiSerializer(DynamicModelSerializer):
   class Meta:
     model = SadProvinsi
-    fields = ['url', 'id', 'kode_provinsi', 'nama_provinsi']
+    name = 'data'
+    fields = ['id', 'kode_provinsi', 'nama_provinsi']
 
-class SadKabKotaSerializer(HyperlinkedModelSerializer):
+class SadKabKotaSerializer(DynamicModelSerializer):
   class Meta:
     model = SadKabKota
-    fields = ['url', 'id', 'kode_kab_kota', 'nama_kab_kota']
+    name = 'data'
+    fields = ['id', 'kode_kab_kota', 'nama_kab_kota']
 
-class SadKecamatanSerializer(HyperlinkedModelSerializer):
+class SadKecamatanSerializer(DynamicModelSerializer):
+  kab_kota = DynamicRelationField('SadKabKotaSerializer', deferred=False, embed=True)
   class Meta:
     model = SadKecamatan
-    fields = ['url', 'id', 'kode_kecamatan', 'nama_kecamatan']
+    name = 'data'
+    fields = ['id', 'kode_kecamatan', 'nama_kecamatan', 'kab_kota']
   
-class SadDesaSerializer(HyperlinkedModelSerializer):
+class SadDesaSerializer(DynamicModelSerializer):
+  kecamatan = DynamicRelationField('SadKecamatanSerializer', deferred=False, embed=True)
   class Meta:
     model = SadDesa
-    fields = ['url', 'id', 'kode_desa', 'nama_desa']
+    name = 'data'
+    fields = ['id', 'kode_desa', 'nama_desa', 'kecamatan']
 
-class SadDusunDukuhSerializer(HyperlinkedModelSerializer):
+class SadDusunDukuhSerializer(DynamicModelSerializer):
   class Meta:
     model = SadDusunDukuh
-    fields = ['url', 'id', 'nama']
+    name = 'data'
+    fields = ['id', 'nama']
 
-class SadRwSerializer(HyperlinkedModelSerializer):
+class SadRwSerializer(DynamicModelSerializer):
   class Meta:
     model = SadRw
-    fields = ['url', 'id', 'rw']
+    name = 'data'
+    fields = ['id', 'rw']
 
-class SadRtSerializer(HyperlinkedModelSerializer):
+class SadRtSerializer(DynamicModelSerializer):
   class Meta:
     model = SadRt
-    fields = ['url', 'id', 'rt']
+    name = 'data'
+    fields = ['id', 'rt']
 
-class SadKeluargaSerializer(HyperlinkedModelSerializer):
+class SadKeluargaSerializer(DynamicModelSerializer):
+  anggota = DynamicRelationField('SadPendudukSerializer', many=True, deferred=True, embed=True)
   class Meta:
     model = SadKeluarga
-    fields = ['url', 'id', 'no_kk']
+    name = 'data'
+    fields = ['id', 'no_kk', 'anggota']
 
-class SadPendudukSerializer(HyperlinkedModelSerializer):
+class SadPendudukSerializer(DynamicModelSerializer):
+  keluarga = DynamicRelationField('SadKeluargaSerializer', deferred=True, embed=True)
   class Meta:
     model = SadPenduduk
-    fields = ['url', 'id', 'nik', 'nama']
+    name = 'data'
+    fields = ['id', 'nik', 'nama', 'keluarga']

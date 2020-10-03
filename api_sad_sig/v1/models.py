@@ -101,7 +101,7 @@ class SadKeluarga(models.Model):
 
 
 class SadPenduduk(models.Model):
-    keluarga = models.ForeignKey(SadKeluarga, models.DO_NOTHING, blank=True, null=True)
+    keluarga = models.ForeignKey(SadKeluarga, models.DO_NOTHING, related_name='anggota', blank=True, null=True)
     nik = models.CharField(max_length=16, blank=True, null=True)
     chip_ektp = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=50, blank=True, null=True)
