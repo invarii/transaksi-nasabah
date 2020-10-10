@@ -25,5 +25,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            git fetch master
-            pwd
+            cd /root/backend-sad
+            git fetch
+            git pull
