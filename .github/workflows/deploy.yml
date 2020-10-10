@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: burnett01/rsync-deployments@4.1
         with:
-          swithes: -avzr --delete
+          switches: -avzr --delete
           path: .
           remote_path: ${{ secrets.TARGET }}
           remote_host: ${{ secrets.HOST }}
