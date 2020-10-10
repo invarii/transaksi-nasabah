@@ -2,6 +2,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework import permissions
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.decorators import action
+from rest_framework.response import Response
+import pandas
 
 from .serializers import (
   UserSerializer,
@@ -87,6 +90,14 @@ class SadKeluargaViewSet(DynamicModelViewSet):
   queryset = SadKeluarga.objects.all().order_by('id')
   serializer_class = SadKeluargaSerializer
   permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    # with open ('api_sad_sig/v1/storage/upload.xlsx', 'wb+') as destination:
+    #   for chunk in file.chunks():
+    #     destination.write(chunk)
+    data = pandas.read_excel(file)
+    return Response(data.to_dict('records'))
 
 class SadPendudukViewSet(DynamicModelViewSet):
   queryset = SadPenduduk.objects.all().order_by('id')
