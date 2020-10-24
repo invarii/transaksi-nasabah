@@ -37,5 +37,6 @@ jobs:
             echo "${{ secrets.DOTENV }}" > api_sad_sig/.env
             pipenv install
             pipenv run python manage.py migrate
+            pipenv run python manage.py collectstatic
             supervisorctl restart all
 
