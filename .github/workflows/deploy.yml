@@ -34,6 +34,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ${{ secrets.TARGET }}
+            echo ${{ secrets.DOTENV }} > api/.env
             pipenv install
             pipenv run python manage.py migrate
             pipenv run gunicorn api.wsgi
