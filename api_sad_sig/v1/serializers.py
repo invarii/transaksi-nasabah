@@ -12,6 +12,15 @@ from .models import (
   SadRt,
   SadKeluarga,
   SadPenduduk,
+  SadKelahiran,
+  SadKematian,
+  SadLahirmati,
+  SadPindahKeluar,
+  SadPindahMasuk,
+  SadSarpras,
+  SadInventaris,
+  SadSurat,
+  SadDetailSurat,
 )
 
 class UserSerializer(DynamicModelSerializer):
@@ -89,3 +98,57 @@ class SadPendudukSerializer(DynamicModelSerializer):
     model = SadPenduduk
     name = 'data'
     fields = ['id', 'nik', 'nama', 'keluarga']
+
+class SadKelahiranSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadKelahiran
+    name = 'data'
+    fields = ['id', 'nama', 'jenis_kelamin']
+
+class SadKematianSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadKematian
+    name = 'data'
+    fields = ['id', 'tanggal_kematian', 'sebab_kematian']
+
+class SadLahirmatiSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadLahirmati
+    name = 'data'
+    fields = ['id', 'lama_kandungan', 'jenis_kelamin']
+
+class SadPindahKeluarSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadPindahKeluar
+    name = 'data'
+    fields = ['id', 'pemohon', 'alasan']
+
+class SadPindahMasukSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadPindahMasuk
+    name = 'data'
+    fields = ['id', 'no_kk', 'nik_kepala_keluarga']
+
+class SadSarprasSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadSarpras
+    name = 'data'
+    fields = ['id', 'nama_sarpras', 'asal']
+
+class SadInventarisSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadInventaris
+    name = 'data'
+    fields = ['id', 'nama_inventaris', 'asal']
+
+class SadSuratSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadSurat
+    name = 'data'
+    fields = ['id', 'judul', 'sifat']
+
+class SadDetailSuratSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SadDetailSurat
+    name = 'data'
+    fields = ['id', 'no_surat', 'keterangan']

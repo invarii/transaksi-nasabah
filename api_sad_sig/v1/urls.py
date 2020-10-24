@@ -16,6 +16,15 @@ from .views import (
   SadRtViewSet,
   SadKeluargaViewSet,
   SadPendudukViewSet,
+  SadKelahiranViewSet,
+  SadKematianViewSet,
+  SadLahirmatiViewSet,
+  SadPindahKeluarViewSet,
+  SadPindahMasukViewSet,
+  SadSarprasViewSet,
+  SadInventarisViewSet,
+  SadSuratViewSet,
+  SadDetailSuratViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -31,6 +40,17 @@ router.register(r'sadrw', SadRwViewSet)
 router.register(r'sadrt', SadRtViewSet)
 router.register(r'keluarga', SadKeluargaViewSet)
 router.register(r'penduduk', SadPendudukViewSet)
+router.register(r'kelahiran', SadKelahiranViewSet)
+router.register(r'kematian', SadKematianViewSet)
+router.register(r'lahirmati', SadLahirmatiViewSet)
+router.register(r'pindahkeluar', SadPindahKeluarViewSet)
+router.register(r'pindahmasuk', SadPindahMasukViewSet)
+router.register(r'sarpras', SadSarprasViewSet)
+router.register(r'inventaris', SadInventarisViewSet)
+router.register(r'surat', SadSuratViewSet)
+router.register(r'detailsurat', SadDetailSuratViewSet)
+
+
 
 urlpatterns = [
     path('', include(router.urls)),

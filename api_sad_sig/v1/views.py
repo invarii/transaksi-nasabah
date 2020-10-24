@@ -19,6 +19,15 @@ from .serializers import (
   SadRtSerializer,
   SadKeluargaSerializer,
   SadPendudukSerializer,
+  SadKelahiranSerializer,
+  SadKematianSerializer,
+  SadLahirmatiSerializer,
+  SadPindahMasukSerializer,
+  SadPindahKeluarSerializer,
+  SadSarprasSerializer,
+  SadInventarisSerializer,
+  SadSuratSerializer,
+  SadDetailSuratSerializer,
 )
 from .models import (
   Pegawai,
@@ -31,6 +40,15 @@ from .models import (
   SadRt,
   SadKeluarga,
   SadPenduduk,
+  SadKelahiran,
+  SadKematian,
+  SadLahirmati,
+  SadPindahKeluar,
+  SadPindahMasuk,
+  SadSarpras,
+  SadInventaris,
+  SadSurat,
+  SadDetailSurat,
 )
 
 
@@ -39,12 +57,10 @@ class UserViewSet(DynamicModelViewSet):
   serializer_class = UserSerializer
   permission_classes = [permissions.IsAuthenticated]
 
-
 class GroupViewSet(DynamicModelViewSet):
   queryset = Group.objects.all()
   serializer_class = GroupSerializer
   permission_classes = [permissions.IsAuthenticated]
-
 
 class PegawaiViewSet(DynamicModelViewSet):
   queryset = Pegawai.objects.all().order_by('id')
@@ -102,4 +118,49 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 class SadPendudukViewSet(DynamicModelViewSet):
   queryset = SadPenduduk.objects.all().order_by('id')
   serializer_class = SadPendudukSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadKelahiranViewSet(DynamicModelViewSet):
+  queryset = SadKelahiran.objects.all().order_by('id')
+  serializer_class = SadKelahiranSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadKematianViewSet(DynamicModelViewSet):
+  queryset = SadKematian.objects.all().order_by('id')
+  serializer_class = SadKematianSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadLahirmatiViewSet(DynamicModelViewSet):
+  queryset = SadLahirmati.objects.all().order_by('id')
+  serializer_class = SadLahirmatiSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadPindahKeluarViewSet(DynamicModelViewSet):
+  queryset = SadPindahKeluar.objects.all().order_by('id')
+  serializer_class = SadPindahKeluarSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadPindahMasukViewSet(DynamicModelViewSet):
+  queryset = SadPindahMasuk.objects.all().order_by('id')
+  serializer_class = SadPindahMasukSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadSarprasViewSet(DynamicModelViewSet):
+  queryset = SadSarpras.objects.all().order_by('id')
+  serializer_class = SadSarprasSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadInventarisViewSet(DynamicModelViewSet):
+  queryset = SadInventaris.objects.all().order_by('id')
+  serializer_class = SadInventarisSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadSuratViewSet(DynamicModelViewSet):
+  queryset = SadSurat.objects.all().order_by('id')
+  serializer_class = SadSuratSerializer
+  permission_classes = [permissions.IsAuthenticated]
+
+class SadDetailSuratViewSet(DynamicModelViewSet):
+  queryset = SadDetailSurat.objects.all().order_by('id')
+  serializer_class = SadDetailSuratSerializer
   permission_classes = [permissions.IsAuthenticated]
