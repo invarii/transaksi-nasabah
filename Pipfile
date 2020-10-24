@@ -17,6 +17,7 @@ dynamic-rest = "*"
 pandas = "*"
 install = "*"
 xlrd = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
