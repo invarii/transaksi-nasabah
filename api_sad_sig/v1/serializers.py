@@ -21,6 +21,15 @@ from .models import (
   SadInventaris,
   SadSurat,
   SadDetailSurat,
+  SigBidang,
+  SigDesa,
+  SigDusunDukuh,
+  SigRt,
+  SigRw,
+  SigSadDesa,
+  SigSadDusunDukuh,
+  SigSadRw,
+  SigSadRt,
 )
 
 class UserSerializer(DynamicModelSerializer):
@@ -90,7 +99,8 @@ class SadKeluargaSerializer(DynamicModelSerializer):
   class Meta:
     model = SadKeluarga
     name = 'data'
-    fields = ['id', 'no_kk', 'anggota']
+    # fields = ['id', 'no_kk', 'anggota']
+    exclude = []
 
 class SadPendudukSerializer(DynamicModelSerializer):
   keluarga = DynamicRelationField('SadKeluargaSerializer', deferred=True, embed=True)
@@ -152,3 +162,57 @@ class SadDetailSuratSerializer(DynamicModelSerializer):
     model = SadDetailSurat
     name = 'data'
     fields = ['id', 'no_surat', 'keterangan']
+
+class SigBidangSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigBidang
+    name = 'data'
+    exclude = []
+
+class SigDesaSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigDesa
+    name = 'data'
+    exclude = []
+
+class SigDusunDukuhSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigDusunDukuh
+    name = 'data'
+    exclude = []
+
+class SigRtSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigRt
+    name = 'data'
+    exclude = []
+
+class SigRwSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigRw
+    name = 'data'
+    exclude = []
+
+class SigSadDesaSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigSadDesa
+    name = 'data'
+    exclude = []
+
+class SigSadDusunDukuhSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigSadDusunDukuh
+    name = 'data'
+    exclude = []
+
+class SigSadRwSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigSadRw
+    name = 'data'
+    exclude = []
+
+class SigSadRtSerializer(DynamicModelSerializer):
+  class Meta:
+    model = SigSadRt
+    name = 'data'
+    exclude = []

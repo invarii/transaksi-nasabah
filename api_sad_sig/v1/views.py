@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 import pandas
+import json
 
 from .serializers import (
   UserSerializer,
@@ -28,6 +29,15 @@ from .serializers import (
   SadInventarisSerializer,
   SadSuratSerializer,
   SadDetailSuratSerializer,
+  SigBidangSerializer,
+  SigDesaSerializer,
+  SigDusunDukuhSerializer,
+  SigRtSerializer,
+  SigRwSerializer,
+  SigSadDesaSerializer,
+  SigSadDusunDukuhSerializer,
+  SigSadRwSerializer,
+  SigSadRtSerializer,
 )
 from .models import (
   Pegawai,
@@ -49,6 +59,15 @@ from .models import (
   SadInventaris,
   SadSurat,
   SadDetailSurat,
+  SigBidang,
+  SigDesa,
+  SigDusunDukuh,
+  SigRt,
+  SigRw,
+  SigSadDesa,
+  SigSadDusunDukuh,
+  SigSadRw,
+  SigSadRt,
 )
 
 
@@ -109,16 +128,29 @@ class SadKeluargaViewSet(DynamicModelViewSet):
   @action(detail=False, methods=['post'])
   def upload (self, request):
     file = request.FILES['file']
-    # with open ('api_sad_sig/v1/storage/upload.xlsx', 'wb+') as destination:
-    #   for chunk in file.chunks():
-    #     destination.write(chunk)
+    
     data = pandas.read_excel(file)
-    return Response(data.to_dict('records'))
+    for item in data.to_dict('records'):
+      item['rt'] = SadRt.objects.get(id=item['rt'])
+
+      SadKeluarga.objects.create(**item)
+    
+    return Response()
 
 class SadPendudukViewSet(DynamicModelViewSet):
   queryset = SadPenduduk.objects.all().order_by('id')
   serializer_class = SadPendudukSerializer
   permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = pandas.read_excel(file)
+    for item in data.dropna(axis=1).to_dict('records'):
+      item['keluarga'] = SadKeluarga.objects.get(id=item['keluarga'])
+
+      SadPenduduk.objects.create(**item)
+
+    return Response()
 
 class SadKelahiranViewSet(DynamicModelViewSet):
   queryset = SadKelahiran.objects.all().order_by('id')
@@ -164,3 +196,87 @@ class SadDetailSuratViewSet(DynamicModelViewSet):
   queryset = SadDetailSurat.objects.all().order_by('id')
   serializer_class = SadDetailSuratSerializer
   permission_classes = [permissions.IsAuthenticated]
+
+class SigBidangViewSet(DynamicModelViewSet):
+  queryset = SigBidang.objects.all().order_by('id')
+  serializer_class = SigBidangSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = pandas.read_excel(file)
+    for item in data.dropna(axis=1).to_dict('records'):
+
+      SigBidang.objects.create(**item)
+
+    return Response()
+
+class SigDesaViewSet(DynamicModelViewSet):
+  queryset = SigDesa.objects.all().order_by('id')
+  serializer_class = SigDesaSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      item = {
+        'nama_desa': item['properties']['Nama_Desa'],
+        'luas': item['properties']['luas'],
+        'keliling': item['properties']['keliling'],
+        'geometry': item['geometry'],
+      }
+      SigDesa.objects.create(**item)
+    
+    return Response()
+
+class SigDusunDukuhViewSet(DynamicModelViewSet):
+  queryset = SigDusunDukuh.objects.all().order_by('id')
+  serializer_class = SigDusunDukuhSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      desa = SigDesa.objects.get (nama_desa=item['properties']['Nama_Desa'])
+      item = {
+        'nama_dukuh': item['properties']['Nama_Dukuh'],
+        'nama_dusun': item['properties']['Nama_Dusun'],
+        'sig_desa': desa,
+        'luas': item['properties']['Luas'],
+        # 'keliling': item['properties']['keliling'],
+        'geometry': item['geometry'],
+      }
+      SigDusunDukuh.objects.create(**item)
+    return Response()
+
+class SigRwViewSet(DynamicModelViewSet):
+  queryset = SigRw.objects.all().order_by('id')
+  serializer_class = SigRwSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = pandas.read_excel(file)
+    for item in data.dropna(axis=1).to_dict('records'):
+
+      SigRw.objects.create(**item)
+
+    return Response()
+
+class SigRtViewSet(DynamicModelViewSet):
+  queryset = SigRt.objects.all().order_by('id')
+  serializer_class = SigRtSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = pandas.read_excel(file)
+    for item in data.dropna(axis=1).to_dict('records'):
+
+      SigRt.objects.create(**item)
+
+    return Response()

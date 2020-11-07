@@ -25,6 +25,11 @@ from .views import (
   SadInventarisViewSet,
   SadSuratViewSet,
   SadDetailSuratViewSet,
+  SigBidangViewSet,
+  SigDesaViewSet,
+  SigDusunDukuhViewSet,
+  SigRtViewSet,
+  SigRwViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -49,7 +54,11 @@ router.register(r'sarpras', SadSarprasViewSet)
 router.register(r'inventaris', SadInventarisViewSet)
 router.register(r'surat', SadSuratViewSet)
 router.register(r'detailsurat', SadDetailSuratViewSet)
-
+router.register(r'sigbidang', SigBidangViewSet)
+router.register(r'sigdesa', SigDesaViewSet)
+router.register(r'sigdusundukuh', SigDusunDukuhViewSet)
+router.register(r'sigrw', SigRwViewSet)
+router.register(r'sigrt', SigRtViewSet)
 
 
 urlpatterns = [
