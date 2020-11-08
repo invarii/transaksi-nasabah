@@ -136,6 +136,14 @@ class SadKeluargaViewSet(DynamicModelViewSet):
       SadKeluarga.objects.create(**item)
     
     return Response()
+  @action(detail=False, methods=['get'])
+  def ekspor (self, request):
+    item = SadKeluarga.objects.all()
+    data = pandas.DataFrame(item)
+    data.to_excel(item)
+    
+    return Response()
+
 
 class SadPendudukViewSet(DynamicModelViewSet):
   queryset = SadPenduduk.objects.all().order_by('id')
