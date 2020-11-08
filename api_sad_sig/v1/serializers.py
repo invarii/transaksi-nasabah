@@ -176,6 +176,7 @@ class SigDesaSerializer(DynamicModelSerializer):
     exclude = []
 
 class SigDusunDukuhSerializer(DynamicModelSerializer):
+  sig_desa = DynamicRelationField('SigDesaSerializer', deferred=True, embed=True)
   class Meta:
     model = SigDusunDukuh
     name = 'data'
