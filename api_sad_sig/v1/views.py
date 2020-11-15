@@ -6,6 +6,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 import pandas
 import json
+from io import BytesIO
+from django.http import HttpResponse
 
 from .serializers import (
   UserSerializer,
@@ -75,6 +77,10 @@ class UserViewSet(DynamicModelViewSet):
   queryset = User.objects.all().order_by('-date_joined')
   serializer_class = UserSerializer
   permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['get'])
+  def me (self, request):
+    data = UserSerializer(request.user)
+    return Response(data.data)
 
 class GroupViewSet(DynamicModelViewSet):
   queryset = Group.objects.all()
@@ -127,22 +133,30 @@ class SadKeluargaViewSet(DynamicModelViewSet):
   permission_classes = [permissions.IsAuthenticated]
   @action(detail=False, methods=['post'])
   def upload (self, request):
-    file = request.FILES['file']
+    try:
+      file = request.FILES['file']
     
-    data = pandas.read_excel(file)
-    for item in data.to_dict('records'):
-      item['rt'] = SadRt.objects.get(id=item['rt'])
+      data = pandas.read_excel(file)
+      for item in data.to_dict('records'):
+        item['rt'] = SadRt.objects.get(id=item['rt'])
 
-      SadKeluarga.objects.create(**item)
+        SadKeluarga.objects.create(**item)
     
-    return Response()
+      return Response(status=200)
+    except:
+      return Response(status=500)
+
   @action(detail=False, methods=['get'])
   def ekspor (self, request):
-    item = SadKeluarga.objects.all()
-    data = pandas.DataFrame(item)
-    data.to_excel(item)
+    with BytesIO() as b:
+      writer = pandas.ExcelWriter(b)
+      item = SadKeluarga.objects.all()
+      serializer = SadKeluargaSerializer(item, many=True)
+      df = pandas.DataFrame(serializer.data)
+      df.to_excel(writer, sheet_name='Sheet1')
+      writer.save()
+      return HttpResponse(b.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     
-    return Response()
 
 
 class SadPendudukViewSet(DynamicModelViewSet):

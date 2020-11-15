@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
+from rest_framework import serializers
 from .models import (
   Pegawai,
   SadProvinsi,
@@ -36,7 +37,22 @@ class UserSerializer(DynamicModelSerializer):
   class Meta:
     model = User
     name = 'data'
-    fields = ['id', 'username', 'email', 'groups']
+    exclude = []
+  
+  def create(self, validated_data):
+    user = super().create(validated_data)
+    user.is_active = True
+    user.set_password(validated_data['password'])
+    user.save()
+
+    return user
+
+  def update(self, instance, validated_data):
+    user = super().update(instance, validated_data)
+    user.set_password(validated_data['password'])
+    user.save()
+
+    return user
 
 class GroupSerializer(DynamicModelSerializer):
   class Meta:
@@ -99,8 +115,8 @@ class SadKeluargaSerializer(DynamicModelSerializer):
   class Meta:
     model = SadKeluarga
     name = 'data'
-    # fields = ['id', 'no_kk', 'anggota']
     exclude = []
+    extra_kwargs = {'created_by': {'default': serializers.CurrentUserDefault()}}
 
 class SadPendudukSerializer(DynamicModelSerializer):
   keluarga = DynamicRelationField('SadKeluargaSerializer', deferred=True, embed=True)

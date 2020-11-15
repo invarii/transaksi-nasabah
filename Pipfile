@@ -18,6 +18,7 @@ pandas = "*"
 install = "*"
 xlrd = "*"
 gunicorn = "*"
+pypx = "*"
 
 [requires]
 python_version = "3.8"
