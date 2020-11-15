@@ -172,6 +172,17 @@ class SadPendudukViewSet(DynamicModelViewSet):
 
     return Response()
 
+  @action(detail=False, methods=['get'])
+  def ekspor (self, request):
+    with BytesIO() as b:
+      writer = pandas.ExcelWriter(b)
+      item = SadPenduduk.objects.all()
+      serializer = SadPendudukSerializer(item, many=True)
+      df = pandas.DataFrame(serializer.data)
+      df.to_excel(writer, sheet_name='Sheet1')
+      writer.save()
+      return HttpResponse(b.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
 class SadKelahiranViewSet(DynamicModelViewSet):
   queryset = SadKelahiran.objects.all().order_by('id')
   serializer_class = SadKelahiranSerializer

@@ -33,7 +33,15 @@ from .models import (
   SigSadRt,
 )
 
+class GroupSerializer(DynamicModelSerializer):
+  class Meta:
+    model = Group
+    name = 'data'
+    fields = ['id', 'name']
+
+
 class UserSerializer(DynamicModelSerializer):
+  # group = DynamicRelationField('GroupSerializer', deferred=False, embed=True)
   class Meta:
     model = User
     name = 'data'
@@ -54,11 +62,7 @@ class UserSerializer(DynamicModelSerializer):
 
     return user
 
-class GroupSerializer(DynamicModelSerializer):
-  class Meta:
-    model = Group
-    name = 'data'
-    fields = ['id', 'name']
+
 
 class PegawaiSerializer(DynamicModelSerializer):
   class Meta:
@@ -123,7 +127,7 @@ class SadPendudukSerializer(DynamicModelSerializer):
   class Meta:
     model = SadPenduduk
     name = 'data'
-    fields = ['id', 'nik', 'nama', 'keluarga']
+    exclude = []
 
 class SadKelahiranSerializer(DynamicModelSerializer):
   class Meta:
