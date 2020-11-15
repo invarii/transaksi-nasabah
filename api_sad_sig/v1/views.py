@@ -86,6 +86,10 @@ class GroupViewSet(DynamicModelViewSet):
   queryset = Group.objects.all()
   serializer_class = GroupSerializer
   permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['get'])
+  def me (self, request):
+    data = GroupSerializer(request.user)
+    return Response(data.data)
 
 class PegawaiViewSet(DynamicModelViewSet):
   queryset = Pegawai.objects.all().order_by('id')
@@ -133,18 +137,12 @@ class SadKeluargaViewSet(DynamicModelViewSet):
   permission_classes = [permissions.IsAuthenticated]
   @action(detail=False, methods=['post'])
   def upload (self, request):
-    try:
       file = request.FILES['file']
-    
       data = pandas.read_excel(file)
       for item in data.to_dict('records'):
         item['rt'] = SadRt.objects.get(id=item['rt'])
-
         SadKeluarga.objects.create(**item)
-    
-      return Response(status=200)
-    except:
-      return Response(status=500)
+      return Response()
 
   @action(detail=False, methods=['get'])
   def ekspor (self, request):
