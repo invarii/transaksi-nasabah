@@ -19,6 +19,7 @@ install = "*"
 xlrd = "*"
 gunicorn = "*"
 pypx = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.8"
