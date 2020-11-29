@@ -40,6 +40,8 @@ from .serializers import (
   SigSadDusunDukuhSerializer,
   SigSadRwSerializer,
   SigSadRtSerializer,
+  SigDusunSerializer,
+  SigDukuhSerializer,
 )
 from .models import (
   Pegawai,
@@ -70,6 +72,8 @@ from .models import (
   SigSadDusunDukuh,
   SigSadRw,
   SigSadRt,
+  SigDusun,
+  SigDusun,
 )
 
 
@@ -253,18 +257,18 @@ class SigDesaViewSet(DynamicModelViewSet):
 
     for item in data['features']:
       item = {
-        'nama_desa': item['properties']['Nama_Desa'],
-        'luas': item['properties']['luas'],
-        'keliling': item['properties']['keliling'],
+        'nama_desa': item['properties']['topo_desa'],
+        'luas': item['properties']['Luas'],
+        'keliling': item['properties']['Keliling'],
         'geometry': item['geometry'],
       }
       SigDesa.objects.create(**item)
     
     return Response()
 
-class SigDusunDukuhViewSet(DynamicModelViewSet):
-  queryset = SigDusunDukuh.objects.all().order_by('id')
-  serializer_class = SigDusunDukuhSerializer
+class SigDusunViewSet(DynamicModelViewSet):
+  queryset = SigDusun.objects.all().order_by('id')
+  serializer_class = SigDusunSerializer
   permission_classes = [permissions.IsAuthenticated]
   @action(detail=False, methods=['post'])
   def upload (self, request):
@@ -272,17 +276,59 @@ class SigDusunDukuhViewSet(DynamicModelViewSet):
     data = json.load(file)
 
     for item in data['features']:
-      desa = SigDesa.objects.get (nama_desa=item['properties']['Nama_Desa'])
+      desa = SigDesa.objects.get (nama_desa=item['properties']['topo_desa'])
       item = {
-        'nama_dukuh': item['properties']['Nama_Dukuh'],
-        'nama_dusun': item['properties']['Nama_Dusun'],
         'sig_desa': desa,
+        'nama_dusun': item['properties']['topo_dusun'],
         'luas': item['properties']['Luas'],
-        # 'keliling': item['properties']['keliling'],
+        'keliling': item['properties']['Keliling'],
         'geometry': item['geometry'],
       }
-      SigDusunDukuh.objects.create(**item)
+      SigDusun.objects.create(**item)
     return Response()
+
+class SigDusunViewSet(DynamicModelViewSet):
+  queryset = SigDusun.objects.all().order_by('id')
+  serializer_class = SigDusunSerializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      desa = SigDesa.objects.get (nama_desa=item['properties']['topo_desa'])
+      item = {
+        'sig_desa': desa,
+        'nama_dusun': item['properties']['topo_dusun'],
+        'luas': item['properties']['Luas'],
+        'keliling': item['properties']['Keliling'],
+        'geometry': item['geometry'],
+      }
+      SigDusun.objects.create(**item)
+    return Response()
+
+# class SigDukuhViewSet(DynamicModelViewSet):
+#   queryset = SigDukuh.objects.all().order_by('id')
+#   serializer_class = SigDukuhSerializer
+#   permission_classes = [permissions.IsAuthenticated]
+#   @action(detail=False, methods=['post'])
+#   def upload (self, request):
+#     file = request.FILES['file']
+#     data = json.load(file)
+
+#     for item in data['features']:
+#       sig_dusun = SigDusun.objects.get (nama_desa=item['properties']['topo_desa'])
+#       item = {
+#         'nama_dukuh': item['properties']['topo_dusun'],
+#         'nama_dusun': item['properties']['topo_dukuh'],
+#         'sig_desa': desa,
+#         'luas': item['properties']['Luas'],
+#         'keliling': item['properties']['Keliling'],
+#         'geometry': item['geometry'],
+#       }
+#       SigDusunDukuh.objects.create(**item)
+#     return Response()
 
 class SigRwViewSet(DynamicModelViewSet):
   queryset = SigRw.objects.all().order_by('id')
@@ -291,11 +337,19 @@ class SigRwViewSet(DynamicModelViewSet):
   @action(detail=False, methods=['post'])
   def upload (self, request):
     file = request.FILES['file']
-    data = pandas.read_excel(file)
-    for item in data.dropna(axis=1).to_dict('records'):
+    data = json.load(file)
 
-      SigRw.objects.create(**item)
-
+    for item in data['features']:
+      dusun_dukuh = SigDusunDukuh.objects.get (nama_desa=item['properties']['Nama_Desa'])
+      item = {
+        'nama_dukuh': item['properties']['Nama_Dukuh'],
+        'nama_dusun': item['properties']['Nama_Dusun'],
+        'sig_desa': dusun_dukuh,
+        'luas': item['properties']['Luas'],
+        # 'keliling': item['properties']['keliling'],
+        'geometry': item['geometry'],
+      }
+      SigDusunDukuh.objects.create(**item)
     return Response()
 
 class SigRtViewSet(DynamicModelViewSet):

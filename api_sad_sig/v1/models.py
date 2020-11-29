@@ -404,6 +404,40 @@ class SigDesa(models.Model):
         
         db_table = 'sig_desa'
 
+class SigDusun(models.Model):
+    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
+    nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
+    luas = models.CharField(max_length=10, blank=True, null=True)
+    keliling = models.CharField(max_length=10, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
+    # created_at = models.DateTimeField(blank=True, null=True)
+    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
+    # updated_at = models.DateTimeField(blank=True, null=True)
+    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
+    # deleted_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_dusun_dukuh'
+
+class SigDukuh(models.Model):
+    sig_dusun = models.ForeignKey(SigDusun, models.DO_NOTHING, blank=True, null=True)
+    nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
+    luas = models.CharField(max_length=10, blank=True, null=True)
+    keliling = models.CharField(max_length=10, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
+    # created_at = models.DateTimeField(blank=True, null=True)
+    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
+    # updated_at = models.DateTimeField(blank=True, null=True)
+    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
+    # deleted_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_dukuh'
+
 
 class SigDusunDukuh(models.Model):
     sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
