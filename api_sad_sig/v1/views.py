@@ -73,7 +73,7 @@ from .models import (
   SigSadRw,
   SigSadRt,
   SigDusun,
-  SigDusun,
+  SigDukuh,
 )
 
 
@@ -287,9 +287,9 @@ class SigDusunViewSet(DynamicModelViewSet):
       SigDusun.objects.create(**item)
     return Response()
 
-class SigDusunViewSet(DynamicModelViewSet):
-  queryset = SigDusun.objects.all().order_by('id')
-  serializer_class = SigDusunSerializer
+class SigDukuhViewSet(DynamicModelViewSet):
+  queryset = SigDukuh.objects.all().order_by('id')
+  serializer_class = SigDukuhSerializer
   permission_classes = [permissions.IsAuthenticated]
   @action(detail=False, methods=['post'])
   def upload (self, request):
@@ -297,38 +297,16 @@ class SigDusunViewSet(DynamicModelViewSet):
     data = json.load(file)
 
     for item in data['features']:
-      desa = SigDesa.objects.get (nama_desa=item['properties']['topo_desa'])
+      sig_dusun = SigDusun.objects.get (sig_dusun=item['properties']['sig_dusun'])
       item = {
-        'sig_desa': desa,
-        'nama_dusun': item['properties']['topo_dusun'],
+        'sig_dusun': sig_dusun,
+        'nama_dukuh': item['properties']['topo_dukuh'],
         'luas': item['properties']['Luas'],
         'keliling': item['properties']['Keliling'],
         'geometry': item['geometry'],
       }
-      SigDusun.objects.create(**item)
+      SigDukuh.objects.create(**item)
     return Response()
-
-# class SigDukuhViewSet(DynamicModelViewSet):
-#   queryset = SigDukuh.objects.all().order_by('id')
-#   serializer_class = SigDukuhSerializer
-#   permission_classes = [permissions.IsAuthenticated]
-#   @action(detail=False, methods=['post'])
-#   def upload (self, request):
-#     file = request.FILES['file']
-#     data = json.load(file)
-
-#     for item in data['features']:
-#       sig_dusun = SigDusun.objects.get (nama_desa=item['properties']['topo_desa'])
-#       item = {
-#         'nama_dukuh': item['properties']['topo_dusun'],
-#         'nama_dusun': item['properties']['topo_dukuh'],
-#         'sig_desa': desa,
-#         'luas': item['properties']['Luas'],
-#         'keliling': item['properties']['Keliling'],
-#         'geometry': item['geometry'],
-#       }
-#       SigDusunDukuh.objects.create(**item)
-#     return Response()
 
 class SigRwViewSet(DynamicModelViewSet):
   queryset = SigRw.objects.all().order_by('id')
@@ -340,16 +318,15 @@ class SigRwViewSet(DynamicModelViewSet):
     data = json.load(file)
 
     for item in data['features']:
-      dusun_dukuh = SigDusunDukuh.objects.get (nama_desa=item['properties']['Nama_Desa'])
+      # dusun_dukuh = SigDusunDukuh.objects.get (nama_desa=item['properties']['Nama_Desa'])
       item = {
         'nama_dukuh': item['properties']['Nama_Dukuh'],
         'nama_dusun': item['properties']['Nama_Dusun'],
-        'sig_desa': dusun_dukuh,
         'luas': item['properties']['Luas'],
         # 'keliling': item['properties']['keliling'],
         'geometry': item['geometry'],
       }
-      SigDusunDukuh.objects.create(**item)
+      SigRw.objects.create(**item)
     return Response()
 
 class SigRtViewSet(DynamicModelViewSet):
