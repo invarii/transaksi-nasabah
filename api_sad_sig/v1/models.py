@@ -419,7 +419,7 @@ class SigDusun(models.Model):
 
     class Meta:
         
-        db_table = 'sig_dusun_dukuh'
+        db_table = 'sig_dusun'
 
 class SigDukuh(models.Model):
     sig_dusun = models.ForeignKey(SigDusun, models.DO_NOTHING, blank=True, null=True)
