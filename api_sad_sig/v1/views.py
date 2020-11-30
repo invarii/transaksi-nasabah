@@ -297,7 +297,7 @@ class SigDukuhViewSet(DynamicModelViewSet):
     data = json.load(file)
 
     for item in data['features']:
-      sig_dusun = SigDusun.objects.get (sig_dusun=item['properties']['topo_dusun'])
+      sig_dusun = SigDusun.objects.get (nama_dusun=item['properties']['topo_dusun'])
       item = {
         'sig_dusun': sig_dusun,
         'nama_dukuh': item['properties']['topo_dukuh'],
