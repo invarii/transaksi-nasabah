@@ -32,7 +32,7 @@ from .models import (
   SigSadRw,
   SigSadRt,
   SigDusun,
-  SigDusun,
+  SigDukuh,
 )
 
 class GroupSerializer(DynamicModelSerializer):
@@ -202,7 +202,7 @@ class SigDusunSerializer(DynamicModelSerializer):
 class SigDukuhSerializer(DynamicModelSerializer):
   sig_dusun = DynamicRelationField('SigDusunSerializer', deferred=True, embed=True)
   class Meta:
-    model = SigDusun
+    model = SigDukuh
     name = 'data'
     exclude = []
 
