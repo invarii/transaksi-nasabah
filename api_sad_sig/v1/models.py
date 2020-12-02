@@ -375,30 +375,25 @@ class SettingDesa(models.Model):
 
 class SigBidang(models.Model):
     nbt = models.IntegerField(blank=True, null=True)
-    desa = models.ForeignKey('SigDesa', models.DO_NOTHING, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
+    sig_dukuh2 = models.ForeignKey('SigDukuh', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         
         db_table = 'sig_bidang'
 
+class SigBidang2(models.Model):
+    nbt = models.IntegerField(blank=True, null=True)
+    sig_dukuh2 = models.ForeignKey('SigDukuh2', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_bidang2'
 
 class SigDesa(models.Model):
     nama_desa = models.CharField(max_length=250, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         
@@ -410,12 +405,6 @@ class SigDusun(models.Model):
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         
@@ -427,67 +416,58 @@ class SigDukuh(models.Model):
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         
         db_table = 'sig_dukuh'
 
 
-class SigDusunDukuh(models.Model):
+class SigDukuh2(models.Model):
     sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
-    nama_dusun = models.CharField(max_length=70, blank=True, null=True)
     nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         
-        db_table = 'sig_dusun_dukuh'
-
-
-class SigRt(models.Model):
-    rw = models.ForeignKey('SigRw', models.DO_NOTHING, blank=True, null=True)
-    rt = models.CharField(max_length=10, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        
-        db_table = 'sig_rt'
-
+        db_table = 'sig_dukuh2'
 
 class SigRw(models.Model):
-    dusun_dukuh = models.ForeignKey(SigDusunDukuh, models.DO_NOTHING, blank=True, null=True)
-    desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
+    sig_dukuh = models.ForeignKey(SigDukuh, models.DO_NOTHING, blank=True, null=True)
     rw = models.CharField(max_length=10, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
 
     class Meta:
         
         db_table = 'sig_rw'
 
+class SigRt(models.Model):
+    sig_rw = models.ForeignKey('SigRw', models.DO_NOTHING, blank=True, null=True)
+    rt = models.CharField(max_length=10, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+    
+    class Meta:
+        
+        db_table = 'sig_rt'
+
+class SigRw2(models.Model):
+    sig_dukuh2 = models.ForeignKey(SigDukuh2, models.DO_NOTHING, blank=True, null=True)
+    rw = models.CharField(max_length=10, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_rw2'
+
+class SigRt2(models.Model):
+    sig_rw2 = models.ForeignKey('SigRw2', models.DO_NOTHING, blank=True, null=True)
+    rt = models.CharField(max_length=10, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+    
+    class Meta:
+        
+        db_table = 'sig_rt2'
 
 class SigSadDesa(models.Model):
     sad_desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)
@@ -496,32 +476,6 @@ class SigSadDesa(models.Model):
     class Meta:
         
         db_table = 'sig_sad_desa'
-
-
-class SigSadDusunDukuh(models.Model):
-    sad_dusun_dukuh = models.ForeignKey(SadDusunDukuh, models.DO_NOTHING, blank=True, null=True)
-    sig_dusun_dukuh = models.ForeignKey(SigDusunDukuh, models.DO_NOTHING, blank=True, null=True)
-
-    class Meta:
-        
-        db_table = 'sig_sad_dusun_dukuh'
-
-
-class SigSadRw(models.Model):
-    sad_rw = models.ForeignKey(SadRw, models.DO_NOTHING, blank=True, null=True)
-    sig_rw = models.ForeignKey(SigRw, models.DO_NOTHING, blank=True, null=True)
-
-    class Meta:
-        
-        db_table = 'sig_sad_rw'
-
-class SigSadRt(models.Model):
-    sad_rt = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
-    sig_rt = models.ForeignKey(SigRt, models.DO_NOTHING, blank=True, null=True)
-
-    class Meta:
-        
-        db_table = 'sig_sad_rt'
 
 class Slider(models.Model):
     judul = models.CharField(max_length=100, blank=True, null=True)

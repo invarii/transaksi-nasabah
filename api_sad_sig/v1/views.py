@@ -33,16 +33,15 @@ from .serializers import (
   SadDetailSuratSerializer,
   SigBidangSerializer,
   SigDesaSerializer,
-  SigDusunDukuhSerializer,
   SigRtSerializer,
   SigRwSerializer,
-  SigSadDesaSerializer,
-  SigSadDusunDukuhSerializer,
-  SigSadRwSerializer,
-  SigSadRtSerializer,
   SigDusunSerializer,
   SigDukuhSerializer,
+  SigDukuh2Serializer,
+  SigRt2Serializer,
+  SigRw2Serializer,
 )
+
 from .models import (
   Pegawai,
   SadProvinsi,
@@ -65,15 +64,13 @@ from .models import (
   SadDetailSurat,
   SigBidang,
   SigDesa,
-  SigDusunDukuh,
   SigRt,
   SigRw,
-  SigSadDesa,
-  SigSadDusunDukuh,
-  SigSadRw,
-  SigSadRt,
   SigDusun,
   SigDukuh,
+  SigDukuh2,
+  SigRt2,
+  SigRw2,
 )
 
 
@@ -158,8 +155,6 @@ class SadKeluargaViewSet(DynamicModelViewSet):
       df.to_excel(writer, sheet_name='Sheet1')
       writer.save()
       return HttpResponse(b.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    
-
 
 class SadPendudukViewSet(DynamicModelViewSet):
   queryset = SadPenduduk.objects.all().order_by('id')
@@ -308,6 +303,27 @@ class SigDukuhViewSet(DynamicModelViewSet):
       SigDukuh.objects.create(**item)
     return Response()
 
+class SigDukuh2ViewSet(DynamicModelViewSet):
+  queryset = SigDukuh2.objects.all().order_by('id')
+  serializer_class = SigDukuh2Serializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      desa = SigDesa.objects.get (nama_desa=item['properties']['topo_desa'])
+      item = {
+        'sig_desa': desa,
+        'nama_dukuh': item['properties']['topo_dukuh'],
+        'luas': item['properties']['Luas'],
+        'keliling': item['properties']['Keliling'],
+        'geometry': item['geometry'],
+      }
+      SigDukuh2.objects.create(**item)
+    return Response()
+
 class SigRwViewSet(DynamicModelViewSet):
   queryset = SigRw.objects.all().order_by('id')
   serializer_class = SigRwSerializer
@@ -318,15 +334,32 @@ class SigRwViewSet(DynamicModelViewSet):
     data = json.load(file)
 
     for item in data['features']:
-      # dusun_dukuh = SigDusunDukuh.objects.get (nama_desa=item['properties']['Nama_Desa'])
+      dukuh = SigDukuh.objects.get (nama_dukuh=item['properties']['topo_dukuh'])
       item = {
-        'nama_dukuh': item['properties']['Nama_Dukuh'],
-        'nama_dusun': item['properties']['Nama_Dusun'],
-        # 'luas': item['properties']['Luas'],
-        # 'keliling': item['properties']['keliling'],
+        'sig_dukuh': dukuh,
+        'rw': item['properties']['RW'],
         'geometry': item['geometry'],
       }
       SigRw.objects.create(**item)
+    return Response()
+
+class SigRw2ViewSet(DynamicModelViewSet):
+  queryset = SigRw2.objects.all().order_by('id')
+  serializer_class = SigRw2Serializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      dukuh2 = SigDukuh2.objects.get (nama_dukuh=item['properties']['topo_dukuh'])
+      item = {
+        'sig_dukuh2': dukuh2,
+        'rw': item['properties']['RW'],
+        'geometry': item['geometry'],
+      }
+      SigRw2.objects.create(**item)
     return Response()
 
 class SigRtViewSet(DynamicModelViewSet):
@@ -336,9 +369,33 @@ class SigRtViewSet(DynamicModelViewSet):
   @action(detail=False, methods=['post'])
   def upload (self, request):
     file = request.FILES['file']
-    data = pandas.read_excel(file)
-    for item in data.dropna(axis=1).to_dict('records'):
+    data = json.load(file)
 
+    for item in data['features']:
+      rw = SigRw.objects.get (rw=item['properties']['RW'])
+      item = {
+        'sig_rw': rw,
+        'rt': item['properties']['RT'],
+        'geometry': item['geometry'],
+      }
       SigRt.objects.create(**item)
+    return Response()
 
+class SigRt2ViewSet(DynamicModelViewSet):
+  queryset = SigRt2.objects.all().order_by('id')
+  serializer_class = SigRt2Serializer
+  permission_classes = [permissions.IsAuthenticated]
+  @action(detail=False, methods=['post'])
+  def upload (self, request):
+    file = request.FILES['file']
+    data = json.load(file)
+
+    for item in data['features']:
+      rw2 = SigRw2.objects.get (rw=item['properties']['RW'])
+      item = {
+        'sig_rw2': rw2,
+        'rt': item['properties']['RT'],
+        'geometry': item['geometry'],
+      }
+      SigRt2.objects.create(**item)
     return Response()

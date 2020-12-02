@@ -31,6 +31,9 @@ from .views import (
   SigDukuhViewSet,
   SigRtViewSet,
   SigRwViewSet,
+  SigDukuh2ViewSet,
+  SigRt2ViewSet,
+  SigRw2ViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -61,6 +64,9 @@ router.register(r'sigdusun', SigDusunViewSet)
 router.register(r'sigdukuh', SigDukuhViewSet)
 router.register(r'sigrw', SigRwViewSet)
 router.register(r'sigrt', SigRtViewSet)
+router.register(r'sigdukuh2', SigDukuh2ViewSet)
+router.register(r'sigrw2', SigRw2ViewSet)
+router.register(r'sigrt2', SigRt2ViewSet)
 
 
 urlpatterns = [

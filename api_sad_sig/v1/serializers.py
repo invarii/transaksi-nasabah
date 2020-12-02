@@ -24,15 +24,13 @@ from .models import (
   SadDetailSurat,
   SigBidang,
   SigDesa,
-  SigDusunDukuh,
-  SigRt,
   SigRw,
-  SigSadDesa,
-  SigSadDusunDukuh,
-  SigSadRw,
-  SigSadRt,
+  SigRt,
+  SigRw2,
+  SigRt2,
   SigDusun,
   SigDukuh,
+  SigDukuh2,
 )
 
 class GroupSerializer(DynamicModelSerializer):
@@ -63,8 +61,6 @@ class UserSerializer(DynamicModelSerializer):
     user.save()
 
     return user
-
-
 
 class PegawaiSerializer(DynamicModelSerializer):
   class Meta:
@@ -206,24 +202,38 @@ class SigDukuhSerializer(DynamicModelSerializer):
     name = 'data'
     exclude = []
 
-class SigDusunDukuhSerializer(DynamicModelSerializer):
+class SigDukuh2Serializer(DynamicModelSerializer):
   sig_desa = DynamicRelationField('SigDesaSerializer', deferred=True, embed=True)
   class Meta:
-    model = SigDusunDukuh
+    model = SigDukuh2
     name = 'data'
     exclude = []
 
 class SigRwSerializer(DynamicModelSerializer):
-  dusun_dukuh = DynamicRelationField('SigDusunDukuhSerializer', deferred=True, embed=True)
+  sig_dukuh = DynamicRelationField('SigDukuhSerializer', deferred=True, embed=True)
   class Meta:
     model = SigRw
     name = 'data'
     exclude = []
 
 class SigRtSerializer(DynamicModelSerializer):
-  rw = DynamicRelationField('SigRwSerializer', deferred=True, embed=True)
+  sig_rw = DynamicRelationField('SigRwSerializer', deferred=True, embed=True)
   class Meta:
     model = SigRt
+    name = 'data'
+    exclude = []
+
+class SigRw2Serializer(DynamicModelSerializer):
+  sig_dukuh2 = DynamicRelationField('SigDukuh2Serializer', deferred=True, embed=True)
+  class Meta:
+    model = SigRw2
+    name = 'data'
+    exclude = []
+
+class SigRt2Serializer(DynamicModelSerializer):
+  sig_rw2 = DynamicRelationField('SigRw2Serializer', deferred=True, embed=True)
+  class Meta:
+    model = SigRt2
     name = 'data'
     exclude = []
 
@@ -231,29 +241,5 @@ class SigBidangSerializer(DynamicModelSerializer):
   desa = DynamicRelationField('SigDesaSerializer', deferred=True, embed=True)
   class Meta:
     model = SigBidang
-    name = 'data'
-    exclude = []
-
-class SigSadDesaSerializer(DynamicModelSerializer):
-  class Meta:
-    model = SigSadDesa
-    name = 'data'
-    exclude = []
-
-class SigSadDusunDukuhSerializer(DynamicModelSerializer):
-  class Meta:
-    model = SigSadDusunDukuh
-    name = 'data'
-    exclude = []
-
-class SigSadRwSerializer(DynamicModelSerializer):
-  class Meta:
-    model = SigSadRw
-    name = 'data'
-    exclude = []
-
-class SigSadRtSerializer(DynamicModelSerializer):
-  class Meta:
-    model = SigSadRt
     name = 'data'
     exclude = []
