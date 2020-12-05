@@ -375,7 +375,7 @@ class SettingDesa(models.Model):
 
 class SigBidang(models.Model):
     nbt = models.IntegerField(blank=True, null=True)
-    sig_dukuh2 = models.ForeignKey('SigDukuh', models.DO_NOTHING, blank=True, null=True)
+    sig_rt = models.ForeignKey('SigRt', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         
@@ -383,7 +383,7 @@ class SigBidang(models.Model):
 
 class SigBidang2(models.Model):
     nbt = models.IntegerField(blank=True, null=True)
-    sig_dukuh2 = models.ForeignKey('SigDukuh2', models.DO_NOTHING, blank=True, null=True)
+    sig_rt2 = models.ForeignKey('SigRt2', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         
@@ -476,6 +476,26 @@ class SigSadDesa(models.Model):
     class Meta:
         
         db_table = 'sig_sad_desa'
+
+class SigSadBidang(models.Model):
+    sad_penduduk = models.ForeignKey(SadPenduduk, models.DO_NOTHING, blank=True, null=True)
+    sig_bidang = models.ForeignKey(SigBidang, models.DO_NOTHING, blank=True, null=True)
+    pemilik = models.CharField(max_length=100, blank=True, null=True)
+    penguasa = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_sad_bidang'
+
+class SigSadBidang2(models.Model):
+    sad_penduduk = models.ForeignKey(SadPenduduk, models.DO_NOTHING, blank=True, null=True)
+    sig_bidang2 = models.ForeignKey(SigBidang2, models.DO_NOTHING, blank=True, null=True)
+    pemilik = models.CharField(max_length=100, blank=True, null=True)
+    penguasa = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        
+        db_table = 'sig_sad_bidang2'
 
 class Slider(models.Model):
     judul = models.CharField(max_length=100, blank=True, null=True)
