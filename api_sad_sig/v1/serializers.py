@@ -41,7 +41,7 @@ class GroupSerializer(DynamicModelSerializer):
 
 
 class UserSerializer(DynamicModelSerializer):
-  # group = DynamicRelationField('GroupSerializer', deferred=False, embed=True)
+  group = DynamicRelationField('GroupSerializer', deferred=False, embed=True)
   class Meta:
     model = User
     name = 'data'
