@@ -14,85 +14,85 @@ from io import BytesIO
 from django.http import HttpResponse
 
 from .serializers import (
-  UserSerializer,
-  GroupSerializer,
-  PegawaiSerializer,
-  SadProvinsiSerializer,
-  SadKabKotaSerializer,
-  SadKecamatanSerializer,
-  SadDesaSerializer,
-  SadDusunDukuhSerializer,
-  SadRwSerializer,
-  SadRtSerializer,
-  SadKeluargaSerializer,
-  SadPendudukSerializer,
-  SadKelahiranSerializer,
-  SadKematianSerializer,
-  SadLahirmatiSerializer,
-  SadPindahMasukSerializer,
-  SadPindahKeluarSerializer,
-  SadSarprasSerializer,
-  SadInventarisSerializer,
-  SadSuratSerializer,
-  SadDetailSuratSerializer,
-  SigBidangSerializer,
-  SigDesaSerializer,
-  SigRtSerializer,
-  SigRwSerializer,
-  SigDusunSerializer,
-  SigDukuhSerializer,
-  SigDukuh2Serializer,
-  SigRt2Serializer,
-  SigRw2Serializer,
-  KategoriLaporSerializer,
-  LaporSerializer,
-  KategoriArtikelSerializer,
-  ArtikelSerializer,
-  KategoriPotensiSerializer,
-  PotensiSerializer,
-  KategoriInformasiSerializer,
-  InformasiSerializer,
-  PotensiSerializer,
-  KategoriPotensiSerializer,
+    UserSerializer,
+    GroupSerializer,
+    PegawaiSerializer,
+    SadProvinsiSerializer,
+    SadKabKotaSerializer,
+    SadKecamatanSerializer,
+    SadDesaSerializer,
+    SadDusunDukuhSerializer,
+    SadRwSerializer,
+    SadRtSerializer,
+    SadKeluargaSerializer,
+    SadPendudukSerializer,
+    SadKelahiranSerializer,
+    SadKematianSerializer,
+    SadLahirmatiSerializer,
+    SadPindahMasukSerializer,
+    SadPindahKeluarSerializer,
+    SadSarprasSerializer,
+    SadInventarisSerializer,
+    SadSuratSerializer,
+    SadDetailSuratSerializer,
+    SigBidangSerializer,
+    SigDesaSerializer,
+    SigRtSerializer,
+    SigRwSerializer,
+    SigDusunSerializer,
+    SigDukuhSerializer,
+    SigDukuh2Serializer,
+    SigRt2Serializer,
+    SigRw2Serializer,
+    KategoriLaporSerializer,
+    LaporSerializer,
+    KategoriArtikelSerializer,
+    ArtikelSerializer,
+    KategoriPotensiSerializer,
+    PotensiSerializer,
+    KategoriInformasiSerializer,
+    InformasiSerializer,
+    PotensiSerializer,
+    KategoriPotensiSerializer,
 )
 
 from .models import (
-  Pegawai,
-  SadProvinsi,
-  SadKabKota,
-  SadKecamatan,
-  SadDesa,
-  SadDusunDukuh,
-  SadRw,
-  SadRt,
-  SadKeluarga,
-  SadPenduduk,
-  SadKelahiran,
-  SadKematian,
-  SadLahirmati,
-  SadPindahKeluar,
-  SadPindahMasuk,
-  SadSarpras,
-  SadInventaris,
-  SadSurat,
-  SadDetailSurat,
-  SigBidang,
-  SigDesa,
-  SigRt,
-  SigRw,
-  SigDusun,
-  SigDukuh,
-  SigDukuh2,
-  SigRt2,
-  SigRw2,
-  KategoriLapor,
-  Lapor,
-  Artikel,
-  KategoriArtikel,
-  Informasi,
-  KategoriInformasi,
-  Potensi,
-  KategoriPotensi,
+    Pegawai,
+    SadProvinsi,
+    SadKabKota,
+    SadKecamatan,
+    SadDesa,
+    SadDusunDukuh,
+    SadRw,
+    SadRt,
+    SadKeluarga,
+    SadPenduduk,
+    SadKelahiran,
+    SadKematian,
+    SadLahirmati,
+    SadPindahKeluar,
+    SadPindahMasuk,
+    SadSarpras,
+    SadInventaris,
+    SadSurat,
+    SadDetailSurat,
+    SigBidang,
+    SigDesa,
+    SigRt,
+    SigRw,
+    SigDusun,
+    SigDukuh,
+    SigDukuh2,
+    SigRt2,
+    SigRw2,
+    KategoriLapor,
+    Lapor,
+    Artikel,
+    KategoriArtikel,
+    Informasi,
+    KategoriInformasi,
+    Potensi,
+    KategoriPotensi,
 )
 
 
@@ -126,7 +126,7 @@ class CustomView(DynamicModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SadProvinsiList(CustomView):
+class SadProvinsiViewSet(CustomView):
     queryset = SadProvinsi.objects.all()
     serializer_class = SadProvinsiSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -506,42 +506,50 @@ class SigRt2ViewSet(CustomView):
             SigRt2.objects.create(**item)
         return Response()
 
+
 class KategoriArtikelViewSet(DynamicModelViewSet):
-  queryset = KategoriArtikel.objects.all().order_by('id')
-  serializer_class = KategoriArtikelSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = KategoriArtikel.objects.all().order_by("id")
+    serializer_class = KategoriArtikelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class ArtikelViewSet(DynamicModelViewSet):
-  queryset = Artikel.objects.all().order_by('id')
-  serializer_class = ArtikelSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = Artikel.objects.all().order_by("id")
+    serializer_class = ArtikelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class KategoriLaporViewSet(DynamicModelViewSet):
-  queryset = KategoriLapor.objects.all().order_by('id')
-  serializer_class = KategoriLaporSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = KategoriLapor.objects.all().order_by("id")
+    serializer_class = KategoriLaporSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class LaporViewSet(DynamicModelViewSet):
-  queryset = Lapor.objects.all().order_by('id')
-  serializer_class = LaporSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = Lapor.objects.all().order_by("id")
+    serializer_class = LaporSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
-  queryset = KategoriInformasi.objects.all().order_by('id')
-  serializer_class = KategoriInformasiSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = KategoriInformasi.objects.all().order_by("id")
+    serializer_class = KategoriInformasiSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class InformasiViewSet(DynamicModelViewSet):
-  queryset = Informasi.objects.all().order_by('id')
-  serializer_class = InformasiSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = Informasi.objects.all().order_by("id")
+    serializer_class = InformasiSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
-  queryset = KategoriPotensi.objects.all().order_by('id')
-  serializer_class = KategoriPotensiSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = KategoriPotensi.objects.all().order_by("id")
+    serializer_class = KategoriPotensiSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class PotensiViewSet(DynamicModelViewSet):
-  queryset = Potensi.objects.all().order_by('id')
-  serializer_class = PotensiSerializer
-  permission_classes = [permissions.IsAuthenticated]
+    queryset = Potensi.objects.all().order_by("id")
+    serializer_class = PotensiSerializer
+    permission_classes = [permissions.IsAuthenticated]
