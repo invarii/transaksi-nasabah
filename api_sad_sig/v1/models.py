@@ -177,7 +177,7 @@ class SadRw(CustomModel):
 
 
 class SadKeluarga(CustomModel):
-    no_kk = models.CharField(max_length=16, blank=True, null=True)
+    no_kk = models.CharField(max_length=16, unique=True)
     alamat = models.CharField(max_length=100, blank=True, null=True)
     rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
@@ -195,12 +195,14 @@ class SadKeluarga(CustomModel):
 class SadPenduduk(CustomModel):
     keluarga = models.ForeignKey(
         SadKeluarga,
-        models.DO_NOTHING,
+        to_field="no_kk",
+        on_delete=models.DO_NOTHING,
         related_name="anggota",
         blank=True,
         null=True,
     )
-    nik = models.CharField(max_length=16, blank=True, null=True)
+
+    nik = models.CharField(max_length=16, unique=True)
     chip_ektp = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=50, blank=True, null=True)
     tgl_lahir = models.DateField(blank=True, null=True)

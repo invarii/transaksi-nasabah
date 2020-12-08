@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.contrib.auth.models import User, Group
 from rest_framework import permissions, status
 from dynamic_rest.viewsets import DynamicModelViewSet
@@ -7,7 +8,6 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
-import numpy
 import pandas
 import json
 from io import BytesIO
@@ -52,8 +52,6 @@ from .serializers import (
     PotensiSerializer,
     KategoriInformasiSerializer,
     InformasiSerializer,
-    PotensiSerializer,
-    KategoriPotensiSerializer,
 )
 
 from .models import (
@@ -94,6 +92,30 @@ from .models import (
     Potensi,
     KategoriPotensi,
 )
+
+
+def format_data_penduduk(data):
+    cols = ["tgl_lahir", "tgl_exp_paspor", "tgl_kawin", "tgl_cerai"]
+    for col in cols:
+        if type(data[col]) == pandas.Timestamp:
+            data[col] = str(data[col]).split(" ")[0]
+        else:
+            data.pop(col)
+
+
+def create_or_reactivate(model, filter_param, data):
+    instance = model.all_objects.filter(**filter_param).dead().first()
+
+    if instance:
+        instance.deleted_by = None
+        instance.deleted_at = None
+        instance.save()
+
+        model.objects.filter(pk=instance.pk).update(**data)
+        instance.refresh_from_db()
+    else:
+        instance = model.objects.create(**data)
+    instance.save()
 
 
 class UserViewSet(DynamicModelViewSet):
@@ -181,14 +203,41 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
-        print("file", request.FILES)
+        status = {
+            "status": "success",
+            "data_diinput": 0,
+            "data_gagal": 0,
+            "data_redundan": 0,
+            "rt_tidak_ditemukan": 0,
+        }
+
         file = request.FILES["file"]
         data = pandas.read_excel(file)
         for item in data.to_dict("records"):
-            item["rt"] = SadRt.objects.filter(rt=item["rt"]).first()
-            instance = SadKeluarga.objects.create(**item)
-            instance.save()
-        return Response({"msg": "Data berhasil diupload"})
+            if item["no_kk"] in [None, "", "0", 0]:
+                status["data_gagal"] += 1
+                continue
+
+            rt = SadRt.objects.filter(rt=item["rt"]).first()
+            item["rt"] = rt
+            if not item["rt"]:
+                status["rt_tidak_ditemukan"] += 1
+                continue
+
+            param_filter = {"no_kk": item["no_kk"]}
+            try:
+                create_or_reactivate(SadKeluarga, param_filter, item)
+            except IntegrityError:
+                status["data_redundan"] += 1
+                continue
+            except Exception as e:
+                print(e)
+                status["data_gagal"] += 1
+                continue
+            status["data_diinput"] += 1
+        if not status["data_diinput"]:
+            status["status"] = "failed"
+        return Response(status)
 
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
@@ -206,15 +255,6 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             )
 
 
-def format_data_penduduk(data):
-    cols = ["tgl_lahir", "tgl_exp_paspor", "tgl_kawin", "tgl_cerai"]
-    for col in cols:
-        if type(data[col]) == pandas.Timestamp:
-            data[col] = str(data[col]).split(" ")[0]
-        else:
-            data.pop(col)
-
-
 class SadPendudukViewSet(CustomView):
     queryset = SadPenduduk.objects.all().order_by("id")
     serializer_class = SadPendudukSerializer
@@ -222,19 +262,44 @@ class SadPendudukViewSet(CustomView):
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
+        status = {
+            "status": "success",
+            "data_diinput": 0,
+            "data_gagal": 0,
+            "data_redundan": 0,
+            "keluarga_tidak_ditemukan": 0,
+        }
+
         file = request.FILES["file"]
         data = pandas.read_excel(file)
         for item in data.to_dict("records"):
+            print(item["keluarga"])
+            if not item["nik"]:
+                status["data_gagal"] += 1
+                continue
+
             item["keluarga"] = SadKeluarga.objects.filter(
                 no_kk=item["keluarga"]
             ).first()
+            if not item["keluarga"]:
+                status["keluarga_tidak_ditemukan"] += 1
+                continue
+
             format_data_penduduk(item)
-            print(item)
-
-            instance = SadPenduduk.objects.create(**item)
-            instance.save()
-
-        return Response({"msg": "Data berhasil diupload"})
+            param_filter = {"nik": item["nik"]}
+            try:
+                create_or_reactivate(SadPenduduk, param_filter, item)
+            except IntegrityError:
+                status["data_redundan"] += 1
+                continue
+            except Exception as e:
+                print(e)
+                status["data_gagal"] += 1
+                continue
+            status["data_diinput"] += 1
+        if not status["data_diinput"]:
+            status["status"] = "failed"
+        return Response(status)
 
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
