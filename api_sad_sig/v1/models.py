@@ -1,51 +1,132 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-# Create your models here.
 
-class Pegawai(models.Model):
+class CustomModelQuerySet(models.QuerySet):
+    def delete(self):
+        return super().update(deleted_at=timezone.now())
+
+    def hard_delete(self):
+        return super().delete()
+
+    def alive(self):
+        return self.filter(deleted_at=None)
+
+    def dead(self):
+        return self.exclude(deleted_at=None)
+
+
+class CustomModelManager(models.Manager):
+    def __init__(self, *args, **kwargs):
+        self.alive_only = kwargs.pop("alive_only", True)
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        if self.alive_only:
+            return CustomModelQuerySet(self.model).filter(deleted_at=None)
+        return CustomModelQuerySet(self.model)
+
+    def hard_delete(self):
+        return self.get_queryset().hard_delete()
+
+
+class CustomModel(models.Model):
+    created_at = models.DateTimeField(blank=True, auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(blank=True, auto_now=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.DO_NOTHING,
+        related_name="created_%(class)ss",
+        blank=True,
+        null=True,
+    )
+    updated_by = models.ForeignKey(
+        User,
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="updated_%(class)ss",
+    )
+    deleted_by = models.ForeignKey(
+        User,
+        on_delete=models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="deleted_%(class)ss",
+    )
+
+    # Untuk query object hidup gunakan model_name.objects
+    # Untuk query semua object gunakan model.all_objects
+    objects = CustomModelManager()
+    all_objects = CustomModelManager(alive_only=False)
+
+    class Meta:
+        abstract = True
+
+    def delete(self):
+        # Tidak menghapus record dari database
+        # hanya menandai bahwa data ini sudah tidak aktif
+        self.deleted_at = timezone.now()
+        self.save()
+
+    def hard_delete(self):
+        # Menghapus data dari database
+        super().delete()
+
+
+class Pegawai(CustomModel):
     nip = models.CharField(max_length=18, blank=True, null=True)
     nama = models.CharField(max_length=50, blank=True, null=True)
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
-    deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'pegawai'
+    class Meta(CustomModel.Meta):
 
-class SadProvinsi(models.Model):
+        db_table = "pegawai"
+
+
+class SadProvinsi(CustomModel):
     kode_provinsi = models.CharField(max_length=5, blank=True, null=True)
     nama_provinsi = models.CharField(max_length=50, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_provinsi'
+    class Meta(CustomModel.Meta):
 
-class SadKabKota(models.Model):
-    provinsi = models.ForeignKey('SadProvinsi', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_provinsi"
+
+
+class SadKabKota(CustomModel):
+    provinsi = models.ForeignKey(
+        "SadProvinsi", models.DO_NOTHING, blank=True, null=True
+    )
     kode_kab_kota = models.CharField(max_length=5, blank=True, null=True)
     nama_kab_kota = models.CharField(max_length=50, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_kab_kota'
+    class Meta(CustomModel.Meta):
 
-class SadKecamatan(models.Model):
-    kab_kota = models.ForeignKey(SadKabKota, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_kab_kota"
+
+
+class SadKecamatan(CustomModel):
+    kab_kota = models.ForeignKey(
+        SadKabKota, models.DO_NOTHING, blank=True, null=True
+    )
     kode_kecamatan = models.CharField(max_length=5, blank=True, null=True)
     nama_kecamatan = models.CharField(max_length=250, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_kecamatan'
+    class Meta(CustomModel.Meta):
 
-class SadDesa(models.Model):
-    kecamatan = models.ForeignKey('SadKecamatan', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_kecamatan"
+
+
+class SadDesa(CustomModel):
+    kecamatan = models.ForeignKey(
+        "SadKecamatan", models.DO_NOTHING, blank=True, null=True
+    )
     kode_desa = models.CharField(max_length=5, blank=True, null=True)
     nama_desa = models.CharField(max_length=250, blank=True, null=True)
     alamat = models.CharField(max_length=150, blank=True, null=True)
@@ -55,62 +136,73 @@ class SadDesa(models.Model):
     visi_misi = models.TextField(blank=True, null=True)
     sejarah = models.TextField(blank=True, null=True)
     logo = models.TextField(blank=True, null=True)
-    
-    class Meta:
-        
-        db_table = 'sad_desa'
 
-class SadDusunDukuh(models.Model):
+    class Meta(CustomModel.Meta):
+
+        db_table = "sad_desa"
+
+
+class SadDusunDukuh(CustomModel):
     desa_id = models.IntegerField(blank=True, null=True)
     tipe = models.CharField(max_length=5, blank=True, null=True)
     nama = models.CharField(max_length=70, blank=True, null=True)
-    dusun_dukuh = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    dusun_dukuh = models.ForeignKey(
+        "self", models.DO_NOTHING, blank=True, null=True
+    )
 
-    class Meta:
-        
-        db_table = 'sad_dusun_dukuh'
+    class Meta(CustomModel.Meta):
 
-class SadRt(models.Model):
-    rw = models.ForeignKey('SadRw', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_dusun_dukuh"
+
+
+class SadRt(CustomModel):
+    rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.CharField(max_length=10, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_rt'
+    class Meta(CustomModel.Meta):
+
+        db_table = "sad_rt"
 
 
-class SadRw(models.Model):
-    dusun_dukuh = models.ForeignKey(SadDusunDukuh, models.DO_NOTHING, blank=True, null=True)
+class SadRw(CustomModel):
+    dusun_dukuh = models.ForeignKey(
+        SadDusunDukuh, models.DO_NOTHING, blank=True, null=True
+    )
     desa_id = models.IntegerField(blank=True, null=True)
     rw = models.CharField(max_length=10, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_rw'
+    class Meta(CustomModel.Meta):
 
-class SadKeluarga(models.Model):
-    no_kk = models.CharField(max_length=16, blank=True, null=True)
+        db_table = "sad_rw"
+
+
+class SadKeluarga(CustomModel):
+    no_kk = models.CharField(max_length=16, unique=True)
     alamat = models.CharField(max_length=100, blank=True, null=True)
-    rt = models.ForeignKey('SadRt', models.DO_NOTHING, blank=True, null=True)
+    rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
-    status_kesejahteraan = models.CharField(max_length=30, blank=True, null=True)
+    status_kesejahteraan = models.CharField(
+        max_length=30, blank=True, null=True
+    )
     penghasil = models.IntegerField(blank=True, null=True)
     status_kk = models.CharField(max_length=20, blank=True, null=True)
-    created_by = models.ForeignKey(User, models.DO_NOTHING, db_column='created_by', blank=True, null=True, related_name='keluarga_create_by')
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_by = models.ForeignKey(User, models.DO_NOTHING, db_column='updated_by', blank=True, null=True, related_name='keluarga_update_by')
-    updated_at = models.DateTimeField(blank=True, null=True)
-    deleted_by = models.ForeignKey(User, models.DO_NOTHING, db_column='deleted_by', blank=True, null=True, related_name='keluarga_delete_by')
-    deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_keluarga'
+    class Meta(CustomModel.Meta):
+
+        db_table = "sad_keluarga"
 
 
-class SadPenduduk(models.Model):
-    keluarga = models.ForeignKey(SadKeluarga, models.DO_NOTHING, related_name='anggota', blank=True, null=True)
-    nik = models.CharField(max_length=16, blank=True, null=True)
+class SadPenduduk(CustomModel):
+    keluarga = models.ForeignKey(
+        SadKeluarga,
+        to_field="no_kk",
+        on_delete=models.DO_NOTHING,
+        related_name="anggota",
+        blank=True,
+        null=True,
+    )
+
+    nik = models.CharField(max_length=16, unique=True)
     chip_ektp = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=50, blank=True, null=True)
     tgl_lahir = models.DateField(blank=True, null=True)
@@ -124,7 +216,9 @@ class SadPenduduk(models.Model):
     kewarganegaraan = models.CharField(max_length=5, blank=True, null=True)
     anak_ke = models.CharField(max_length=5, blank=True, null=True)
     golongan_darah = models.CharField(max_length=5, blank=True, null=True)
-    status_dalam_keluarga = models.CharField(max_length=20, blank=True, null=True)
+    status_dalam_keluarga = models.CharField(
+        max_length=20, blank=True, null=True
+    )
     no_paspor = models.CharField(max_length=20, blank=True, null=True)
     suku = models.CharField(max_length=20, blank=True, null=True)
     potensi_diri = models.CharField(max_length=50, blank=True, null=True)
@@ -141,13 +235,16 @@ class SadPenduduk(models.Model):
     tgl_cerai = models.DateField(blank=True, null=True)
     kelainan_fisik = models.CharField(max_length=50, blank=True, null=True)
     foto = models.CharField(max_length=50, blank=True, null=True)
-    pass_field = models.CharField(db_column='pass', max_length=20, blank=True, null=True)  # Field renamed because it was a Python reserved word.
+    pass_field = models.CharField(
+        db_column="pass", max_length=20, blank=True, null=True
+    )  # Field renamed because it was a Python reserved word.
 
-    class Meta:
-        
-        db_table = 'sad_penduduk'
+    class Meta(CustomModel.Meta):
 
-class SadKelahiran(models.Model):
+        db_table = "sad_penduduk"
+
+
+class SadKelahiran(CustomModel):
     nama = models.CharField(max_length=50, blank=True, null=True)
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
     tempat_dilahirkan = models.CharField(max_length=20, blank=True, null=True)
@@ -165,19 +262,16 @@ class SadKelahiran(models.Model):
     nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
     nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
     nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_kelahiran'
+    class Meta(CustomModel.Meta):
 
-class SadKematian(models.Model):
-    penduduk = models.ForeignKey('SadPenduduk', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_kelahiran"
+
+
+class SadKematian(CustomModel):
+    penduduk = models.ForeignKey(
+        "SadPenduduk", models.DO_NOTHING, blank=True, null=True
+    )
     tanggal_kematian = models.DateField(blank=True, null=True)
     sebab_kematian = models.CharField(max_length=50, blank=True, null=True)
     tempat_kematian = models.CharField(max_length=50, blank=True, null=True)
@@ -185,18 +279,13 @@ class SadKematian(models.Model):
     nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
     nama_saksi_satu = models.CharField(max_length=50, blank=True, null=True)
     nama_saksi_dua = models.CharField(max_length=50, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_kematian'
+    class Meta(CustomModel.Meta):
 
-class SadLahirmati(models.Model):
+        db_table = "sad_kematian"
+
+
+class SadLahirmati(CustomModel):
     lama_kandungan = models.CharField(max_length=20, blank=True, null=True)
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
     tanggal_lahir = models.DateField(blank=True, null=True)
@@ -212,19 +301,16 @@ class SadLahirmati(models.Model):
     nama_ayah = models.CharField(max_length=50, blank=True, null=True)
     nama_ibu = models.CharField(max_length=50, blank=True, null=True)
     nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_lahirmati'
+    class Meta(CustomModel.Meta):
 
-class SadPindahKeluar(models.Model):
-    keluarga = models.ForeignKey(SadKeluarga, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sad_lahirmati"
+
+
+class SadPindahKeluar(CustomModel):
+    keluarga = models.ForeignKey(
+        SadKeluarga, models.DO_NOTHING, blank=True, null=True
+    )
     pemohon = models.CharField(max_length=30, blank=True, null=True)
     alasan = models.CharField(max_length=100, blank=True, null=True)
     provinsi_tujuan = models.CharField(max_length=20, blank=True, null=True)
@@ -238,38 +324,32 @@ class SadPindahKeluar(models.Model):
     no_telp = models.CharField(max_length=13, blank=True, null=True)
     klarifikasi_pindah = models.CharField(max_length=50, blank=True, null=True)
     jenis_kepindahan = models.CharField(max_length=50, blank=True, null=True)
-    status_no_kk_pindah = models.CharField(max_length=50, blank=True, null=True)
+    status_no_kk_pindah = models.CharField(
+        max_length=50, blank=True, null=True
+    )
     rencana_tgl_pindah = models.DateField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_pindah_keluar'
+    class Meta(CustomModel.Meta):
 
-class SadPindahMasuk(models.Model):
+        db_table = "sad_pindah_keluar"
+
+
+class SadPindahMasuk(CustomModel):
     no_kk = models.CharField(max_length=18, blank=True, null=True)
-    status_no_kk_pindah = models.CharField(max_length=20, blank=True, null=True)
+    status_no_kk_pindah = models.CharField(
+        max_length=20, blank=True, null=True
+    )
     tanggal_kedatangan = models.DateField(blank=True, null=True)
     alamat = models.CharField(max_length=100, blank=True, null=True)
     rt_id = models.IntegerField(blank=True, null=True)
     yang_datang = models.TextField(blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_pindah_masuk'
+    class Meta(CustomModel.Meta):
 
-class SadSarpras(models.Model):
+        db_table = "sad_pindah_masuk"
+
+
+class SadSarpras(CustomModel):
     nama_sarpras = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
     tgl_awal = models.DateField(blank=True, null=True)
@@ -280,18 +360,13 @@ class SadSarpras(models.Model):
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
     foto = models.CharField(max_length=200, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_sarpras'
+    class Meta(CustomModel.Meta):
 
-class SadInventaris(models.Model):
+        db_table = "sad_sarpras"
+
+
+class SadInventaris(CustomModel):
     nama_inventaris = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
     tgl_awal = models.DateField(blank=True, null=True)
@@ -302,35 +377,29 @@ class SadInventaris(models.Model):
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
     foto = models.CharField(max_length=200, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_inventaris'
+    class Meta(CustomModel.Meta):
 
-class SadSurat(models.Model):
+        db_table = "sad_inventaris"
+
+
+class SadSurat(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)
     sifat = models.CharField(max_length=50, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sad_surat'
+    class Meta(CustomModel.Meta):
 
-class SadDetailSurat(models.Model):
+        db_table = "sad_surat"
+
+
+class SadDetailSurat(CustomModel):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
-    surat = models.ForeignKey('SadSurat', models.DO_NOTHING, blank=True, null=True)
-    pegawai = models.ForeignKey(Pegawai, models.DO_NOTHING, blank=True, null=True)
+    surat = models.ForeignKey(
+        "SadSurat", models.DO_NOTHING, blank=True, null=True
+    )
+    pegawai = models.ForeignKey(
+        Pegawai, models.DO_NOTHING, blank=True, null=True
+    )
     lampiran = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.CharField(max_length=50, blank=True, null=True)
     tempat_tujuan = models.CharField(max_length=50, blank=True, null=True)
@@ -349,159 +418,289 @@ class SadDetailSurat(models.Model):
     jenis_hiburan = models.CharField(max_length=50, blank=True, null=True)
     nama_grup = models.CharField(max_length=50, blank=True, null=True)
     pimpinan_acara = models.CharField(max_length=50, blank=True, null=True)
-    jumlah_keluarga_yg_pindah = models.CharField(max_length=50, blank=True, null=True)
+    jumlah_keluarga_yg_pindah = models.CharField(
+        max_length=50, blank=True, null=True
+    )
     hubungan = models.CharField(max_length=50, blank=True, null=True)
-    data_penduduk_luar_desa = models.CharField(max_length=50, blank=True, null=True)
-    # created_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='created_by', blank=True, null=True)
-    # created_at = models.DateTimeField(blank=True, null=True)
-    # updated_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='updated_by', blank=True, null=True)
-    # updated_at = models.DateTimeField(blank=True, null=True)
-    # deleted_by = models.ForeignKey('Users', models.DO_NOTHING, db_column='deleted_by', blank=True, null=True)
-    # deleted_at = models.DateTimeField(blank=True, null=True)
+    data_penduduk_luar_desa = models.CharField(
+        max_length=50, blank=True, null=True
+    )
 
-    class Meta:
-        
-        db_table = 'sad_detail_surat'
+    class Meta(CustomModel.Meta):
 
-class SettingDesa(models.Model):
+        db_table = "sad_detail_surat"
+
+
+class SettingDesa(CustomModel):
     desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)
     key = models.CharField(max_length=20, blank=True, null=True)
     value = models.CharField(max_length=100, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'setting_desa'
+    class Meta(CustomModel.Meta):
+
+        db_table = "setting_desa"
 
 
-class SigBidang(models.Model):
+class SigBidang(CustomModel):
     nbt = models.IntegerField(blank=True, null=True)
-    sig_rt = models.ForeignKey('SigRt', models.DO_NOTHING, blank=True, null=True)
+    sig_rt = models.ForeignKey(
+        "SigRt", models.DO_NOTHING, blank=True, null=True
+    )
 
-    class Meta:
-        
-        db_table = 'sig_bidang'
+    class Meta(CustomModel.Meta):
 
-class SigBidang2(models.Model):
+        db_table = "sig_bidang"
+
+
+class SigBidang2(CustomModel):
     nbt = models.IntegerField(blank=True, null=True)
-    sig_rt2 = models.ForeignKey('SigRt2', models.DO_NOTHING, blank=True, null=True)
+    sig_rt2 = models.ForeignKey(
+        "SigRt2", models.DO_NOTHING, blank=True, null=True
+    )
 
-    class Meta:
-        
-        db_table = 'sig_bidang2'
+    class Meta(CustomModel.Meta):
 
-class SigDesa(models.Model):
+        db_table = "sig_bidang2"
+
+
+class SigDesa(CustomModel):
     nama_desa = models.CharField(max_length=250, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_desa'
+    class Meta(CustomModel.Meta):
 
-class SigDusun(models.Model):
-    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_desa"
+
+
+class SigDusun(CustomModel):
+    sig_desa = models.ForeignKey(
+        SigDesa, models.DO_NOTHING, blank=True, null=True
+    )
     nama_dusun = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_dusun'
+    class Meta(CustomModel.Meta):
 
-class SigDukuh(models.Model):
-    sig_dusun = models.ForeignKey(SigDusun, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_dusun"
+
+
+class SigDukuh(CustomModel):
+    sig_dusun = models.ForeignKey(
+        SigDusun, models.DO_NOTHING, blank=True, null=True
+    )
     nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_dukuh'
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_dukuh"
 
 
-class SigDukuh2(models.Model):
-    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
+class SigDukuh2(CustomModel):
+    sig_desa = models.ForeignKey(
+        SigDesa, models.DO_NOTHING, blank=True, null=True
+    )
     nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_dukuh2'
+    class Meta(CustomModel.Meta):
 
-class SigRw(models.Model):
-    sig_dukuh = models.ForeignKey(SigDukuh, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_dukuh2"
+
+
+class SigRw(CustomModel):
+    sig_dukuh = models.ForeignKey(
+        SigDukuh, models.DO_NOTHING, blank=True, null=True
+    )
     rw = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_rw'
+    class Meta(CustomModel.Meta):
 
-class SigRt(models.Model):
-    sig_rw = models.ForeignKey('SigRw', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_rw"
+
+
+class SigRt(CustomModel):
+    sig_rw = models.ForeignKey(
+        "SigRw", models.DO_NOTHING, blank=True, null=True
+    )
     rt = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    
-    class Meta:
-        
-        db_table = 'sig_rt'
 
-class SigRw2(models.Model):
-    sig_dukuh2 = models.ForeignKey(SigDukuh2, models.DO_NOTHING, blank=True, null=True)
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_rt"
+
+
+class SigRw2(CustomModel):
+    sig_dukuh2 = models.ForeignKey(
+        SigDukuh2, models.DO_NOTHING, blank=True, null=True
+    )
     rw = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_rw2'
+    class Meta(CustomModel.Meta):
 
-class SigRt2(models.Model):
-    sig_rw2 = models.ForeignKey('SigRw2', models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_rw2"
+
+
+class SigRt2(CustomModel):
+    sig_rw2 = models.ForeignKey(
+        "SigRw2", models.DO_NOTHING, blank=True, null=True
+    )
     rt = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
-    
-    class Meta:
-        
-        db_table = 'sig_rt2'
 
-class SigSadDesa(models.Model):
-    sad_desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)
-    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
+    class Meta(CustomModel.Meta):
 
-    class Meta:
-        
-        db_table = 'sig_sad_desa'
+        db_table = "sig_rt2"
 
-class SigSadBidang(models.Model):
-    sad_penduduk = models.ForeignKey(SadPenduduk, models.DO_NOTHING, blank=True, null=True)
-    sig_bidang = models.ForeignKey(SigBidang, models.DO_NOTHING, blank=True, null=True)
+
+class SigSadDesa(CustomModel):
+    sad_desa = models.ForeignKey(
+        SadDesa, models.DO_NOTHING, blank=True, null=True
+    )
+    sig_desa = models.ForeignKey(
+        SigDesa, models.DO_NOTHING, blank=True, null=True
+    )
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_sad_desa"
+
+
+class SigSadBidang(CustomModel):
+    sad_penduduk = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    sig_bidang = models.ForeignKey(
+        SigBidang, models.DO_NOTHING, blank=True, null=True
+    )
     pemilik = models.CharField(max_length=100, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_sad_bidang'
+    class Meta(CustomModel.Meta):
 
-class SigSadBidang2(models.Model):
-    sad_penduduk = models.ForeignKey(SadPenduduk, models.DO_NOTHING, blank=True, null=True)
-    sig_bidang2 = models.ForeignKey(SigBidang2, models.DO_NOTHING, blank=True, null=True)
+        db_table = "sig_sad_bidang"
+
+
+class SigSadBidang2(CustomModel):
+    sad_penduduk = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    sig_bidang2 = models.ForeignKey(
+        SigBidang2, models.DO_NOTHING, blank=True, null=True
+    )
     pemilik = models.CharField(max_length=100, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
 
-    class Meta:
-        
-        db_table = 'sig_sad_bidang2'
+    class Meta(CustomModel.Meta):
 
-class Slider(models.Model):
+        db_table = "sig_sad_bidang2"
+
+
+class Slider(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)
     deskripsi = models.TextField(blank=True, null=True)
-    gambar = models.BinaryField(blank=True, null=True)
+    gambar = models.TextField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "slider"
+
+
+class KategoriArtikel(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        
-        db_table = 'slider'
+
+        db_table = "KategoriArtikel"
+
+
+class Artikel(models.Model):
+    kategori = models.ForeignKey(
+        KategoriArtikel, models.DO_NOTHING, blank=True, null=True
+    )
+    judul = models.CharField(max_length=100, blank=True, null=True)
+    isi = models.TextField(blank=True, null=True)
+    gambar = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "Artikel"
+
+
+class KategoriPotensi(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        db_table = "KategoriPotensi"
+
+
+class Potensi(models.Model):
+    kategori = models.ForeignKey(
+        KategoriPotensi, models.DO_NOTHING, blank=True, null=True
+    )
+    bidang = models.CharField(max_length=100, blank=True, null=True)
+    judul = models.CharField(max_length=100, blank=True, null=True)
+    harga = models.CharField(max_length=100, blank=True, null=True)
+    isi = models.TextField(blank=True, null=True)
+    geometry = models.TextField(blank=True, null=True)
+    centroid = models.TextField(blank=True, null=True)
+    gambar = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "Potensi"
+
+
+class KategoriInformasi(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+
+        db_table = "KategoriInformasi"
+
+
+class Informasi(models.Model):
+    kategori = models.ForeignKey(
+        KategoriInformasi, models.DO_NOTHING, blank=True, null=True
+    )
+    judul = models.CharField(max_length=100, blank=True, null=True)
+    tempat = models.CharField(max_length=100, blank=True, null=True)
+    tanggal = models.DateField(blank=True, null=True)
+    mulai = models.CharField(max_length=10, blank=True, null=True)
+    selesai = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+
+        db_table = "Informasi"
+
+
+class KategoriLapor(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+
+        db_table = "KategoriLapor"
+
+
+class Lapor(models.Model):
+    kategori = models.ForeignKey(
+        KategoriLapor, models.DO_NOTHING, blank=True, null=True
+    )
+    judul = models.CharField(max_length=100, blank=True, null=True)
+    isi = models.TextField(blank=True, null=True)
+    gambar = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "Lapor"

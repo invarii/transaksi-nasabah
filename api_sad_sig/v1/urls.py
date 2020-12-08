@@ -34,6 +34,14 @@ from .views import (
   SigDukuh2ViewSet,
   SigRt2ViewSet,
   SigRw2ViewSet,
+  KategoriArtikelViewSet,
+  KategoriInformasiViewSet,
+  KategoriLaporViewSet,
+  KategoriPotensiViewSet,
+  ArtikelViewSet,
+  LaporViewSet,
+  InformasiViewSet,
+  PotensiViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -67,11 +75,17 @@ router.register(r'sigrt', SigRtViewSet)
 router.register(r'sigdukuh2', SigDukuh2ViewSet)
 router.register(r'sigrw2', SigRw2ViewSet)
 router.register(r'sigrt2', SigRt2ViewSet)
-
+router.register(r'kategorilapor', KategoriLaporViewSet)
+router.register(r'kategoriinformasi', KategoriInformasiViewSet)
+router.register(r'kategoriartikel', KategoriArtikelViewSet)
+router.register(r'kategoripotensi', KategoriPotensiViewSet)
+router.register(r'artikel', ArtikelViewSet),
+router.register(r'informasi', InformasiViewSet),
+router.register(r'potensi', PotensiViewSet),
+router.register(r'lapor', LaporViewSet),
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('token/', TokenObtainPairView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
-    
+    path("", include(router.urls)),
+    path("token/", TokenObtainPairView.as_view()),
+    path("token/refresh/", TokenRefreshView.as_view()),
 ]
