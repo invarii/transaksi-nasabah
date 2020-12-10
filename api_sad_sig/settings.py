@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-
 import environ
 from pathlib import Path
 from datetime import timedelta
@@ -36,7 +35,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
 # Application definition
 
 INSTALLED_APPS = [
-    "api_sad_sig.v1",
+    "v1.apps.V1Config",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -89,16 +88,27 @@ DATABASES = {"default": env.db_url("DATABASE_URL")}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation." "MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "NumericPasswordValidator"
+        ),
     },
 ]
 
@@ -120,8 +130,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_ROOT = env.str("STATIC_ROOT")
-
 STATIC_URL = "/static/"
+
+MEDIA_ROOT = env.str("MEDIA_ROOT")
+MEDIA_URL = "/media/"
+
 
 # CORS_ORIGIN_WHITELIST = [
 #     "https://example.com",

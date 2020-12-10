@@ -1,7 +1,15 @@
+import os
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+
+
+def file_destination(instance, filename):
+    extension = os.path.splitext(filename)[1]
+    new_filename = timezone.now().strftime("%Y%m%d%H%M%S")
+    folder_name = instance.__class__.__name__.lower()
+    return f"{folder_name}/{new_filename}{extension}"
 
 
 class CustomModelQuerySet(models.QuerySet):
@@ -610,7 +618,9 @@ class SigSadBidang2(CustomModel):
 class Slider(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)
     deskripsi = models.TextField(blank=True, null=True)
-    gambar = models.TextField(blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta(CustomModel.Meta):
 
@@ -619,6 +629,9 @@ class Slider(CustomModel):
 
 class KategoriArtikel(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.nama
 
     class Meta:
 
@@ -631,7 +644,9 @@ class Artikel(models.Model):
     )
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
-    gambar = models.TextField(blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta:
 
@@ -640,6 +655,9 @@ class Artikel(models.Model):
 
 class KategoriPotensi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.nama
 
     class Meta:
         db_table = "KategoriPotensi"
@@ -655,7 +673,9 @@ class Potensi(models.Model):
     isi = models.TextField(blank=True, null=True)
     geometry = models.TextField(blank=True, null=True)
     centroid = models.TextField(blank=True, null=True)
-    gambar = models.TextField(blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta:
 
@@ -664,6 +684,9 @@ class Potensi(models.Model):
 
 class KategoriInformasi(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.nama
 
     class Meta:
 
@@ -688,6 +711,9 @@ class Informasi(models.Model):
 class KategoriLapor(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
 
+    def __str__(self):
+        return self.nama
+
     class Meta:
 
         db_table = "KategoriLapor"
@@ -699,7 +725,9 @@ class Lapor(models.Model):
     )
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
-    gambar = models.TextField(blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta:
 

@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
+markdown = "*"
 
 [packages]
 django = "*"
@@ -20,7 +21,7 @@ xlrd = "*"
 gunicorn = "*"
 pypx = "*"
 openpyxl = "*"
-markdown = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.8"
