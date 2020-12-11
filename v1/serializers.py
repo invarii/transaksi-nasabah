@@ -1,77 +1,45 @@
-from django.contrib.auth.models import User, Group
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
 from rest_framework import serializers
 from .models import (
-  Pegawai,
-  SadProvinsi,
-  SadKabKota,
-  SadKecamatan,
-  SadDesa,
-  SadDusunDukuh,
-  SadRw,
-  SadRt,
-  SadKeluarga,
-  SadPenduduk,
-  SadKelahiran,
-  SadKematian,
-  SadLahirmati,
-  SadPindahKeluar,
-  SadPindahMasuk,
-  SadSarpras,
-  SadInventaris,
-  SadSurat,
-  SadDetailSurat,
-  SigBidang,
-  SigDesa,
-  SigRw,
-  SigRt,
-  SigRw2,
-  SigRt2,
-  SigDusun,
-  SigDukuh,
-  SigDukuh2,
-  Slider,
-  KategoriArtikel,
-  Artikel,
-  KategoriInformasi,
-  Informasi,
-  KategoriPotensi,
-  Potensi,
-  KategoriLapor,
-  Lapor,
+    Pegawai,
+    SadProvinsi,
+    SadKabKota,
+    SadKecamatan,
+    SadDesa,
+    SadDusunDukuh,
+    SadRw,
+    SadRt,
+    SadKeluarga,
+    SadPenduduk,
+    SadKelahiran,
+    SadKematian,
+    SadLahirmati,
+    SadPindahKeluar,
+    SadPindahMasuk,
+    SadSarpras,
+    SadInventaris,
+    SadSurat,
+    SadDetailSurat,
+    SigBidang,
+    SigDesa,
+    SigRw,
+    SigRt,
+    SigRw2,
+    SigRt2,
+    SigDusun,
+    SigDukuh,
+    SigDukuh2,
+    Slider,
+    KategoriArtikel,
+    Artikel,
+    KategoriInformasi,
+    Informasi,
+    KategoriPotensi,
+    Potensi,
+    KategoriLapor,
+    Lapor,
 )
-
-
-class GroupSerializer(DynamicModelSerializer):
-    class Meta:
-        model = Group
-        name = "data"
-        fields = ["id", "name"]
-
-
-class UserSerializer(DynamicModelSerializer):
-    role = serializers.CharField(source="groups.first")
-
-    class Meta:
-        model = User
-        name = "data"
-        fields = ["id", "username", "email", "groups", "role"]
-
-    def create(self, validated_data):
-        user = super().create(validated_data)
-        user.is_active = True
-        user.set_password(validated_data["password"])
-        user.save()
-
-        return user
-
-    def update(self, instance, validated_data):
-        user = super().update(instance, validated_data)
-        user.set_password(validated_data["password"])
-        user.save()
-
-        return user
 
 
 class CustomSerializer(DynamicModelSerializer):
@@ -342,61 +310,81 @@ class SigBidangSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+
 class SliderSerializer(DynamicModelSerializer):
-  class Meta:
-    model = Slider
-    name = 'data'
-    exclude = []
+    class Meta:
+        model = Slider
+        name = "data"
+        exclude = []
+
 
 class KategoriArtikelSerializer(DynamicModelSerializer):
-  class Meta:
-    model = KategoriArtikel
-    name = 'data'
-    exclude = []
+    class Meta:
+        model = KategoriArtikel
+        name = "data"
+        exclude = []
+
 
 class KategoriInformasiSerializer(DynamicModelSerializer):
-  class Meta:
-    model = KategoriInformasi
-    name = 'data'
-    exclude = []
+    class Meta:
+        model = KategoriInformasi
+        name = "data"
+        exclude = []
+
 
 class KategoriPotensiSerializer(DynamicModelSerializer):
-  class Meta:
-    model = KategoriPotensi
-    name = 'data'
-    exclude = []
+    class Meta:
+        model = KategoriPotensi
+        name = "data"
+        exclude = []
+
 
 class KategoriLaporSerializer(DynamicModelSerializer):
-  class Meta:
-    model = KategoriLapor
-    name = 'data'
-    exclude = []
+    class Meta:
+        model = KategoriLapor
+        name = "data"
+        exclude = []
+
 
 class LaporSerializer(DynamicModelSerializer):
-  kategori = DynamicRelationField('KategoriLaporSerializer', deferred=True, embed=True)
-  class Meta:
-    model = Lapor
-    name = 'data'
-    exclude = []
+    kategori = DynamicRelationField(
+        "KategoriLaporSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Lapor
+        name = "data"
+        exclude = []
+
 
 class ArtikelSerializer(DynamicModelSerializer):
-  kategori = DynamicRelationField('KategoriArtikelSerializer', deferred=True, embed=True)
-  class Meta:
-    model = Artikel
-    name = 'data'
-    exclude = []
+    kategori = DynamicRelationField(
+        "KategoriArtikelSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Artikel
+        name = "data"
+        exclude = []
+
 
 class InformasiSerializer(DynamicModelSerializer):
-  kategori = DynamicRelationField('KategoriInformasiSerializer', deferred=True, embed=True)
-  class Meta:
-    model = Informasi
-    name = 'data'
-    exclude = []
+    kategori = DynamicRelationField(
+        "KategoriInformasiSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Informasi
+        name = "data"
+        exclude = []
+
 
 class PotensiSerializer(DynamicModelSerializer):
-  kategori = DynamicRelationField('KategoriPotensiSerializer', deferred=True, embed=True)
-  class Meta:
-    model = Potensi
-    name = 'data'
-    exclude = []
+    kategori = DynamicRelationField(
+        "KategoriPotensiSerializer", deferred=True, embed=True
+    )
 
+    class Meta:
+        model = Potensi
+        name = "data"
+        exclude = []
