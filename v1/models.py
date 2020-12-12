@@ -150,17 +150,13 @@ class SadDesa(CustomModel):
         db_table = "sad_desa"
 
 
-class SadDusunDukuh(CustomModel):
-    desa_id = models.IntegerField(blank=True, null=True)
-    tipe = models.CharField(max_length=5, blank=True, null=True)
+class SadDusun(CustomModel):
+    desa = models.ForeignKey("SadDesa", models.DO_NOTHING, blank=True, null=True)
     nama = models.CharField(max_length=70, blank=True, null=True)
-    dusun_dukuh = models.ForeignKey(
-        "self", models.DO_NOTHING, blank=True, null=True
-    )
 
     class Meta(CustomModel.Meta):
 
-        db_table = "sad_dusun_dukuh"
+        db_table = "sad_dusun"
 
 
 class SadRt(CustomModel):
@@ -173,10 +169,9 @@ class SadRt(CustomModel):
 
 
 class SadRw(CustomModel):
-    dusun_dukuh = models.ForeignKey(
-        SadDusunDukuh, models.DO_NOTHING, blank=True, null=True
+    dusun = models.ForeignKey(
+        SadDusun, models.DO_NOTHING, blank=True, null=True
     )
-    desa_id = models.IntegerField(blank=True, null=True)
     rw = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
@@ -216,6 +211,7 @@ class SadPenduduk(CustomModel):
     tgl_lahir = models.DateField(blank=True, null=True)
     tempat_lahir = models.CharField(max_length=50, blank=True, null=True)
     jk = models.CharField(max_length=12, blank=True, null=True)
+    alamat = models.CharField(max_length=100, blank=True, null=True)
     agama = models.CharField(max_length=20, blank=True, null=True)
     pendidikan = models.CharField(max_length=20, blank=True, null=True)
     pekerjaan = models.CharField(max_length=50, blank=True, null=True)
@@ -642,6 +638,7 @@ class Artikel(models.Model):
     kategori = models.ForeignKey(
         KategoriArtikel, models.DO_NOTHING, blank=True, null=True
     )
+    tgl = models.DateField(blank=True, null=True)
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
     gambar = models.ImageField(
@@ -732,3 +729,52 @@ class Lapor(models.Model):
     class Meta:
 
         db_table = "Lapor"
+
+class SuratDomisili(models.Model):
+    no_surat = models.CharField(max_length=50, blank=True, null=True)
+    pegawai = models.ForeignKey(
+        Pegawai, models.DO_NOTHING, blank=True, null=True
+    )
+    penduduk = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    keperluan = models.TextField(blank=True, null=True)
+
+class SuratSkck(models.Model):
+    no_surat = models.CharField(max_length=50, blank=True, null=True)
+    pegawai = models.ForeignKey(
+        Pegawai, models.DO_NOTHING, blank=True, null=True
+    )
+    penduduk = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    keterangan = models.TextField(blank=True, null=True)
+    keperluan = models.TextField(blank=True, null=True)
+
+class SuratKelahiran(models.Model):
+    no_surat = models.CharField(max_length=50, blank=True, null=True)
+    pegawai = models.ForeignKey(
+        Pegawai, models.DO_NOTHING, blank=True, null=True
+    )
+    ayah = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    ibu = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    saksi1 = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    saksi2 = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    nama = models.models.CharField(max_length=100, blank=True, null=True)
+    jk = models.CharField(max_length=15, blank=True, null=True)
+    tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
+    tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
+    tgl = models.DateField(blank=True, null=True)
+    jenis_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    kelahiran_ke = models.CharField(max_length=15, blank=True, null=True)
+    penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    berat = models.CharField(max_length=15, blank=True, null=True)
+    panjang = models.CharField(max_length=15, blank=True, null=True)

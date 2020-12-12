@@ -2,43 +2,45 @@ from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
 from rest_framework import serializers
 from .models import (
-    Pegawai,
-    SadProvinsi,
-    SadKabKota,
-    SadKecamatan,
-    SadDesa,
-    SadDusunDukuh,
-    SadRw,
-    SadRt,
-    SadKeluarga,
-    SadPenduduk,
-    SadKelahiran,
-    SadKematian,
-    SadLahirmati,
-    SadPindahKeluar,
-    SadPindahMasuk,
-    SadSarpras,
-    SadInventaris,
-    SadSurat,
-    SadDetailSurat,
-    SigBidang,
-    SigDesa,
-    SigRw,
-    SigRt,
-    SigRw2,
-    SigRt2,
-    SigDusun,
-    SigDukuh,
-    SigDukuh2,
-    Slider,
-    KategoriArtikel,
-    Artikel,
-    KategoriInformasi,
-    Informasi,
-    KategoriPotensi,
-    Potensi,
-    KategoriLapor,
-    Lapor,
+  Pegawai,
+  SadProvinsi,
+  SadKabKota,
+  SadKecamatan,
+  SadDesa,
+  SadDusun,
+  SadRw,
+  SadRt,
+  SadKeluarga,
+  SadPenduduk,
+  SadKelahiran,
+  SadKematian,
+  SadLahirmati,
+  SadPindahKeluar,
+  SadPindahMasuk,
+  SadSarpras,
+  SadInventaris,
+  SadSurat,
+  SadDetailSurat,
+  SigSadBidang,
+  SigSadBidang2,
+  SigBidang,
+  SigDesa,
+  SigRw,
+  SigRt,
+  SigRw2,
+  SigRt2,
+  SigDusun,
+  SigDukuh,
+  SigDukuh2,
+  Slider,
+  KategoriArtikel,
+  Artikel,
+  KategoriInformasi,
+  Informasi,
+  KategoriPotensi,
+  Potensi,
+  KategoriLapor,
+  Lapor,
 )
 
 
@@ -68,21 +70,21 @@ class PegawaiSerializer(CustomSerializer):
     class Meta:
         model = Pegawai
         name = "data"
-        fields = ["id", "nama", "jabatan"]
+        exclude = []
 
 
 class SadProvinsiSerializer(CustomSerializer):
     class Meta:
         model = SadProvinsi
         name = "data"
-        fields = ["id", "kode_provinsi", "nama_provinsi"]
+        exclude = []
 
 
 class SadKabKotaSerializer(CustomSerializer):
     class Meta:
         model = SadKabKota
         name = "data"
-        fields = ["id", "provinsi", "kode_kab_kota", "nama_kab_kota"]
+        exclude = []
 
 
 class SadKecamatanSerializer(CustomSerializer):
@@ -93,7 +95,7 @@ class SadKecamatanSerializer(CustomSerializer):
     class Meta:
         model = SadKecamatan
         name = "data"
-        fields = ["id", "kode_kecamatan", "nama_kecamatan", "kab_kota"]
+        exclude = []
 
 
 class SadDesaSerializer(CustomSerializer):
@@ -104,28 +106,38 @@ class SadDesaSerializer(CustomSerializer):
     class Meta:
         model = SadDesa
         name = "data"
-        fields = ["id", "kode_desa", "nama_desa", "kecamatan"]
+        exclude = []
 
 
-class SadDusunDukuhSerializer(CustomSerializer):
+class SadDusunSerializer(CustomSerializer):
+    desa = DynamicRelationField(
+        "SadDesaSerializer", deferred=False, embed=True
+    )
+
     class Meta:
-        model = SadDusunDukuh
+        model = SadDusun
         name = "data"
-        fields = ["id", "nama"]
+        exclude = []
 
 
 class SadRwSerializer(CustomSerializer):
+    dusun = DynamicRelationField(
+        "SadDusunSerializer", deferred=False, embed=True
+    )
     class Meta:
         model = SadRw
         name = "data"
-        fields = ["id", "rw"]
+        exclude = []
 
 
 class SadRtSerializer(CustomSerializer):
+    rw = DynamicRelationField(
+        "SadRwSerializer", deferred=False, embed=True
+    )
     class Meta:
         model = SadRt
         name = "data"
-        fields = ["id", "rt"]
+        exclude = []
 
 
 class SadKeluargaSerializer(CustomSerializer):
@@ -307,6 +319,24 @@ class SigBidangSerializer(CustomSerializer):
 
     class Meta:
         model = SigBidang
+        name = "data"
+        exclude = []
+
+class SigSadBidangSerializer(CustomSrializer):
+    sad_penduduk = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
+    sig_bidang = DynamicRelationField("SigBidangSerializer", deferred=True, embed=True)
+
+    class Meta:
+        model = SigSadBidang
+        name = "data"
+        exclude = []
+
+class SigSadBidang2Serializer(CustomSrializer):
+    sad_penduduk = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
+    sig_bidang2 = DynamicRelationField("SigBidang2Serializer", deferred=True, embed=True)
+
+    class Meta:
+        model = SigSadBidang2
         name = "data"
         exclude = []
 
