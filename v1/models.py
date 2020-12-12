@@ -151,7 +151,9 @@ class SadDesa(CustomModel):
 
 
 class SadDusun(CustomModel):
-    desa = models.ForeignKey("SadDesa", models.DO_NOTHING, blank=True, null=True)
+    desa = models.ForeignKey(
+        "SadDesa", models.DO_NOTHING, blank=True, null=True
+    )
     nama = models.CharField(max_length=70, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
@@ -730,6 +732,7 @@ class Lapor(models.Model):
 
         db_table = "Lapor"
 
+
 class SuratDomisili(models.Model):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
@@ -739,6 +742,7 @@ class SuratDomisili(models.Model):
         SadPenduduk, models.DO_NOTHING, blank=True, null=True
     )
     keperluan = models.TextField(blank=True, null=True)
+
 
 class SuratSkck(models.Model):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
@@ -751,24 +755,44 @@ class SuratSkck(models.Model):
     keterangan = models.TextField(blank=True, null=True)
     keperluan = models.TextField(blank=True, null=True)
 
+
 class SuratKelahiran(models.Model):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
-        Pegawai, models.DO_NOTHING, blank=True, null=True
+        Pegawai,
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
     )
     ayah = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+        SadPenduduk,
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name='ayah_surat_lahir',
     )
     ibu = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+        SadPenduduk,
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name='ibu_surat_lahir',
     )
     saksi1 = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+        SadPenduduk,
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name='saksi1_surat_lahir',
     )
     saksi2 = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+        SadPenduduk,
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name='saksi2_surat_lahir',
     )
-    nama = models.models.CharField(max_length=100, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
     jk = models.CharField(max_length=15, blank=True, null=True)
     tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
     tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)

@@ -160,7 +160,6 @@ class SadDusunViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadRwViewSet(CustomView):
     queryset = SadRw.objects.all().order_by("id")
     serializer_class = SadRwSerializer
@@ -208,7 +207,6 @@ class SadKeluargaViewSet(DynamicModelViewSet):
                 status["data_redundan"] += 1
                 continue
             except Exception as e:
-                print(e)
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
@@ -253,7 +251,6 @@ class SadPendudukViewSet(CustomView):
         file = request.FILES["file"]
         data = pandas.read_excel(file)
         for item in data.to_dict("records"):
-            print(item["keluarga"])
             if not item["nik"]:
                 status["data_gagal"] += 1
                 continue
@@ -273,7 +270,6 @@ class SadPendudukViewSet(CustomView):
                 status["data_redundan"] += 1
                 continue
             except Exception as e:
-                print(e)
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
@@ -353,15 +349,18 @@ class SadDetailSuratViewSet(CustomView):
     serializer_class = SadDetailSuratSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+
 class SigSadBidangViewSet(CustomView):
     queryset = SigSadBidang.objects.all().order_by("id")
     serializer_class = SigSadBidangSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class SigSadBidang2ViewSet(CustomView):
     queryset = SigSadBidang2.objects.all().order_by("id")
     serializer_class = SigSadBidang2Serializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")

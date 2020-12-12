@@ -28,7 +28,6 @@ router.registry.extend(v1_urls.router.registry)
 
 url_collections = []
 url_collections.extend(users_urls.urlpatterns)
-print(url_collections)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

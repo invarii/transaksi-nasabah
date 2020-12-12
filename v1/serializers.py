@@ -2,45 +2,45 @@ from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
 from rest_framework import serializers
 from .models import (
-  Pegawai,
-  SadProvinsi,
-  SadKabKota,
-  SadKecamatan,
-  SadDesa,
-  SadDusun,
-  SadRw,
-  SadRt,
-  SadKeluarga,
-  SadPenduduk,
-  SadKelahiran,
-  SadKematian,
-  SadLahirmati,
-  SadPindahKeluar,
-  SadPindahMasuk,
-  SadSarpras,
-  SadInventaris,
-  SadSurat,
-  SadDetailSurat,
-  SigSadBidang,
-  SigSadBidang2,
-  SigBidang,
-  SigDesa,
-  SigRw,
-  SigRt,
-  SigRw2,
-  SigRt2,
-  SigDusun,
-  SigDukuh,
-  SigDukuh2,
-  Slider,
-  KategoriArtikel,
-  Artikel,
-  KategoriInformasi,
-  Informasi,
-  KategoriPotensi,
-  Potensi,
-  KategoriLapor,
-  Lapor,
+    Pegawai,
+    SadProvinsi,
+    SadKabKota,
+    SadKecamatan,
+    SadDesa,
+    SadDusun,
+    SadRw,
+    SadRt,
+    SadKeluarga,
+    SadPenduduk,
+    SadKelahiran,
+    SadKematian,
+    SadLahirmati,
+    SadPindahKeluar,
+    SadPindahMasuk,
+    SadSarpras,
+    SadInventaris,
+    SadSurat,
+    SadDetailSurat,
+    SigSadBidang,
+    SigSadBidang2,
+    SigBidang,
+    SigDesa,
+    SigRw,
+    SigRt,
+    SigRw2,
+    SigRt2,
+    SigDusun,
+    SigDukuh,
+    SigDukuh2,
+    Slider,
+    KategoriArtikel,
+    Artikel,
+    KategoriInformasi,
+    Informasi,
+    KategoriPotensi,
+    Potensi,
+    KategoriLapor,
+    Lapor,
 )
 
 
@@ -56,7 +56,6 @@ class CustomSerializer(DynamicModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context["request"].user
-        print(user)
         validated_data["updated_by"] = user
         data = super().update(instance, validated_data)
         data.save()
@@ -124,6 +123,7 @@ class SadRwSerializer(CustomSerializer):
     dusun = DynamicRelationField(
         "SadDusunSerializer", deferred=False, embed=True
     )
+
     class Meta:
         model = SadRw
         name = "data"
@@ -131,9 +131,8 @@ class SadRwSerializer(CustomSerializer):
 
 
 class SadRtSerializer(CustomSerializer):
-    rw = DynamicRelationField(
-        "SadRwSerializer", deferred=False, embed=True
-    )
+    rw = DynamicRelationField("SadRwSerializer", deferred=False, embed=True)
+
     class Meta:
         model = SadRt
         name = "data"
@@ -322,18 +321,28 @@ class SigBidangSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
-class SigSadBidangSerializer(CustomSrializer):
-    sad_penduduk = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
-    sig_bidang = DynamicRelationField("SigBidangSerializer", deferred=True, embed=True)
+
+class SigSadBidangSerializer(CustomSerializer):
+    sad_penduduk = DynamicRelationField(
+        "SadPendudukSerializer", deferred=True, embed=True
+    )
+    sig_bidang = DynamicRelationField(
+        "SigBidangSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigSadBidang
         name = "data"
         exclude = []
 
-class SigSadBidang2Serializer(CustomSrializer):
-    sad_penduduk = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
-    sig_bidang2 = DynamicRelationField("SigBidang2Serializer", deferred=True, embed=True)
+
+class SigSadBidang2Serializer(CustomSerializer):
+    sad_penduduk = DynamicRelationField(
+        "SadPendudukSerializer", deferred=True, embed=True
+    )
+    sig_bidang2 = DynamicRelationField(
+        "SigBidang2Serializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigSadBidang2
