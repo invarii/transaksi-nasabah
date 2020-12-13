@@ -207,7 +207,7 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
-        if data[['no_kk', 'rt']].isna().values().any:
+        if data[['no_kk', 'rt']].isna().values.any():
             message = 'Silahkan lengkapi data no_kk dan rt'
             return Response({'message': message}, status=400)
 
