@@ -256,7 +256,7 @@ class SadKeluargaViewSet(DynamicModelViewSet):
                 b.getvalue(),
                 content_type=(
                     "application/vnd.openxmlformats-"
-
+                )
             )
 
 
