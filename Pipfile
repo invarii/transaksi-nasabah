@@ -19,7 +19,7 @@ pandas = "*"
 install = "*"
 xlrd = "*"
 gunicorn = "*"
-pypx = "*"
+pypx = "==1.2.0"
 openpyxl = "*"
 pillow = "*"
 
