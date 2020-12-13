@@ -274,29 +274,29 @@ class SadPendudukViewSet(CustomView):
             message = 'Silahkan lengkapi data nik, keluarga dan nama'
             return Response({'message': message}, status=400)
 
-            for item in data.to_dict('record'):
-                item["keluarga"] = SadKeluarga.objects.filter(
-                    no_kk=item["keluarga"]
-                ).first()
-                if not item["keluarga"]:
-                    status["keluarga_tidak_ditemukan"] += 1
-                    continue
+        for item in data.to_dict('record'):
+            item["keluarga"] = SadKeluarga.objects.filter(
+                no_kk=item["keluarga"]
+            ).first()
+            if not item["keluarga"]:
+                status["keluarga_tidak_ditemukan"] += 1
+                continue
 
-                format_data_penduduk(item)
-                param_filter = {"nik": item["nik"]}
-                try:
-                    create_or_reactivate(SadPenduduk, param_filter, item)
-                except IntegrityError:
-                    status["data_redundan"] += 1
-                    continue
-                except Exception:
-                    status["data_gagal"] += 1
-                    continue
-                status["data_diinput"] += 1
+            format_data_penduduk(item)
+            param_filter = {"nik": item["nik"]}
+            try:
+                create_or_reactivate(SadPenduduk, param_filter, item)
+            except IntegrityError:
+                status["data_redundan"] += 1
+                continue
+            except Exception:
+                status["data_gagal"] += 1
+                continue
+            status["data_diinput"] += 1
 
-                create_or_reactivate_user(
-                    item['nik'], item['tgl_lahir'].replace('-', '')
-                )
+            create_or_reactivate_user(
+                item['nik'], item['tgl_lahir'].replace('-', '')
+            )
 
         if not status["data_diinput"]:
             status["status"] = "failed"
@@ -609,7 +609,7 @@ class ArtikelViewSet(DynamicModelViewSet):
 class KategoriLaporViewSet(DynamicModelViewSet):
     queryset = KategoriLapor.objects.all().order_by("id")
     serializer_class = KategoriLaporSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class LaporViewSet(DynamicModelViewSet):
@@ -639,4 +639,4 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
 class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("id")
     serializer_class = PotensiSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
