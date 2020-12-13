@@ -731,8 +731,7 @@ class Lapor(models.Model):
     class Meta:
 
         db_table = "Lapor"
-
-
+        
 class SuratDomisili(models.Model):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
@@ -802,3 +801,4 @@ class SuratKelahiran(models.Model):
     penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
     berat = models.CharField(max_length=15, blank=True, null=True)
     panjang = models.CharField(max_length=15, blank=True, null=True)
+

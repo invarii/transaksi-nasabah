@@ -43,7 +43,6 @@ from .models import (
     Lapor,
 )
 
-
 class CustomSerializer(DynamicModelSerializer):
     extra_kwargs = {"created_by": {"write_only": True}}
 
@@ -79,11 +78,13 @@ class SadProvinsiSerializer(CustomSerializer):
         exclude = []
 
 
+
 class SadKabKotaSerializer(CustomSerializer):
     class Meta:
         model = SadKabKota
         name = "data"
         exclude = []
+
 
 
 class SadKecamatanSerializer(CustomSerializer):
@@ -95,6 +96,7 @@ class SadKecamatanSerializer(CustomSerializer):
         model = SadKecamatan
         name = "data"
         exclude = []
+
 
 
 class SadDesaSerializer(CustomSerializer):
@@ -427,3 +429,4 @@ class PotensiSerializer(DynamicModelSerializer):
         model = Potensi
         name = "data"
         exclude = []
+
