@@ -316,7 +316,7 @@ class SigRt2Serializer(CustomSerializer):
 
 
 class SigBidangSerializer(CustomSerializer):
-    desa = DynamicRelationField("SigDesaSerializer", deferred=True, embed=True)
+    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
 
     class Meta:
         model = SigBidang
