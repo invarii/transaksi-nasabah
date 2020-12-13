@@ -448,7 +448,7 @@ class SettingDesa(CustomModel):
 
 
 class SigBidang(CustomModel):
-    nbt = models.IntegerField(blank=True, null=True)
+    nbt = models.CharField(max_length=20, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", models.DO_NOTHING, blank=True, null=True
     )

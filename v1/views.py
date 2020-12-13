@@ -392,9 +392,16 @@ class SigBidangViewSet(CustomView):
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
-        data = pandas.read_excel(file)
-        for item in data.dropna(axis=1).to_dict("records"):
+        data = json.load(file)
 
+        for item in data["features"]:
+            rt = SigRt.objects.get(
+                rt=item["properties"]["RT"]
+            )
+            item = {
+                "sig_rt": rt,
+                "nbt": item["properties"]["NBT"],
+            }
             SigBidang.objects.create(**item)
 
         return Response()
@@ -403,7 +410,7 @@ class SigBidangViewSet(CustomView):
 class SigDesaViewSet(CustomView):
     queryset = SigDesa.objects.all().order_by("id")
     serializer_class = SigDesaSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -425,7 +432,7 @@ class SigDesaViewSet(CustomView):
 class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
     serializer_class = SigDusunSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -450,7 +457,7 @@ class SigDusunViewSet(CustomView):
 class SigDukuhViewSet(CustomView):
     queryset = SigDukuh.objects.all().order_by("id")
     serializer_class = SigDukuhSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -500,7 +507,7 @@ class SigDukuh2ViewSet(CustomView):
 class SigRwViewSet(CustomView):
     queryset = SigRw.objects.all().order_by("id")
     serializer_class = SigRwSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -546,7 +553,7 @@ class SigRw2ViewSet(CustomView):
 class SigRtViewSet(CustomView):
     queryset = SigRt.objects.all().order_by("id")
     serializer_class = SigRtSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
