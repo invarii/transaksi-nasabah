@@ -1,27 +1,24 @@
-from django.db import IntegrityError
-from django.contrib.auth.models import User, Group
 from rest_framework import permissions, status
+from django.db import IntegrityError
+from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from django.contrib.auth.models import User, Group
+
 import pandas
 import json
 from io import BytesIO
-from django.http import HttpResponse
 
+from users.permissions import IsAdminUserOrReadOnly
 from .serializers import (
-    UserSerializer,
-    GroupSerializer,
     PegawaiSerializer,
     SadProvinsiSerializer,
     SadKabKotaSerializer,
     SadKecamatanSerializer,
     SadDesaSerializer,
-    SadDusunDukuhSerializer,
+    SadDusunSerializer,
     SadRwSerializer,
     SadRtSerializer,
     SadKeluargaSerializer,
@@ -36,6 +33,8 @@ from .serializers import (
     SadSuratSerializer,
     SadDetailSuratSerializer,
     SigBidangSerializer,
+    SigSadBidangSerializer,
+    SigSadBidang2Serializer,
     SigDesaSerializer,
     SigRtSerializer,
     SigRwSerializer,
@@ -60,7 +59,7 @@ from .models import (
     SadKabKota,
     SadKecamatan,
     SadDesa,
-    SadDusunDukuh,
+    SadDusun,
     SadRw,
     SadRt,
     SadKeluarga,
@@ -75,6 +74,8 @@ from .models import (
     SadSurat,
     SadDetailSurat,
     SigBidang,
+    SigSadBidang,
+    SigSadBidang2,
     SigDesa,
     SigRt,
     SigRw,
@@ -118,26 +119,20 @@ def create_or_reactivate(model, filter_param, data):
     instance.save()
 
 
-class UserViewSet(DynamicModelViewSet):
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+def create_or_reactivate_user(username, password):
+    user = User.objects.filter(username=username).first()
+    group = Group.objects.get(name='penduduk')
 
-    @action(detail=False, methods=["get"])
-    def me(self, request):
-        data = UserSerializer(request.user)
-        return Response(data.data)
+    if not user:
+        user = User.objects.create(username=username)
+        user.set_password(password)
+        user.groups.add(group)
+        user.save()
+    elif not user.is_active:
+        user.is_active = True
+        user.set_password(password)
+        user.save()
 
-
-class GroupViewSet(DynamicModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    @action(detail=False, methods=["get"])
-    def me(self, request):
-        data = GroupSerializer(request.user)
-        return Response(data.data)
 
 
 class CustomView(DynamicModelViewSet):
@@ -151,49 +146,56 @@ class CustomView(DynamicModelViewSet):
 class SadProvinsiViewSet(CustomView):
     queryset = SadProvinsi.objects.all()
     serializer_class = SadProvinsiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class PegawaiViewSet(CustomView):
     queryset = Pegawai.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadKabKotaViewSet(CustomView):
     queryset = SadKabKota.objects.all().order_by("id")
     serializer_class = SadKabKotaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadKecamatanViewSet(CustomView):
     queryset = SadKecamatan.objects.all().order_by("id")
     serializer_class = SadKecamatanSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadDesaViewSet(CustomView):
     queryset = SadDesa.objects.all().order_by("id")
     serializer_class = SadDesaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
-class SadDusunDukuhViewSet(CustomView):
-    queryset = SadDusunDukuh.objects.all().order_by("id")
-    serializer_class = SadDusunDukuhSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SadDusunViewSet(CustomView):
+    queryset = SadDusun.objects.all().order_by("id")
+    serializer_class = SadDusunSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadRwViewSet(CustomView):
     queryset = SadRw.objects.all().order_by("id")
     serializer_class = SadRwSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadRtViewSet(CustomView):
     queryset = SadRt.objects.all().order_by("id")
     serializer_class = SadRtSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadKeluargaViewSet(DynamicModelViewSet):
@@ -213,10 +215,11 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
+        if data[['no_kk', 'rt']].isna().values().any:
+            message = 'Silahkan lengkapi data no_kk dan rt'
+            return Response({'message': message}, status=400)
+
         for item in data.to_dict("records"):
-            if item["no_kk"] in [None, "", "0", 0]:
-                status["data_gagal"] += 1
-                continue
 
             rt = SadRt.objects.filter(rt=item["rt"]).first()
             item["rt"] = rt
@@ -230,8 +233,8 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
-            except Exception as e:
-                print(e)
+            except Exception:
+
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
@@ -251,7 +254,9 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             writer.save()
             return HttpResponse(
                 b.getvalue(),
-                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                content_type=(
+                    "application/vnd.openxmlformats-"
+
             )
 
 
@@ -272,11 +277,9 @@ class SadPendudukViewSet(CustomView):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
-        for item in data.to_dict("records"):
-            print(item["keluarga"])
-            if not item["nik"]:
-                status["data_gagal"] += 1
-                continue
+        if data[['nik', 'keluarga', 'nama']].isna().values.any():
+            message = 'Silahkan lengkapi data nik, keluarga dan nama'
+            return Response({'message': message}, status=400)
 
             item["keluarga"] = SadKeluarga.objects.filter(
                 no_kk=item["keluarga"]
@@ -292,11 +295,15 @@ class SadPendudukViewSet(CustomView):
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
-            except Exception as e:
-                print(e)
+            except Exception:
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
+
+            create_or_reactivate_user(
+                item['nik'], item['tgl_lahir'].replace('-', '')
+            )
+
         if not status["data_diinput"]:
             status["status"] = "failed"
         return Response(status)
@@ -313,61 +320,85 @@ class SadPendudukViewSet(CustomView):
             writer.save()
             return HttpResponse(
                 b.getvalue(),
-                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                content_type=(
+                    "application/vnd.openxmlformats-"
+                    "officedocument.spreadsheetml.sheet"
+                ),
+
             )
 
 
 class SadKelahiranViewSet(CustomView):
     queryset = SadKelahiran.objects.all().order_by("id")
     serializer_class = SadKelahiranSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadKematianViewSet(CustomView):
     queryset = SadKematian.objects.all().order_by("id")
     serializer_class = SadKematianSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadLahirmatiViewSet(CustomView):
     queryset = SadLahirmati.objects.all().order_by("id")
     serializer_class = SadLahirmatiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadPindahKeluarViewSet(CustomView):
     queryset = SadPindahKeluar.objects.all().order_by("id")
     serializer_class = SadPindahKeluarSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadPindahMasukViewSet(CustomView):
     queryset = SadPindahMasuk.objects.all().order_by("id")
     serializer_class = SadPindahMasukSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadSarprasViewSet(CustomView):
     queryset = SadSarpras.objects.all().order_by("id")
     serializer_class = SadSarprasSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadInventarisViewSet(CustomView):
     queryset = SadInventaris.objects.all().order_by("id")
     serializer_class = SadInventarisSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class SadSuratViewSet(CustomView):
     queryset = SadSurat.objects.all().order_by("id")
     serializer_class = SadSuratSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class SadDetailSuratViewSet(CustomView):
     queryset = SadDetailSurat.objects.all().order_by("id")
     serializer_class = SadDetailSuratSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class SigSadBidangViewSet(CustomView):
+    queryset = SigSadBidang.objects.all().order_by("id")
+    serializer_class = SigSadBidangSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class SigSadBidang2ViewSet(CustomView):
+    queryset = SigSadBidang2.objects.all().order_by("id")
+    serializer_class = SigSadBidang2Serializer
+
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -379,9 +410,16 @@ class SigBidangViewSet(CustomView):
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
-        data = pandas.read_excel(file)
-        for item in data.dropna(axis=1).to_dict("records"):
+        data = json.load(file)
 
+        for item in data["features"]:
+            rt = SigRt.objects.get(
+                rt=item["properties"]["RT"]
+            )
+            item = {
+                "sig_rt": rt,
+                "nbt": item["properties"]["NBT"],
+            }
             SigBidang.objects.create(**item)
 
         return Response()
@@ -462,7 +500,8 @@ class SigDukuhViewSet(CustomView):
 class SigDukuh2ViewSet(CustomView):
     queryset = SigDukuh2.objects.all().order_by("id")
     serializer_class = SigDukuh2Serializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -510,7 +549,8 @@ class SigRwViewSet(CustomView):
 class SigRw2ViewSet(CustomView):
     queryset = SigRw2.objects.all().order_by("id")
     serializer_class = SigRw2Serializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -554,7 +594,8 @@ class SigRtViewSet(CustomView):
 class SigRt2ViewSet(CustomView):
     queryset = SigRt2.objects.all().order_by("id")
     serializer_class = SigRt2Serializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -575,46 +616,53 @@ class SigRt2ViewSet(CustomView):
 class KategoriArtikelViewSet(DynamicModelViewSet):
     queryset = KategoriArtikel.objects.all().order_by("id")
     serializer_class = KategoriArtikelSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class ArtikelViewSet(DynamicModelViewSet):
     queryset = Artikel.objects.all().order_by("id")
     serializer_class = ArtikelSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class KategoriLaporViewSet(DynamicModelViewSet):
     queryset = KategoriLapor.objects.all().order_by("id")
     serializer_class = KategoriLaporSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
     serializer_class = LaporSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
     queryset = KategoriInformasi.objects.all().order_by("id")
     serializer_class = KategoriInformasiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class InformasiViewSet(DynamicModelViewSet):
     queryset = Informasi.objects.all().order_by("id")
     serializer_class = InformasiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
 
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
     queryset = KategoriPotensi.objects.all().order_by("id")
     serializer_class = KategoriPotensiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("id")
     serializer_class = PotensiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
+
