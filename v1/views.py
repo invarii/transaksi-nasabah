@@ -134,7 +134,6 @@ def create_or_reactivate_user(username, password):
         user.save()
 
 
-
 class CustomView(DynamicModelViewSet):
     def destroy(self, request, pk, format=None):
         data = self.get_object()
@@ -149,12 +148,10 @@ class SadProvinsiViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class PegawaiViewSet(CustomView):
     queryset = Pegawai.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadKabKotaViewSet(CustomView):
@@ -163,12 +160,10 @@ class SadKabKotaViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadKecamatanViewSet(CustomView):
     queryset = SadKecamatan.objects.all().order_by("id")
     serializer_class = SadKecamatanSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadDesaViewSet(CustomView):
@@ -183,19 +178,16 @@ class SadDusunViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadRwViewSet(CustomView):
     queryset = SadRw.objects.all().order_by("id")
     serializer_class = SadRwSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadRtViewSet(CustomView):
     queryset = SadRt.objects.all().order_by("id")
     serializer_class = SadRtSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadKeluargaViewSet(DynamicModelViewSet):
@@ -256,7 +248,8 @@ class SadKeluargaViewSet(DynamicModelViewSet):
                 b.getvalue(),
                 content_type=(
                     "application/vnd.openxmlformats-"
-                )
+                    "officedocument.spreadsheetml.sheet"
+                ),
             )
 
 
@@ -281,28 +274,29 @@ class SadPendudukViewSet(CustomView):
             message = 'Silahkan lengkapi data nik, keluarga dan nama'
             return Response({'message': message}, status=400)
 
-            item["keluarga"] = SadKeluarga.objects.filter(
-                no_kk=item["keluarga"]
-            ).first()
-            if not item["keluarga"]:
-                status["keluarga_tidak_ditemukan"] += 1
-                continue
+            for item in data.to_dict('record'):
+                item["keluarga"] = SadKeluarga.objects.filter(
+                    no_kk=item["keluarga"]
+                ).first()
+                if not item["keluarga"]:
+                    status["keluarga_tidak_ditemukan"] += 1
+                    continue
 
-            format_data_penduduk(item)
-            param_filter = {"nik": item["nik"]}
-            try:
-                create_or_reactivate(SadPenduduk, param_filter, item)
-            except IntegrityError:
-                status["data_redundan"] += 1
-                continue
-            except Exception:
-                status["data_gagal"] += 1
-                continue
-            status["data_diinput"] += 1
+                format_data_penduduk(item)
+                param_filter = {"nik": item["nik"]}
+                try:
+                    create_or_reactivate(SadPenduduk, param_filter, item)
+                except IntegrityError:
+                    status["data_redundan"] += 1
+                    continue
+                except Exception:
+                    status["data_gagal"] += 1
+                    continue
+                status["data_diinput"] += 1
 
-            create_or_reactivate_user(
-                item['nik'], item['tgl_lahir'].replace('-', '')
-            )
+                create_or_reactivate_user(
+                    item['nik'], item['tgl_lahir'].replace('-', '')
+                )
 
         if not status["data_diinput"]:
             status["status"] = "failed"
@@ -324,7 +318,6 @@ class SadPendudukViewSet(CustomView):
                     "application/vnd.openxmlformats-"
                     "officedocument.spreadsheetml.sheet"
                 ),
-
             )
 
 
@@ -334,12 +327,10 @@ class SadKelahiranViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadKematianViewSet(CustomView):
     queryset = SadKematian.objects.all().order_by("id")
     serializer_class = SadKematianSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadLahirmatiViewSet(CustomView):
@@ -348,12 +339,10 @@ class SadLahirmatiViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadPindahKeluarViewSet(CustomView):
     queryset = SadPindahKeluar.objects.all().order_by("id")
     serializer_class = SadPindahKeluarSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadPindahMasukViewSet(CustomView):
@@ -362,19 +351,16 @@ class SadPindahMasukViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadSarprasViewSet(CustomView):
     queryset = SadSarpras.objects.all().order_by("id")
     serializer_class = SadSarprasSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class SadInventarisViewSet(CustomView):
     queryset = SadInventaris.objects.all().order_by("id")
     serializer_class = SadInventarisSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class SadSuratViewSet(CustomView):
@@ -413,9 +399,7 @@ class SigBidangViewSet(CustomView):
         data = json.load(file)
 
         for item in data["features"]:
-            rt = SigRt.objects.get(
-                rt=item["properties"]["RT"]
-            )
+            rt = SigRt.objects.get(rt=item["properties"]["RT"])
             item = {
                 "sig_rt": rt,
                 "nbt": item["properties"]["NBT"],
@@ -502,7 +486,6 @@ class SigDukuh2ViewSet(CustomView):
     serializer_class = SigDukuh2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -551,7 +534,6 @@ class SigRw2ViewSet(CustomView):
     serializer_class = SigRw2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -596,7 +578,6 @@ class SigRt2ViewSet(CustomView):
     serializer_class = SigRt2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -619,12 +600,10 @@ class KategoriArtikelViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class ArtikelViewSet(DynamicModelViewSet):
     queryset = Artikel.objects.all().order_by("id")
     serializer_class = ArtikelSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class KategoriLaporViewSet(DynamicModelViewSet):
@@ -633,12 +612,10 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
     serializer_class = LaporSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
@@ -647,12 +624,10 @@ class KategoriInformasiViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-
 class InformasiViewSet(DynamicModelViewSet):
     queryset = Informasi.objects.all().order_by("id")
     serializer_class = InformasiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
 
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
@@ -665,4 +640,3 @@ class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("id")
     serializer_class = PotensiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
