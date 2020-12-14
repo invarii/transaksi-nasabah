@@ -315,6 +315,7 @@ class SadPendudukViewSet(CustomView):
             penduduk.user = user
             penduduk.save()
 
+
         if not status["data_diinput"]:
             status["status"] = "failed"
         return Response(status)

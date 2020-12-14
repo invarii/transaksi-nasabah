@@ -824,4 +824,3 @@ class SuratKelahiran(CustomModel):
 
     class Meta:
         db_table = "surat_kelahiran"
-
