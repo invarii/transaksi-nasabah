@@ -24,6 +24,8 @@ openpyxl = "*"
 pillow = "*"
 pdfkit = "*"
 wkhtmltopdf = "*"
+jinja2 = "*"
+
 
 [requires]
 python_version = "3.8"
