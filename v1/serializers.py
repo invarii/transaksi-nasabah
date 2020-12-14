@@ -42,6 +42,8 @@ from .models import (
     KategoriLapor,
     Lapor,
     SuratKelahiran,
+    SuratSkck,
+    SuratDomisili,
 )
 
 
@@ -462,17 +464,77 @@ class AdminSuratKelahiranSerializer(DynamicModelSerializer):
         ]
 
 
-class SuratKelahiranSerializer(CustomSerializer):
+class AdminSuratSkckSerializer(DynamicModelSerializer):
+    pegawai = DynamicRelationField(PegawaiSerializer)
+
     class Meta:
-        model = SuratKelahiran
-        name = "data"
+        model = SuratSkck
+        name = 'data'
+        include = ['pegawai']
         exclude = [
-            'pegawai',
-            'no_surat',
             'created_by',
             'created_at',
+            'updated_at',
             'deleted_by',
             'deleted_at',
-            'updated_by',
-            'updated_at',
         ]
+        read_only_fields = ['keperluan', 'keterangan', 'penduduk']
+
+
+class AdminSuratDomisiliSerializer(DynamicModelSerializer):
+    class Meta:
+        model = SuratDomisili
+        name = 'data'
+        include = ['pegawai']
+        exclude = [
+            'created_by',
+            'created_at',
+            'updated_at',
+            'deleted_by',
+            'deleted_at',
+        ]
+        read_only_fields = ['keperluan', 'penduduk']
+
+
+class SuratMeta:
+    name = "data"
+    exclude = [
+        'pegawai',
+        'no_surat',
+        'created_by',
+        'created_at',
+        'deleted_by',
+        'deleted_at',
+        'updated_by',
+        'updated_at',
+    ]
+
+
+class SuratKelahiranSerializer(CustomSerializer):
+    class Meta(SuratMeta):
+        model = SuratKelahiran
+
+
+class SuratSkckSerializer(CustomSerializer):
+    class Meta(SuratMeta):
+        model = SuratSkck
+
+    def create(self, validated_data):
+        surat = SuratSkck(**validated_data)
+        surat.created_by = self.context['request'].user
+        surat.penduduk = self.context['request'].user.profile
+        surat.save()
+        return surat
+
+
+class SuratDomisiliSerializer(CustomSerializer):
+    class Meta(SuratMeta):
+        model = SuratDomisili
+
+    def create(self, validated_data):
+        surat = SuratDomisili(**validated_data)
+        surat.created_by = self.context['request'].user
+        surat.penduduk = self.context['request'].user.profile
+        surat.save()
+        return surat
+

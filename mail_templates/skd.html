@@ -1,5 +1,6 @@
 <html>
 	<head>
+	<head>
 		<style>
 			#container {
 				width: 85%;
@@ -30,6 +31,7 @@
 	</head>
 	<body>
 		<div id="container">
+
 			<header>
 				<div id="logo">
 					<img src="{{logo}}"></img>
@@ -79,75 +81,46 @@
 					<tr class="data-row">
 						<td>Nama</td>
 						<td>:</td>
-						<td>{{surat.nama}}</td>
+						<td>{{surat.penduduk.nama}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>NIK</td>
+						<td>:</td>
+						<td>{{surat.penduduk.nik}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Jenis Kelamin</td>
 						<td>:</td>
-						<td>{{surat.jk}}</td>
+						<td>{{surat.penduduk.jk}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Tempat Dilahirkan</td>
+						<td>Status Perkawinan</td>
 						<td>:</td>
-						<td>{{surat.templat_dilahirkan}}</td>
+						<td>{{surat.penduduk.status_kawin}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Tempat Kelahiran</td>
+						<td>Pekerjaan</td>
 						<td>:</td>
-						<td>{{surat.tempat_kelahiran}}</td>
+						<td>{{surat.penduduk.pekerjaan}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Jenis Kelahiran</td>
+						<td>Agama</td>
 						<td>:</td>
-						<td>{{surat.jenis_kelahiran}}</td>
+						<td>{{surat.penduduk.agama}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Penolong Kelahiran</td>
+						<td>Alamat</td>
 						<td>:</td>
-						<td>{{surat.penolong_kelahiran}}</td>
+						<td>{{surat.penduduk.agama}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Berat</td>
+						<td>Surat Keterangan ini digunakan untuk</td>
 						<td>:</td>
-						<td>{{surat.berat}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>Panjang</td>
-						<td>:</td>
-						<td>{{surat.panjang}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>Saksi I</td>
-						<td>:</td>
-						<td>{{surat.saksi1}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>{{surat.saksi2}}</td>
-						<td>:</td>
-						<td>Lorem Ipsum</td>
-					</tr>
-					<tr>
-						<td colspan=3>
-							Dengan ini menerangkan bahwa:
-						</td>
-					</tr>
-					<tr class="data-row">
-						<td>Nama Ayah Kandung</td>
-						<td>:</td>
-						<td>{{surat.ayah}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>Nama Ibu Kandung</td>
-						<td>:</td>
-						<td>{{surat.ibu}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>Anak Ke</td>
-						<td>:</td>
-						<td>{{surat.kelahiran_ke}}</td>
+						<td>{{surat.keterangan}}</td>
 					</tr>
 				</table>
-				Demikianlah surat keterangan kelahiran ini dibuat untuk dipergunakan sebagaimana semestinya.
+				<p> Adalah benar-benar warga penduduk Desa Pontolo yang berdomisili dan bertempat tinggal di alamat tersebut.</p>
+				<p>Demikian surat keterangan ini dibuat dengan sebenarnya dan untuk dipergunakan sebagaimana semestinya.</p>
 
 				<table style="margin-top:40px;width:100%;">
 					<tr>
@@ -165,7 +138,7 @@
 						<td style="text-align:center;">
 							Pemohon
 							<p style="margin-top:80px;">
-							<b><u>{{surat.created_by.username}}</u></b>
+							<b><u>{{surat.penduduk.nama}}</u></b>
 							</p>
 						</td>
 						<td style="width:40%">

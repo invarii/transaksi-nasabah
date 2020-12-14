@@ -30,6 +30,7 @@
 	</head>
 	<body>
 		<div id="container">
+
 			<header>
 				<div id="logo">
 					<img src="{{logo}}"></img>
@@ -51,7 +52,7 @@
 				<br>
 				<center>
 					<h3><u>SURAT KETERANGAN SKCK</u></h3>
-					<p>{{surat.no_surat}}
+					<p>{{surat.no_surat}}</p>
 				</center>
 
 				<br>
@@ -69,7 +70,7 @@
 					<tr class="data-row">
 						<td style="width:400px;">Jabatan</td>
 						<td style="width:10px;">:</td>
-						<td>{{surat.pegawai.jabatan}}</td>
+						<td>{{surat.pegawai.nama}}</td>
 					</tr>
 					<tr>
 						<td colspan=3>
@@ -79,75 +80,71 @@
 					<tr class="data-row">
 						<td>Nama</td>
 						<td>:</td>
-						<td>{{surat.nama}}</td>
+						<td>{{surat.penduduk.nama}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Tempat / Tanggal Lahir</td>
+						<td>:</td>
+						<td>{{surat.penduduk.tempat_lahir}},
+							{{surat.penduduk.tgl_lahir}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Jenis Kelamin</td>
 						<td>:</td>
-						<td>{{surat.jk}}</td>
+						<td>{{surat.penduduk.jk}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Tempat Dilahirkan</td>
+						<td>Kewarganegaraan</td>
 						<td>:</td>
-						<td>{{surat.templat_dilahirkan}}</td>
+						<td>{{surat.penduduk.kewarganegaraan}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Tempat Kelahiran</td>
+						<td>Agama</td>
 						<td>:</td>
-						<td>{{surat.tempat_kelahiran}}</td>
+						<td>{{surat.penduduk.agama}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Jenis Kelahiran</td>
+						<td>Status Perkawinan</td>
 						<td>:</td>
-						<td>{{surat.jenis_kelahiran}}</td>
+						<td>{{surat.penduduk.status_kawin}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Penolong Kelahiran</td>
+						<td>Pekerjaan</td>
 						<td>:</td>
-						<td>{{surat.penolong_kelahiran}}</td>
+						<td>{{surat.penduduk.pekerjaan}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Berat</td>
+						<td>Pendidikan</td>
 						<td>:</td>
-						<td>{{surat.berat}}</td>
+						<td>{{surat.penduduk.pendidikan}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Panjang</td>
+						<td>Nomor KTP</td>
 						<td>:</td>
-						<td>{{surat.panjang}}</td>
+						<td>{{surat.penduduk.nik}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Saksi I</td>
+						<td>Nomor KK</td>
 						<td>:</td>
-						<td>{{surat.saksi1}}</td>
+						<td>{{surat.penduduk.keluarga.no_kk}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>{{surat.saksi2}}</td>
+						<td>Alamat</td>
 						<td>:</td>
-						<td>Lorem Ipsum</td>
-					</tr>
-					<tr>
-						<td colspan=3>
-							Dengan ini menerangkan bahwa:
-						</td>
+						<td>{{surat.penduduk.alamat}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Nama Ayah Kandung</td>
+						<td>Keterangan</td>
 						<td>:</td>
-						<td>{{surat.ayah}}</td>
+						<td>{{surat.keterangan}}</td>
 					</tr>
 					<tr class="data-row">
-						<td>Nama Ibu Kandung</td>
+						<td>Surat Keterangan ini digunakan untuk</td>
 						<td>:</td>
-						<td>{{surat.ibu}}</td>
-					</tr>
-					<tr class="data-row">
-						<td>Anak Ke</td>
-						<td>:</td>
-						<td>{{surat.kelahiran_ke}}</td>
+						<td>{{surat.keperluan}}</td>
 					</tr>
 				</table>
-				Demikianlah surat keterangan kelahiran ini dibuat untuk dipergunakan sebagaimana semestinya.
+				Demikianlah surat keterangan ini dibuat untuk dipergunakan sebagaimana semestinya.
 
 				<table style="margin-top:40px;width:100%;">
 					<tr>
@@ -165,7 +162,7 @@
 						<td style="text-align:center;">
 							Pemohon
 							<p style="margin-top:80px;">
-							<b><u>{{surat.created_by.username}}</u></b>
+							<b><u>{{surat.penduduk.nama}}</u></b>
 							</p>
 						</td>
 						<td style="width:40%">
