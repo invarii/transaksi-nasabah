@@ -463,32 +463,69 @@ class AdminSuratKelahiranSerializer(DynamicModelSerializer):
             'panjang',
         ]
 
+
 class AdminSuratSkckSerializer(DynamicModelSerializer):
-    pegawai = DynamicRelationField(PegawaiSerializer)
+    nama = serializers.CharField(source='penduduk.nama', read_only=True)
+    tempat_lahir = serializers.CharField(
+        source='penduduk.tempat_lahir', read_only=True
+    )
+    jenis_kelamin = serializers.CharField(source='penduduk.jk', read_only=True)
+    kewarganegaraan = serializers.CharField(
+        source='penduduk.kewargananegaraan', read_only=True
+    )
+    agama = serializers.CharField(source='penduduk.agama', read_only=True)
+    status_kawin = serializers.CharField(
+        source='penduduk.status_kawin', read_only=True
+    )
+    pekerjaan = serializers.CharField(
+        source='penduduk.pekerjaan', read_only=True
+    )
+    pendidikan = serializers.CharField(
+        source='penduduk.pendidikan', read_only=True
+    )
+    no_ktp = serializers.CharField(source='penduduk.nik', read_only=True)
+    no_kk = serializers.CharField(
+        source='penduduk.keluarga.no_kk', read_only=True
+    )
+    alamat = serializers.CharField(source='penduduk.alamat', read_only=True)
 
     class Meta:
         model = SuratSkck
         name = 'data'
-        include = ['pegawai']
         exclude = [
+            'penduduk',
             'created_by',
             'created_at',
             'updated_at',
+            'updated_by',
             'deleted_by',
             'deleted_at',
         ]
-        read_only_fields = ['keperluan', 'keterangan', 'penduduk']
+        read_only_fields = ['keperluan', 'keterangan']
 
 
 class AdminSuratDomisiliSerializer(DynamicModelSerializer):
+    nama = serializers.CharField(source='penduduk.nama', read_only=True)
+    no_ktp = serializers.CharField(source='penduduk.nik', read_only=True)
+    jenis_kelamin = serializers.CharField(source='penduduk.jk', read_only=True)
+    status_kawin = serializers.CharField(
+        source='penduduk.status_kawin', read_only=True
+    )
+    pekerjaan = serializers.CharField(
+        source='penduduk.pekerjaan', read_only=True
+    )
+    agama = serializers.CharField(source='penduduk.agama', read_only=True)
+    alamat = serializers.CharField(source='penduduk.alamat', read_only=True)
+
     class Meta:
         model = SuratDomisili
         name = 'data'
-        include = ['pegawai']
         exclude = [
+            'penduduk',
             'created_by',
             'created_at',
             'updated_at',
+            'updated_by',
             'deleted_by',
             'deleted_at',
         ]
