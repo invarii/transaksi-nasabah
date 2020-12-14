@@ -82,3 +82,4 @@ router.register(r'informasi', InformasiViewSet)
 router.register(r'potensi', PotensiViewSet)
 router.register(r'lapor', LaporViewSet)
 router.register(r'suratkelahiran', SuratKelahiranViewSet)
+

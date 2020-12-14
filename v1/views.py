@@ -294,6 +294,7 @@ class SadPendudukViewSet(CustomView):
                 penduduk = create_or_reactivate(
                     SadPenduduk, param_filter, item
                 )
+
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
@@ -307,6 +308,7 @@ class SadPendudukViewSet(CustomView):
             )
             penduduk.user = user
             penduduk.save()
+
 
         if not status["data_diinput"]:
             status["status"] = "failed"
@@ -625,7 +627,7 @@ class KategoriLaporViewSet(DynamicModelViewSet):
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
     serializer_class = LaporSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
@@ -666,3 +668,4 @@ class SuratKelahiranViewSet(DynamicModelViewSet):
         data = self.get_object()
         pdf = render_mail(data)
         return HttpResponse(pdf, content_type='application/pdf')
+
