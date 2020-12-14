@@ -615,7 +615,7 @@ class KategoriLaporViewSet(DynamicModelViewSet):
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
     serializer_class = LaporSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
