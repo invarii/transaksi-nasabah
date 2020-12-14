@@ -1,0 +1,175 @@
+<html>
+	<head>
+	</head>
+	<style>
+		#container {
+			width: 85%;
+			margin: auto;
+		}
+		header{
+			margin-top: 30px;
+		}
+		h2, h3, p{
+			margin-top: 0px;
+			margin-bottom: 0px;
+		}
+		table{
+			border-collapse: separate;
+			border-spacing: 0 0.5em;
+		}
+		.data-row td:first-child {
+			padding-left: 35px;	
+		}
+	</style>
+	<body>
+		<div id="container">
+
+			<header>
+				<center>
+					<h3>Pemerintah Kabupaten Gorontalo</h3>
+					<h3>Kecamatan Kwandang</h3>
+					<h2>DESA PONTOLO</h2>
+					<p>Alamant: Pontolo, Kwandang, Gorontalo Utara, Gorontalo, 96252</p>
+					<p>Telp:021-2345678</p>
+				</center>
+			</header>
+
+			<hr>
+
+			<div>
+				<br>
+				<center>
+					<h3><u>SURAT KETERANGAN SKCK</u></h3>
+					<p>{{surat.no_surat}}
+				</center>
+
+				<br>
+				<table style="width:100%;">
+					<tr>
+						<td colspan=3>
+						Yang bertanda tangan di bawah ini:
+						</td>
+					</tr>
+					<tr class="data-row">
+						<td style="width:400px;">Nama</td>
+						<td style="width:5px;">:</td>
+						<td>{{surat.pegawai.nama}}</td>
+					</tr>
+					<tr class="data-row">
+						<td style="width:400px;">Jabatan</td>
+						<td style="width:10px;">:</td>
+						<td>{{surat.pegawai.jabatan}}</td>
+					</tr>
+					<tr>
+						<td colspan=3>
+							Dengan ini menerangkan bahwa:
+						</td>
+					</tr>
+					<tr class="data-row">
+						<td>Nama</td>
+						<td>:</td>
+						<td>{{surat.nama}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Jenis Kelamin</td>
+						<td>:</td>
+						<td>{{surat.jk}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Tempat Dilahirkan</td>
+						<td>:</td>
+						<td>{{surat.templat_dilahirkan}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Tempat Kelahiran</td>
+						<td>:</td>
+						<td>{{surat.tempat_kelahiran}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Jenis Kelahiran</td>
+						<td>:</td>
+						<td>{{surat.jenis_kelahiran}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Penolong Kelahiran</td>
+						<td>:</td>
+						<td>{{surat.penolong_kelahiran}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Berat</td>
+						<td>:</td>
+						<td>{{surat.berat}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Panjang</td>
+						<td>:</td>
+						<td>{{surat.panjang}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Saksi I</td>
+						<td>:</td>
+						<td>{{surat.saksi1}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>{{surat.saksi2}}</td>
+						<td>:</td>
+						<td>Lorem Ipsum</td>
+					</tr>
+					<tr>
+						<td colspan=3>
+							Dengan ini menerangkan bahwa:
+						</td>
+					</tr>
+					<tr class="data-row">
+						<td>Nama Ayah Kandung</td>
+						<td>:</td>
+						<td>{{surat.ayah}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Nama Ibu Kandung</td>
+						<td>:</td>
+						<td>{{surat.ibu}}</td>
+					</tr>
+					<tr class="data-row">
+						<td>Anak Ke</td>
+						<td>:</td>
+						<td>{{surat.kelahiran_ke}}</td>
+					</tr>
+				</table>
+				Demikianlah surat keterangan kelahiran ini dibuat untuk dipergunakan sebagaimana semestinya.
+
+				<table style="margin-top:40px;width:100%;">
+					<tr>
+						<td style="text-align:center;">
+							&nbsp;
+						</td>
+						<td style="width:40%">
+							&nbsp;
+						</td>
+						<td style="text-align: center;">
+							Pontolo, 22 November 2020
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;">
+							Pemohon
+							<p style="margin-top:80px;">
+							<b><u>{{surat.created_by.username}}</u></b>
+							</p>
+						</td>
+						<td style="width:40%">
+							&nbsp;
+						</td>
+						<td style="text-align: center;">
+							Kepala Desa Pontolo
+							<p style="margin-top:80px;">
+							<b><u>{{surat.pegawai.nama}}</u></b>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+	</body>
+</html>

@@ -13,8 +13,26 @@ class UserViewSet(DynamicModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        data = UserSerializer(request.user)
-        return Response(data.data)
+        user = request.user
+        payload = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'role': user.groups.first().name,
+        }
+
+        if hasattr(user, 'profile'):
+            profile = {
+                'nama': user.profile.nama,
+                'nik': user.profile.nik,
+                'tempat_lahir': user.profile.tempat_lahir,
+                'tanggal_lahir': user.profile.tgl_lahir,
+                'kelamin': user.profile.jk,
+                'pendidikan': user.profile.pendidikan,
+                'potensi': user.profile.potensi_diri,
+            }
+            payload['profile'] = profile
+        return Response(payload)
 
 
 class GroupViewSet(DynamicModelViewSet):

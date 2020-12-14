@@ -22,6 +22,8 @@ gunicorn = "*"
 pypx = "*"
 openpyxl = "*"
 pillow = "*"
+pdfkit = "*"
+wkhtmltopdf = "*"
 
 [requires]
 python_version = "3.8"
