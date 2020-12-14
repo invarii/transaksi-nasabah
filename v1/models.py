@@ -247,7 +247,9 @@ class SadPenduduk(CustomModel):
     akta_cerai = models.CharField(max_length=18, blank=True, null=True)
     tgl_cerai = models.DateField(blank=True, null=True)
     kelainan_fisik = models.CharField(max_length=50, blank=True, null=True)
-    foto = models.CharField(max_length=50, blank=True, null=True)
+    foto = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
     pass_field = models.CharField(
         db_column="pass", max_length=20, blank=True, null=True
     )  # Field renamed because it was a Python reserved word.
@@ -459,6 +461,9 @@ class SigBidang(CustomModel):
     sig_rt = models.ForeignKey(
         "SigRt", models.DO_NOTHING, blank=True, null=True
     )
+    pemilik = models.CharField(max_length=100, blank=True, null=True)
+    penguasa = models.CharField(max_length=100, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -740,7 +745,7 @@ class Lapor(models.Model):
         db_table = "Lapor"
 
 
-class SuratDomisili(models.Model):
+class SuratDomisili(CustomModel):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
         Pegawai, models.DO_NOTHING, blank=True, null=True
@@ -750,8 +755,11 @@ class SuratDomisili(models.Model):
     )
     keperluan = models.TextField(blank=True, null=True)
 
+    class Meta:
+        db_table = "surat_domisili"
 
-class SuratSkck(models.Model):
+
+class SuratSkck(CustomModel):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
         Pegawai, models.DO_NOTHING, blank=True, null=True
@@ -761,6 +769,9 @@ class SuratSkck(models.Model):
     )
     keterangan = models.TextField(blank=True, null=True)
     keperluan = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = "surat_skck"
 
 
 class SuratKelahiran(CustomModel):
@@ -810,3 +821,6 @@ class SuratKelahiran(CustomModel):
     penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
     berat = models.CharField(max_length=15, blank=True, null=True)
     panjang = models.CharField(max_length=15, blank=True, null=True)
+
+    class Meta:
+        db_table = "surat_kelahiran"

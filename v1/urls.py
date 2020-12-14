@@ -40,6 +40,8 @@ from .views import (
     InformasiViewSet,
     PotensiViewSet,
     SuratKelahiranViewSet,
+    SuratSkckViewSet,
+    SuratDomisiliViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -82,4 +84,7 @@ router.register(r'informasi', InformasiViewSet)
 router.register(r'potensi', PotensiViewSet)
 router.register(r'lapor', LaporViewSet)
 router.register(r'suratkelahiran', SuratKelahiranViewSet)
+router.register(r'suratskck', SuratSkckViewSet)
+router.register(r'domisili', SuratDomisiliViewSet)
+
 
