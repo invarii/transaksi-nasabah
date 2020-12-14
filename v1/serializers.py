@@ -41,7 +41,9 @@ from .models import (
     Potensi,
     KategoriLapor,
     Lapor,
+    SuratKelahiran,
 )
+
 
 class CustomSerializer(DynamicModelSerializer):
     extra_kwargs = {"created_by": {"write_only": True}}
@@ -78,13 +80,11 @@ class SadProvinsiSerializer(CustomSerializer):
         exclude = []
 
 
-
 class SadKabKotaSerializer(CustomSerializer):
     class Meta:
         model = SadKabKota
         name = "data"
         exclude = []
-
 
 
 class SadKecamatanSerializer(CustomSerializer):
@@ -96,7 +96,6 @@ class SadKecamatanSerializer(CustomSerializer):
         model = SadKecamatan
         name = "data"
         exclude = []
-
 
 
 class SadDesaSerializer(CustomSerializer):
@@ -430,3 +429,50 @@ class PotensiSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
+
+class AdminSuratKelahiranSerializer(DynamicModelSerializer):
+    pegawai = DynamicRelationField(PegawaiSerializer)
+
+    class Meta:
+        model = SuratKelahiran
+        name = 'data'
+        include = ['pegawai']
+        exclude = [
+            'created_by',
+            'created_at',
+            'updated_at',
+            'deleted_by',
+            'deleted_at',
+        ]
+        read_only_fields = [
+            'ayah',
+            'ibu',
+            'saksi1',
+            'saksi2',
+            'nama',
+            'jk',
+            'tempat_dilahirkan',
+            'tempat_kelahiran',
+            'tgl',
+            'jenis_kelahiran',
+            'kelahiran_ke',
+            'penolong_kelahiran',
+            'berat',
+            'panjang',
+        ]
+
+
+class SuratKelahiranSerializer(CustomSerializer):
+    class Meta:
+        model = SuratKelahiran
+        name = "data"
+        exclude = [
+            'pegawai',
+            'no_surat',
+            'created_by',
+            'created_at',
+            'deleted_by',
+            'deleted_at',
+            'updated_by',
+            'updated_at',
+        ]
