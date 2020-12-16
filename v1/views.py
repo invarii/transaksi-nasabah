@@ -434,6 +434,7 @@ class SigSadBidang2ViewSet(CustomView):
 
     permission_classes = [permissions.IsAuthenticated]
 
+
 class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
     serializer_class = SigBidangSerializer
@@ -454,6 +455,7 @@ class SigBidangViewSet(CustomView):
             SigBidang.objects.create(**item)
 
         return Response()
+
 
 class SigPemilikViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
@@ -655,7 +657,7 @@ class KategoriArtikelViewSet(DynamicModelViewSet):
 class ArtikelViewSet(DynamicModelViewSet):
     queryset = Artikel.objects.all().order_by("id")
     serializer_class = ArtikelSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class KategoriLaporViewSet(DynamicModelViewSet):
@@ -667,7 +669,7 @@ class KategoriLaporViewSet(DynamicModelViewSet):
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
     serializer_class = LaporSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
@@ -679,7 +681,7 @@ class KategoriInformasiViewSet(DynamicModelViewSet):
 class InformasiViewSet(DynamicModelViewSet):
     queryset = Informasi.objects.all().order_by("id")
     serializer_class = InformasiSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
@@ -691,7 +693,7 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
 class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("id")
     serializer_class = PotensiSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
