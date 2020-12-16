@@ -318,6 +318,7 @@ class SigRt2Serializer(CustomSerializer):
 
 class SigPemilikSerializer(CustomSerializer):
     pemilik = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
+    
     class Meta:
         model = SigPemilik
         name = "data"
