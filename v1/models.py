@@ -373,7 +373,7 @@ class SadSarpras(CustomModel):
     keadaan_akhir = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
-    foto = models.CharField(max_length=200, blank=True, null=True)
+    foto = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -390,7 +390,7 @@ class SadInventaris(CustomModel):
     keadaan_akhir = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
-    foto = models.CharField(max_length=200, blank=True, null=True)
+    foto = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -455,19 +455,31 @@ class SettingDesa(CustomModel):
         db_table = "setting_desa"
 
 
+class SigPemilik(CustomModel):
+    pemilik = models.ForeignKey(
+        SadPenduduk, models.DO_NOTHING, blank=True, null=True
+    )
+    penguasa = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_pemilik"
+
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", models.DO_NOTHING, blank=True, null=True
     )
-    pemilik = models.CharField(max_length=100, blank=True, null=True)
+    pemilik_warga = models.ForeignKey(
+        "SigPemilik", models.DO_NOTHING, blank=True, null=True
+    )
+    pemilik_nonwarga = models.CharField(max_length=100, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):
-
+        
         db_table = "sig_bidang"
-
 
 class SigBidang2(CustomModel):
     nbt = models.IntegerField(blank=True, null=True)
