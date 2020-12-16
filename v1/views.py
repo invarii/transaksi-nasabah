@@ -33,6 +33,7 @@ from .serializers import (
     SadInventarisSerializer,
     SadSuratSerializer,
     SadDetailSuratSerializer,
+    SigPemilikSerializer,
     SigBidangSerializer,
     SigSadBidangSerializer,
     SigSadBidang2Serializer,
@@ -80,6 +81,7 @@ from .models import (
     SadInventaris,
     SadSurat,
     SadDetailSurat,
+    SigPemilik,
     SigBidang,
     SigSadBidang,
     SigSadBidang2,
@@ -432,11 +434,10 @@ class SigSadBidang2ViewSet(CustomView):
 
     permission_classes = [permissions.IsAuthenticated]
 
-
 class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
     serializer_class = SigBidangSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdminUserOrReadOnly]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -448,13 +449,16 @@ class SigBidangViewSet(CustomView):
             item = {
                 "sig_rt": rt,
                 "nbt": item["properties"]["NBT"],
-                "pemilik": item["properties"]["pemilik"],
-                "penguasa": item["properties"]["penguasa"],
                 "geometry": item["geometry"],
             }
             SigBidang.objects.create(**item)
 
         return Response()
+
+class SigPemilikViewSet(CustomView):
+    queryset = SigBidang.objects.all().order_by("id")
+    serializer_class = SigBidangSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class SigDesaViewSet(CustomView):

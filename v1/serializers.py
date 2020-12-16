@@ -23,6 +23,7 @@ from .models import (
     SadDetailSurat,
     SigSadBidang,
     SigSadBidang2,
+    SigPemilik,
     SigBidang,
     SigDesa,
     SigRw,
@@ -315,10 +316,15 @@ class SigRt2Serializer(CustomSerializer):
         name = "data"
         exclude = []
 
+class SigPemilikSerializer(CustomSerializer):
+    class Meta:
+        model = SigPemilik
+        name = "data"
+        exclude = []
 
 class SigBidangSerializer(CustomSerializer):
     sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
-
+    pemilik_warga = DynamicRelationField("SigPemilikSerializer", deferred=True, embed=True)
     class Meta:
         model = SigBidang
         name = "data"
