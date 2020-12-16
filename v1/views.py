@@ -212,7 +212,7 @@ class SadDusunViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        desa = self.request_query_params.get('desa')
+        desa = self.request.query_params.get('desa')
         if desa:
             return SadDesa.objects.filter(desa_id=desa).all()
         return SadDusun.objects.all()[:25]
