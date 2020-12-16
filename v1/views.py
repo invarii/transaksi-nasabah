@@ -214,7 +214,7 @@ class SadDusunViewSet(CustomView):
     def get_queryset(self):
         desa = self.request.query_params.get('desa')
         if desa:
-            return SadDesa.objects.filter(desa_id=desa).all()
+            return SadDusun.objects.filter(desa_id=desa).all()
         return SadDusun.objects.all()[:25]
 
 
