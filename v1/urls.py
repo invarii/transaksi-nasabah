@@ -86,5 +86,3 @@ router.register(r'lapor', LaporViewSet)
 router.register(r'suratkelahiran', SuratKelahiranViewSet)
 router.register(r'suratskck', SuratSkckViewSet)
 router.register(r'domisili', SuratDomisiliViewSet)
-
-

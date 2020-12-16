@@ -167,27 +167,55 @@ class PegawaiViewSet(CustomView):
 
 
 class SadKabKotaViewSet(CustomView):
-    queryset = SadKabKota.objects.all().order_by("id")
+    queryset = SadKabKota.objects.all().order_by("id")[:25]
     serializer_class = SadKabKotaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_queryset(self):
+        provinsi = self.request.query_params.get('provinsi')
+        if provinsi:
+            return (
+                SadKabKota.objects.all()
+                .filter(provinsi_id=provinsi)
+                .order_by('nama_kab_kota')
+            )
+        return SadKabKota.objects.all()[:25]
+
 
 class SadKecamatanViewSet(CustomView):
-    queryset = SadKecamatan.objects.all().order_by("id")
+    queryset = SadKecamatan.objects.all().order_by("id")[:25]
     serializer_class = SadKecamatanSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_queryset(self):
+        kabkota = self.request.query_params.get('kabkota')
+        if kabkota:
+            return SadKecamatan.objects.filter(kab_kota_id=kabkota).all()
+        return SadKecamatan.objects.all()[:25]
+
 
 class SadDesaViewSet(CustomView):
-    queryset = SadDesa.objects.all().order_by("id")
+    queryset = SadDesa.objects.all().order_by("id")[:25]
     serializer_class = SadDesaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_queryset(self):
+        kecamatan = self.request.query_params.get('kecamatan')
+        if kecamatan:
+            return SadDesa.objects.filter(kecamatan_id=kecamatan).all()
+        return SadDesa.objects.all()[:25]
+
 
 class SadDusunViewSet(CustomView):
-    queryset = SadDusun.objects.all().order_by("id")
+    queryset = SadDusun.objects.all().order_by("id")[:25]
     serializer_class = SadDusunSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_queryset(self):
+        desa = self.request_query_params.get('desa')
+        if desa:
+            return SadDesa.objects.filter(desa_id=desa).all()
+        return SadDusun.objects.all()[:25]
 
 
 class SadRwViewSet(CustomView):
@@ -314,7 +342,6 @@ class SadPendudukViewSet(CustomView):
             )
             penduduk.user = user
             penduduk.save()
-
 
         if not status["data_diinput"]:
             status["status"] = "failed"
