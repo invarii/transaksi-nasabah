@@ -216,7 +216,7 @@ class SadDesaViewSet(CustomView):
             return SadDesa.objects.filter(kecamatan_id=kecamatan).all()
         return SadDesa.objects.all()
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[permissions.AllowAny])
     def me(self, request):
         desa = SadDesa.objects.get(pk=settings.DESA_ID)
         data = SadDesaSerializer(desa)
