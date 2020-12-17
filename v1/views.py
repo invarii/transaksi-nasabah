@@ -752,6 +752,12 @@ class PotensiViewSet(DynamicModelViewSet):
     serializer_class = PotensiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        kategori = self.request.query_params.get('kategori')
+        if kategori:
+            return Potensi.objects.filter(kategori=kategori).all()
+        return Potensi.objects.all()
+
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
     queryset = SuratKelahiran.objects.all()

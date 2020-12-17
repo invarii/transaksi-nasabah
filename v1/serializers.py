@@ -487,8 +487,8 @@ class InformasiSerializer(DynamicModelSerializer):
 
 
 class PotensiSerializer(DynamicModelSerializer):
-    kategori = DynamicRelationField(
-        "KategoriPotensiSerializer", deferred=True, embed=True
+    kategori = serializers.IntegerField(
+        source='kategori.id', read_only=True
     )
 
     class Meta:
