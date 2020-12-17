@@ -43,6 +43,11 @@ from .views import (
     SuratKelahiranViewSet,
     SuratSkckViewSet,
     SuratDomisiliViewSet,
+    JenisPindahViewSet,
+    AlasanPindahViewSet,
+    KlasifikasiPindahViewSet,
+    StatusKKTinggalViewSet,
+    StatusKKPindahViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -88,3 +93,8 @@ router.register(r'lapor', LaporViewSet)
 router.register(r'suratkelahiran', SuratKelahiranViewSet)
 router.register(r'suratskck', SuratSkckViewSet)
 router.register(r'domisili', SuratDomisiliViewSet)
+router.register(r'jenispindah', JenisPindahViewSet)
+router.register(r'klasifikasipindah', KlasifikasiPindahViewSet)
+router.register(r'alasanpindah', AlasanPindahViewSet)
+router.register(r'statuskktinggal', StatusKKTinggalViewSet)
+router.register(r'statuskkpindah', StatusKKPindahViewSet)

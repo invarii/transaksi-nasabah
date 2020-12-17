@@ -25,6 +25,7 @@ pillow = "*"
 pdfkit = "*"
 wkhtmltopdf = "*"
 jinja2 = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.8"
