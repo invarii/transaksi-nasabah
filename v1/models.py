@@ -92,6 +92,9 @@ class Pegawai(CustomModel):
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
+    foto = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta(CustomModel.Meta):
 
