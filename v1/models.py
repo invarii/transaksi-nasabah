@@ -92,7 +92,10 @@ class Pegawai(CustomModel):
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
-
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    
     class Meta(CustomModel.Meta):
 
         db_table = "pegawai"
@@ -149,6 +152,19 @@ class SadDesa(CustomModel):
     class Meta(CustomModel.Meta):
 
         db_table = "sad_desa"
+
+class BatasDesa(CustomModel):
+    desa = models.ForeignKey(
+        "SadDesa", models.DO_NOTHING, blank=True, null=True
+    )
+    utara = models.CharField(max_length=50, blank=True, null=True)
+    selatan = models.CharField(max_length=50, blank=True, null=True)
+    timur = models.CharField(max_length=50, blank=True, null=True)
+    barat = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "batas_desa"
 
 
 class SadDusun(CustomModel):
