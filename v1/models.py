@@ -144,7 +144,7 @@ class SadDesa(CustomModel):
     email = models.CharField(max_length=100, blank=True, null=True)
     visi_misi = models.TextField(blank=True, null=True)
     sejarah = models.TextField(blank=True, null=True)
-    logo = models.TextField(blank=True, null=True)
+    logo = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -321,25 +321,99 @@ class SadLahirmati(CustomModel):
         db_table = "sad_lahirmati"
 
 
+class JenisPindah(CustomModel):
+    nama = models.CharField(max_length=64)
+    label = models.CharField(max_length=128)
+
+    class Meta(CustomModel.Meta):
+        db_table = 'jenis_pindah'
+
+
+class AlasanPindah(CustomModel):
+    id = models.IntegerField(primary_key=True, default=1)
+    nama = models.CharField(max_length=64, default='label')
+    label = models.CharField(max_length=128, default='nama')
+
+    class Meta(CustomModel.Meta):
+        db_table = 'alasan_pindah'
+
+
+class KlasifikasiPindah(CustomModel):
+    id = models.IntegerField(primary_key=True, default=1)
+    nama = models.CharField(max_length=64, default='label')
+    label = models.CharField(max_length=128, default='nama')
+
+    class Meta(CustomModel.Meta):
+        db_table = 'klasifikasi_pindah'
+
+
+class StatusKKTinggal(CustomModel):
+    id = models.IntegerField(primary_key=True, default=1)
+    nama = models.CharField(max_length=64, default='label')
+    label = models.CharField(max_length=128, default='nama')
+
+    class Meta(CustomModel.Meta):
+        db_table = 'status_kk_tinggal'
+
+
+class StatusKKPindah(CustomModel):
+    id = models.IntegerField(primary_key=True, default=1)
+    nama = models.CharField(max_length=64, default='label')
+    label = models.CharField(max_length=128, default='nama')
+
+    class Meta(CustomModel.Meta):
+        db_table = 'status_kk_pindah'
+
+
 class SadPindahKeluar(CustomModel):
     keluarga = models.ForeignKey(
-        SadKeluarga, models.DO_NOTHING, blank=True, null=True
+        SadKeluarga,
+        models.DO_NOTHING,
+        related_name='data_keluar',
+        blank=True,
+        null=True,
     )
-    pemohon = models.CharField(max_length=30, blank=True, null=True)
+    pemohon = models.ForeignKey(
+        SadPenduduk,
+        models.DO_NOTHING,
+        related_name='data_keluar',
+        blank=True,
+        null=True,
+    )
     alasan = models.CharField(max_length=100, blank=True, null=True)
-    provinsi_tujuan = models.CharField(max_length=20, blank=True, null=True)
-    kota_tujuan = models.CharField(max_length=20, blank=True, null=True)
-    kecamatan_tujuan = models.CharField(max_length=20, blank=True, null=True)
     kelurahan_tujuan = models.CharField(max_length=20, blank=True, null=True)
     dusun_tujuan = models.CharField(max_length=20, blank=True, null=True)
     rt_tujuan = models.CharField(max_length=5, blank=True, null=True)
     rw_tujuan = models.CharField(max_length=5, blank=True, null=True)
     kodepos_tujuan = models.CharField(max_length=5, blank=True, null=True)
     no_telp = models.CharField(max_length=13, blank=True, null=True)
-    klarifikasi_pindah = models.CharField(max_length=50, blank=True, null=True)
-    jenis_kepindahan = models.CharField(max_length=50, blank=True, null=True)
-    status_no_kk_pindah = models.CharField(
-        max_length=50, blank=True, null=True
+    klasifikasi_pindah = models.ForeignKey(
+        KlasifikasiPindah,
+        models.DO_NOTHING,
+        related_name='data_keluar_klasifikasi',
+        blank=True,
+        null=True,
+    )
+    jenis_kepindahan = models.ForeignKey(
+        JenisPindah,
+        models.DO_NOTHING,
+        related_name='data_keluar_jenis',
+        blank=True,
+        null=True,
+    )
+    status_kk_pindah = models.ForeignKey(
+        StatusKKPindah,
+        models.DO_NOTHING,
+        related_name='data_keluar_kk_pindah',
+        blank=True,
+        null=True,
+    )
+    status_kk_tinggal = models.ForeignKey(
+        StatusKKTinggal,
+        models.DO_NOTHING,
+        related_name='data_keluar_kk_tinggal',
+        blank=True,
+        null=True,
     )
     rencana_tgl_pindah = models.DateField(blank=True, null=True)
 
@@ -465,6 +539,7 @@ class SigPemilik(CustomModel):
 
         db_table = "sig_pemilik"
 
+
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     sig_rt = models.ForeignKey(
@@ -478,8 +553,9 @@ class SigBidang(CustomModel):
     geometry = JSONField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):
-        
+
         db_table = "sig_bidang"
+
 
 class SigBidang2(CustomModel):
     nbt = models.IntegerField(blank=True, null=True)

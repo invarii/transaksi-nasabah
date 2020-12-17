@@ -45,6 +45,11 @@ from .models import (
     SuratKelahiran,
     SuratSkck,
     SuratDomisili,
+    JenisPindah,
+    KlasifikasiPindah,
+    AlasanPindah,
+    StatusKKTinggal,
+    StatusKKPindah,
 )
 
 
@@ -69,6 +74,41 @@ class CustomSerializer(DynamicModelSerializer):
         model = None
 
 
+class JenisPindahSerializer(CustomSerializer):
+    class Meta:
+        model = JenisPindah
+        name = 'data'
+        exclude = []
+
+
+class AlasanPindahSerializer(CustomSerializer):
+    class Meta:
+        model = AlasanPindah
+        name = 'data'
+        exclude = []
+
+
+class KlasifikasiPindahSerializer(CustomSerializer):
+    class Meta:
+        model = KlasifikasiPindah
+        name = 'data'
+        exclude = []
+
+
+class StatusKKTinggalSerializer(CustomSerializer):
+    class Meta:
+        model = StatusKKTinggal
+        name = 'data'
+        exclude = []
+
+
+class StatusKKPindahSerializer(CustomSerializer):
+    class Meta:
+        model = StatusKKPindah
+        name = 'data'
+        exclude = []
+
+
 class PegawaiSerializer(CustomSerializer):
     class Meta:
         model = Pegawai
@@ -84,43 +124,45 @@ class SadProvinsiSerializer(CustomSerializer):
 
 
 class SadKabKotaSerializer(CustomSerializer):
+    provinsi_id = serializers.IntegerField(
+        source='provinsi.id', read_only=True
+    )
+
     class Meta:
         model = SadKabKota
         name = "data"
-        exclude = []
+        exclude = ['provinsi']
 
 
 class SadKecamatanSerializer(CustomSerializer):
-    kab_kota = DynamicRelationField(
-        "SadKabKotaSerializer", deferred=False, embed=True
+    kab_kota_id = serializers.IntegerField(
+        source='kab_kota.id', read_only=True
     )
 
     class Meta:
         model = SadKecamatan
         name = "data"
-        exclude = []
+        exclude = ['kab_kota']
 
 
 class SadDesaSerializer(CustomSerializer):
-    kecamatan = DynamicRelationField(
-        "SadKecamatanSerializer", deferred=False, embed=True
+    kecamatan_id = serializers.IntegerField(
+        source='kecamatan.id', read_only=True
     )
 
     class Meta:
         model = SadDesa
         name = "data"
-        exclude = []
+        exclude = ['kecamatan']
 
 
 class SadDusunSerializer(CustomSerializer):
-    desa = DynamicRelationField(
-        "SadDesaSerializer", deferred=False, embed=True
-    )
+    desa_id = serializers.IntegerField(source='desa.id', read_only=True)
 
     class Meta:
         model = SadDusun
         name = "data"
-        exclude = []
+        exclude = ['desa']
 
 
 class SadRwSerializer(CustomSerializer):
@@ -316,17 +358,24 @@ class SigRt2Serializer(CustomSerializer):
         name = "data"
         exclude = []
 
+
 class SigPemilikSerializer(CustomSerializer):
-    pemilik = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
-    
+    pemilik = DynamicRelationField(
+        "SadPendudukSerializer", deferred=True, embed=True
+    )
+
     class Meta:
         model = SigPemilik
         name = "data"
         exclude = []
 
+
 class SigBidangSerializer(CustomSerializer):
     sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
-    pemilik_warga = DynamicRelationField("SigPemilikSerializer", deferred=True, embed=True)
+    pemilik_warga = DynamicRelationField(
+        "SigPemilikSerializer", deferred=True, embed=True
+    )
+
     class Meta:
         model = SigBidang
         name = "data"
