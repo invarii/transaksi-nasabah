@@ -319,7 +319,7 @@ class SadPendudukViewSet(CustomView):
         keluarga = self.request.query_params.get('keluarga')
         if keluarga:
             return SadPenduduk.objects.filter(keluarga_id=keluarga).all()
-        return SadKeluarga.objects.all()
+        return SadPenduduk.objects.all()
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
