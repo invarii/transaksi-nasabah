@@ -6,6 +6,7 @@ from .views import (
     SadKabKotaViewSet,
     SadKecamatanViewSet,
     SadDesaViewSet,
+    BatasDesaViewSet,
     SadDusunViewSet,
     SadRwViewSet,
     SadRtViewSet,
@@ -56,6 +57,7 @@ router.register(r'provinsi', SadProvinsiViewSet)
 router.register(r'kabkota', SadKabKotaViewSet)
 router.register(r'kecamatan', SadKecamatanViewSet)
 router.register(r'desa', SadDesaViewSet)
+router.register(r'batasdesa', BatasDesaViewSet)
 router.register(r'saddusun', SadDusunViewSet)
 router.register(r'sadrw', SadRwViewSet)
 router.register(r'sadrt', SadRtViewSet)

@@ -7,6 +7,7 @@ from .models import (
     SadKabKota,
     SadKecamatan,
     SadDesa,
+    BatasDesa,
     SadDusun,
     SadRw,
     SadRt,
@@ -155,6 +156,13 @@ class SadDesaSerializer(CustomSerializer):
         name = "data"
         exclude = ['kecamatan']
 
+class BatasDesaSerializer(CustomSerializer):
+    desa = DynamicRelationField("SadDesaSerializer", deferred=False, embed=True)
+
+    class Meta:
+        model = BatasDesa
+        name = "data"
+        exclude = []
 
 class SadDusunSerializer(CustomSerializer):
     desa_id = serializers.IntegerField(source='desa.id', read_only=True)
