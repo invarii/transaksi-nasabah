@@ -36,6 +36,7 @@ from .serializers import (
     SadSuratSerializer,
     SadDetailSuratSerializer,
     SigBidangSerializer,
+    SigPemilikSerializer,
     SigSadBidangSerializer,
     SigSadBidang2Serializer,
     SigDesaSerializer,
@@ -89,6 +90,7 @@ from .models import (
     SadSurat,
     SadDetailSurat,
     SigBidang,
+    SigPemilik,
     SigSadBidang,
     SigSadBidang2,
     SigDesa,
@@ -489,7 +491,6 @@ class SigSadBidangViewSet(CustomView):
 class SigSadBidang2ViewSet(CustomView):
     queryset = SigSadBidang2.objects.all().order_by("id")
     serializer_class = SigSadBidang2Serializer
-
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -497,6 +498,21 @@ class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
     serializer_class = SigBidangSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        user = request.user
+        payload = {
+            'id': user.id,
+            'username': user.username
+        }
+
+        if hasattr(user, 'pemilik'):
+            pemilik = {
+                'pemilik_warga': user.pemilik.pemilik_warga,
+            }
+            payload['pemilik'] = pemilik
+        return Response(payload)
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -516,8 +532,8 @@ class SigBidangViewSet(CustomView):
 
 
 class SigPemilikViewSet(CustomView):
-    queryset = SigBidang.objects.all().order_by("id")
-    serializer_class = SigBidangSerializer
+    queryset = SigPemilik.objects.all().order_by("id")
+    serializer_class = SigPemilikSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
 
