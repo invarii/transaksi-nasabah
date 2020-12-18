@@ -166,6 +166,13 @@ class SadDesaSerializer(CustomSerializer):
         name = "data"
         exclude = ['kecamatan']
 
+class BatasDesaSerializer(CustomSerializer):
+    desa = DynamicRelationField("SadDesaSerializer", deferred=False, embed=True)
+
+    class Meta:
+        model = BatasDesa
+        name = "data"
+        exclude = []
 
 class BatasDesaSerializer(CustomSerializer):
     desa = DynamicRelationField(
@@ -540,6 +547,7 @@ class InformasiSerializer(DynamicModelSerializer):
 
 class PotensiSerializer(DynamicModelSerializer):
     kategori = serializers.IntegerField(source='kategori.id', read_only=True)
+
 
     class Meta:
         model = Potensi

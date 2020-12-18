@@ -153,6 +153,19 @@ class SadDesa(CustomModel):
 
         db_table = "sad_desa"
 
+class BatasDesa(CustomModel):
+    desa = models.ForeignKey(
+        "SadDesa", models.DO_NOTHING, blank=True, null=True
+    )
+    utara = models.CharField(max_length=50, blank=True, null=True)
+    selatan = models.CharField(max_length=50, blank=True, null=True)
+    timur = models.CharField(max_length=50, blank=True, null=True)
+    barat = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "batas_desa"
+
 
 class BatasDesa(CustomModel):
     desa = models.ForeignKey(
