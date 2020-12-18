@@ -1,3 +1,4 @@
+from django.utils import timezone
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
 from rest_framework import serializers
@@ -52,6 +53,15 @@ from .models import (
     StatusKKTinggal,
     StatusKKPindah,
 )
+
+util_columns = [
+    'created_by',
+    'updated_by',
+    'deleted_by',
+    'created_at',
+    'updated_at',
+    'deleted_at',
+]
 
 
 class CustomSerializer(DynamicModelSerializer):
@@ -164,6 +174,17 @@ class BatasDesaSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+class BatasDesaSerializer(CustomSerializer):
+    desa = DynamicRelationField(
+        "SadDesaSerializer", deferred=False, embed=True
+    )
+
+    class Meta:
+        model = BatasDesa
+        name = "data"
+        exclude = []
+
+
 class SadDusunSerializer(CustomSerializer):
     desa_id = serializers.IntegerField(source='desa.id', read_only=True)
 
@@ -244,6 +265,44 @@ class SadLahirmatiSerializer(CustomSerializer):
 
 
 class SadPindahKeluarSerializer(CustomSerializer):
+    pemohon = DynamicRelationField(SadPendudukSerializer)
+    anggota_pindah = serializers.ListField(
+        child=serializers.IntegerField(), write_only=True
+    )
+    anggota_tinggal = serializers.ListField(
+        child=serializers.IntegerField(), write_only=True
+    )
+
+    def create(self, validated_data):
+        anggota_pindah_s = validated_data.pop('anggota_pindah')
+        anggota_tinggal_s = validated_data.pop('anggota_tinggal')
+
+        sad_pindah = SadPindahKeluar.objects.create(**validated_data)
+
+        if validated_data.get('status_kk_pindah'):
+            if validated_data['status_kk_pindah'].nama == 'kk_baru':
+                for item in anggota_pindah_s:
+                    penduduk = SadPenduduk.objects.filter(id=item).first()
+                    if penduduk:
+                        penduduk.deleted_at = timezone.now()
+                        penduduk.deleted_by = self.context['request'].user
+                        penduduk.save()
+        if validated_data.get('status_kk_tinggal'):
+            if validated_data['status_kk_tinggal'].nama == 'kk_baru':
+                for item in anggota_tinggal_s:
+                    penduduk = SadPenduduk.objects.filter(id=item).first()
+                    if penduduk:
+                        penduduk.deleted_at = timezone.now()
+                        penduduk.deleted_by = self.context['request'].user
+                        penduduk.save()
+        keluarga = validated_data.get('keluarga')
+        if not keluarga.anggota.count():
+            keluarga.deleted_at = timezone.now()
+            keluarga.deleted_by = self.context['request'].user
+            keluarga.save()
+        sad_pindah.save()
+        return sad_pindah
+
     class Meta:
         model = SadPindahKeluar
         name = "data"
@@ -487,9 +546,8 @@ class InformasiSerializer(DynamicModelSerializer):
 
 
 class PotensiSerializer(DynamicModelSerializer):
-    kategori = serializers.IntegerField(
-        source='kategori.id', read_only=True
-    )
+    kategori = serializers.IntegerField(source='kategori.id', read_only=True)
+
 
     class Meta:
         model = Potensi
