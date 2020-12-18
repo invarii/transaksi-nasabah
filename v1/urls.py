@@ -49,6 +49,7 @@ from .views import (
     KlasifikasiPindahViewSet,
     StatusKKTinggalViewSet,
     StatusKKPindahViewSet,
+    SliderViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -100,3 +101,4 @@ router.register(r'klasifikasipindah', KlasifikasiPindahViewSet)
 router.register(r'alasanpindah', AlasanPindahViewSet)
 router.register(r'statuskktinggal', StatusKKTinggalViewSet)
 router.register(r'statuskkpindah', StatusKKPindahViewSet)
+router.register(r'slider', SliderViewSet)

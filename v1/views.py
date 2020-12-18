@@ -51,6 +51,7 @@ from .serializers import (
     LaporSerializer,
     KategoriArtikelSerializer,
     ArtikelSerializer,
+    SliderSerializer,
     KategoriPotensiSerializer,
     PotensiSerializer,
     KategoriInformasiSerializer,
@@ -117,6 +118,7 @@ from .models import (
     AlasanPindah,
     StatusKKTinggal,
     StatusKKPindah,
+    Slider,
 )
 
 
@@ -733,6 +735,10 @@ class ArtikelViewSet(DynamicModelViewSet):
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+class SliderViewSet(DynamicModelViewSet):
+    queryset = Slider.objects.all().order_by("id")
+    serializer_class = SliderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class KategoriLaporViewSet(DynamicModelViewSet):
     queryset = KategoriLapor.objects.all().order_by("id")
