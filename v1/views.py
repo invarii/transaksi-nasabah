@@ -507,9 +507,9 @@ class SigBidangViewSet(CustomView):
             'username': user.username
         }
 
-        if hasattr(user, 'pemilik'):
+        if hasattr(user.profile, 'pemilik'):
             pemilik = {
-                'pemilik_warga': user.pemilik.pemilik_warga,
+                'pemilik_warga': user.profile.pemilik.pemilik_warga,
             }
             payload['pemilik'] = pemilik
         return Response(payload)
