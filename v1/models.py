@@ -859,6 +859,9 @@ class Informasi(models.Model):
     tanggal = models.DateField(blank=True, null=True)
     mulai = models.CharField(max_length=10, blank=True, null=True)
     selesai = models.CharField(max_length=10, blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta:
 
