@@ -515,9 +515,10 @@ class SigBidangViewSet(CustomView):
         user = request.user
         payload = {"id": user.id, "username": user.username}
 
-        if hasattr(user.profile, "pemilik"):
+
+        if hasattr(user.profile, 'pemilik'):
             pemilik = {
-                "pemilik_warga": user.profile.pemilik.pemilik_warga,
+                'pemilik_warga': user.profile.pemilik.pemilik_warga,
             }
             payload["pemilik"] = pemilik
         return Response(payload)
@@ -741,6 +742,10 @@ class ArtikelViewSet(DynamicModelViewSet):
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+class SliderViewSet(DynamicModelViewSet):
+    queryset = Slider.objects.all().order_by("id")
+    serializer_class = SliderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class SliderViewSet(DynamicModelViewSet):
     queryset = Slider.objects.all().order_by("id")
