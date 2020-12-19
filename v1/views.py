@@ -11,6 +11,7 @@ from django.contrib.auth.models import User, Group
 import pandas
 import json
 from io import BytesIO
+import numpy as np
 
 from users.permissions import IsAdminUserOrReadOnly
 from .utils import render_mail
@@ -123,7 +124,12 @@ from .models import (
 
 
 def format_data_penduduk(data):
-    cols = ["tgl_lahir", "tgl_exp_paspor", "tgl_kawin", "tgl_cerai"]
+    cols = [
+        "tgl_lahir",
+        "tgl_exp_paspor",
+        "tgl_kawin",
+        "tgl_cerai",
+    ]
     for col in cols:
         if type(data[col]) == pandas.Timestamp:
             data[col] = str(data[col]).split(" ")[0]
@@ -132,6 +138,7 @@ def format_data_penduduk(data):
 
 
 def create_or_reactivate(model, filter_param, data):
+    print(data)
     instance = model.all_objects.filter(**filter_param).dead().first()
 
     if instance:
@@ -149,7 +156,7 @@ def create_or_reactivate(model, filter_param, data):
 
 def create_or_reactivate_user(username, password):
     user = User.objects.filter(username=username).first()
-    group = Group.objects.get(name='penduduk')
+    group = Group.objects.get(name="penduduk")
 
     if not user:
         user = User.objects.create(username=username)
@@ -188,18 +195,19 @@ class BatasDesaViewSet(CustomView):
     serializer_class = BatasDesaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
 class SadKabKotaViewSet(CustomView):
     queryset = SadKabKota.objects.all().order_by("id")
     serializer_class = SadKabKotaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        provinsi = self.request.query_params.get('provinsi')
+        provinsi = self.request.query_params.get("provinsi")
         if provinsi:
             return (
                 SadKabKota.objects.all()
                 .filter(provinsi_id=provinsi)
-                .order_by('nama_kab_kota')
+                .order_by("nama_kab_kota")
             )
         return SadKabKota.objects.all()
 
@@ -210,7 +218,7 @@ class SadKecamatanViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        kabkota = self.request.query_params.get('kabkota')
+        kabkota = self.request.query_params.get("kabkota")
         if kabkota:
             return SadKecamatan.objects.filter(kab_kota_id=kabkota).all()
         return SadKecamatan.objects.all()
@@ -222,7 +230,7 @@ class SadDesaViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        kecamatan = self.request.query_params.get('kecamatan')
+        kecamatan = self.request.query_params.get("kecamatan")
         if kecamatan:
             return SadDesa.objects.filter(kecamatan_id=kecamatan).all()
         return SadDesa.objects.all()
@@ -240,7 +248,7 @@ class SadDusunViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        desa = self.request.query_params.get('desa')
+        desa = self.request.query_params.get("desa")
         if desa:
             return SadDusun.objects.filter(desa_id=desa).all()
         return SadDusun.objects.all()
@@ -275,9 +283,9 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
-        if data[['no_kk', 'rt']].isna().values.any():
-            message = 'Silahkan lengkapi data no_kk dan rt'
-            return Response({'message': message}, status=400)
+        if data[["no_kk", "rt"]].isna().values.any():
+            message = "Silahkan lengkapi data no_kk dan rt"
+            return Response({"message": message}, status=400)
 
         for item in data.to_dict("records"):
 
@@ -327,7 +335,7 @@ class SadPendudukViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        keluarga = self.request.query_params.get('keluarga')
+        keluarga = self.request.query_params.get("keluarga")
         if keluarga:
             return SadPenduduk.objects.filter(keluarga_id=keluarga).all()
         return SadPenduduk.objects.all()
@@ -344,11 +352,12 @@ class SadPendudukViewSet(CustomView):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
-        if data[['nik', 'keluarga', 'nama']].isna().values.any():
-            message = 'Silahkan lengkapi data nik, keluarga dan nama'
-            return Response({'message': message}, status=400)
+        if data[["nik", "keluarga", "nama"]].isna().values.any():
+            message = "Silahkan lengkapi data nik, keluarga dan nama"
+            return Response({"message": message}, status=400)
+        data = data.replace({np.nan: None})
 
-        for item in data.to_dict('record'):
+        for item in data.to_dict("record"):
             item["keluarga"] = SadKeluarga.objects.filter(
                 no_kk=item["keluarga"]
             ).first()
@@ -372,7 +381,7 @@ class SadPendudukViewSet(CustomView):
             status["data_diinput"] += 1
 
             user = create_or_reactivate_user(
-                item['nik'], item['tgl_lahir'].replace('-', '')
+                item["nik"], item["tgl_lahir"].replace("-", "")
             )
             penduduk.user = user
             penduduk.save()
@@ -504,16 +513,13 @@ class SigBidangViewSet(CustomView):
     @action(detail=False, methods=["get"])
     def me(self, request):
         user = request.user
-        payload = {
-            'id': user.id,
-            'username': user.username
-        }
+        payload = {"id": user.id, "username": user.username}
 
-        if hasattr(user.profile, 'pemilik'):
+        if hasattr(user.profile, "pemilik"):
             pemilik = {
-                'pemilik_warga': user.profile.pemilik.pemilik_warga,
+                "pemilik_warga": user.profile.pemilik.pemilik_warga,
             }
-            payload['pemilik'] = pemilik
+            payload["pemilik"] = pemilik
         return Response(payload)
 
     @action(detail=False, methods=["post"])
@@ -735,10 +741,12 @@ class ArtikelViewSet(DynamicModelViewSet):
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
 class SliderViewSet(DynamicModelViewSet):
     queryset = Slider.objects.all().order_by("id")
     serializer_class = SliderSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class KategoriLaporViewSet(DynamicModelViewSet):
     queryset = KategoriLapor.objects.all().order_by("id")
@@ -776,7 +784,7 @@ class PotensiViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        kategori = self.request.query_params.get('kategori')
+        kategori = self.request.query_params.get("kategori")
         if kategori:
             return Potensi.objects.filter(kategori=kategori).all()
         return Potensi.objects.all()
@@ -787,15 +795,15 @@ class SuratKelahiranViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.user.groups.first().name == 'admin':
+        if self.request.user.groups.first().name == "admin":
             return AdminSuratKelahiranSerializer
         return SuratKelahiranSerializer
 
     @action(detail=True, methods=["get"])
     def print(self, request, pk=None):
         data = self.get_object()
-        pdf = render_mail('skl', data)
-        return HttpResponse(pdf, content_type='application/pdf')
+        pdf = render_mail("skl", data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
 
 class SuratSkckViewSet(DynamicModelViewSet):
@@ -803,15 +811,15 @@ class SuratSkckViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.user.groups.first().name == 'admin':
+        if self.request.user.groups.first().name == "admin":
             return AdminSuratSkckSerializer
         return SuratSkckSerializer
 
     @action(detail=True, methods=["get"])
     def print(self, request, pk=None):
         data = self.get_object()
-        pdf = render_mail('skck', data)
-        return HttpResponse(pdf, content_type='application/pdf')
+        pdf = render_mail("skck", data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
 
 class SuratDomisiliViewSet(DynamicModelViewSet):
@@ -819,12 +827,12 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.user.groups.first().name == 'admin':
+        if self.request.user.groups.first().name == "admin":
             return AdminSuratDomisiliSerializer
         return SuratDomisiliSerializer
 
     @action(detail=True, methods=["get"])
     def print(self, request, pk=None):
         data = self.get_object()
-        pdf = render_mail('skd', data)
-        return HttpResponse(pdf, content_type='application/pdf')
+        pdf = render_mail("skd", data)
+        return HttpResponse(pdf, content_type="application/pdf")
