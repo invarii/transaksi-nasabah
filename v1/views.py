@@ -510,19 +510,6 @@ class SigBidangViewSet(CustomView):
     serializer_class = SigBidangSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    @action(detail=False, methods=["get"])
-    # def me(self, request):
-    #     user = request.user
-    #     payload = {"id": user.id, "username": user.username}
-
-
-    #     if hasattr(user.profile, 'pemilik'):
-    #         pemilik = {
-    #             'pemilik_warga': user.profile.pemilik.pemilik_warga,
-    #         }
-    #         payload["pemilik"] = pemilik
-    #     return Response(payload)
-
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
