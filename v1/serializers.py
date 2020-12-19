@@ -215,9 +215,7 @@ class SadRtSerializer(CustomSerializer):
 
 
 class SadKeluargaSerializer(CustomSerializer):
-    anggota = DynamicRelationField(
-        "SadPendudukSerializer", many=True, deferred=True, embed=True
-    )
+    anggota = DynamicRelationField("SadPendudukSerializer", many=True)
 
     class Meta:
         model = SadKeluarga
@@ -229,9 +227,7 @@ class SadKeluargaSerializer(CustomSerializer):
 
 
 class SadPendudukSerializer(CustomSerializer):
-    keluarga = DynamicRelationField(
-        "SadKeluargaSerializer", deferred=True, embed=True
-    )
+    keluarga = DynamicRelationField("SadKeluargaSerializer")
 
     class Meta:
         model = SadPenduduk
@@ -394,6 +390,7 @@ class SadPindahMasukSerializer(CustomSerializer):
                 item["nik"], str(item["tgl_lahir"]).replace("-", "")
             )
             penduduk.user = user
+            penduduk.keluarga = keluarga
             penduduk.save()
         print("This 2")
 
