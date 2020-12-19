@@ -153,19 +153,6 @@ class SadDesa(CustomModel):
 
         db_table = "sad_desa"
 
-class BatasDesa(CustomModel):
-    desa = models.ForeignKey(
-        "SadDesa", models.DO_NOTHING, blank=True, null=True
-    )
-    utara = models.CharField(max_length=50, blank=True, null=True)
-    selatan = models.CharField(max_length=50, blank=True, null=True)
-    timur = models.CharField(max_length=50, blank=True, null=True)
-    barat = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "batas_desa"
-
 
 class BatasDesa(CustomModel):
     desa = models.ForeignKey(
@@ -245,7 +232,7 @@ class SadPenduduk(CustomModel):
         on_delete=models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name='profile',
+        related_name="profile",
     )
 
     nik = models.CharField(max_length=16, unique=True)
@@ -365,76 +352,64 @@ class JenisPindah(CustomModel):
         return self.label
 
     class Meta(CustomModel.Meta):
-        db_table = 'jenis_pindah'
+        db_table = "jenis_pindah"
 
 
 class AlasanPindah(CustomModel):
     id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default='label')
-    label = models.CharField(max_length=128, default='nama')
+    nama = models.CharField(max_length=64, default="label")
+    label = models.CharField(max_length=128, default="nama")
 
     def __str__(self):
         return self.label
 
     class Meta(CustomModel.Meta):
-        db_table = 'alasan_pindah'
+        db_table = "alasan_pindah"
 
 
 class KlasifikasiPindah(CustomModel):
     id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default='label')
-    label = models.CharField(max_length=128, default='nama')
+    nama = models.CharField(max_length=64, default="label")
+    label = models.CharField(max_length=128, default="nama")
 
     def __str__(self):
         return self.label
 
     class Meta(CustomModel.Meta):
-        db_table = 'klasifikasi_pindah'
+        db_table = "klasifikasi_pindah"
 
 
 class StatusKKTinggal(CustomModel):
     id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default='label')
-    label = models.CharField(max_length=128, default='nama')
+    nama = models.CharField(max_length=64, default="label")
+    label = models.CharField(max_length=128, default="nama")
 
     def __str__(self):
         return self.label
 
     class Meta(CustomModel.Meta):
-        db_table = 'status_kk_tinggal'
+        db_table = "status_kk_tinggal"
 
 
 class StatusKKPindah(CustomModel):
     id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default='label')
-    label = models.CharField(max_length=128, default='nama')
+    nama = models.CharField(max_length=64, default="label")
+    label = models.CharField(max_length=128, default="nama")
 
     def __str__(self):
         return self.label
 
     class Meta(CustomModel.Meta):
-        db_table = 'status_kk_pindah'
+        db_table = "status_kk_pindah"
 
 
 class SadPindahKeluar(CustomModel):
-    keluarga = models.ForeignKey(
-        SadKeluarga,
-        models.DO_NOTHING,
-        related_name='data_keluar',
-        blank=True,
-        null=True,
-    )
-    pemohon = models.ForeignKey(
-        SadPenduduk,
-        models.DO_NOTHING,
-        related_name='data_keluar',
-        blank=True,
-        null=True,
-    )
+    nomor_kk = models.CharField(max_length=54, default="")
+    nik_pemohon = models.CharField(max_length=54, default="")
     alasan = models.ForeignKey(
         AlasanPindah,
         models.DO_NOTHING,
-        related_name='data_keluar_alasan',
+        related_name="data_keluar_alasan",
         blank=True,
         null=True,
     )
@@ -449,32 +424,39 @@ class SadPindahKeluar(CustomModel):
     klasifikasi_pindah = models.ForeignKey(
         KlasifikasiPindah,
         models.DO_NOTHING,
-        related_name='data_keluar_klasifikasi',
+        related_name="data_keluar_klasifikasi",
         blank=True,
         null=True,
     )
     jenis_kepindahan = models.ForeignKey(
         JenisPindah,
         models.DO_NOTHING,
-        related_name='data_keluar_jenis',
+        related_name="data_keluar_jenis",
         blank=True,
         null=True,
     )
     status_kk_pindah = models.ForeignKey(
         StatusKKPindah,
         models.DO_NOTHING,
-        related_name='data_keluar_kk_pindah',
+        related_name="data_keluar_kk_pindah",
         blank=True,
         null=True,
     )
     status_kk_tinggal = models.ForeignKey(
         StatusKKTinggal,
         models.DO_NOTHING,
-        related_name='data_keluar_kk_tinggal',
+        related_name="data_keluar_kk_tinggal",
         blank=True,
         null=True,
     )
     rencana_tgl_pindah = models.DateField(blank=True, null=True)
+    nik_pindah = models.CharField(max_length=72, default="")
+
+    def anggota_keluar(self):
+        nik_s = list(self.nik_pindah.split(","))
+        if nik_s:
+            return SadPenduduk.all_objects.filter(pk__in=nik_s)
+        return []
 
     class Meta(CustomModel.Meta):
 
@@ -483,13 +465,19 @@ class SadPindahKeluar(CustomModel):
 
 class SadPindahMasuk(CustomModel):
     no_kk = models.CharField(max_length=18, blank=True, null=True)
-    status_no_kk_pindah = models.CharField(
-        max_length=20, blank=True, null=True
+    status_kk_pindah = models.ForeignKey(
+        StatusKKPindah, models.DO_NOTHING, blank=True, null=True
     )
     tanggal_kedatangan = models.DateField(blank=True, null=True)
     alamat = models.CharField(max_length=100, blank=True, null=True)
-    rt_id = models.IntegerField(blank=True, null=True)
-    yang_datang = models.TextField(blank=True, null=True)
+    rt_id = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
+    nik_datang = models.CharField(max_length=128, blank=True, null=True)
+
+    def anggota_masuk(self):
+        nik_s = list(self.nik_datang.split(","))
+        if nik_s:
+            return SadPenduduk.all_objects.filter(pk__in=nik_s)
+        return []
 
     class Meta(CustomModel.Meta):
 
@@ -928,7 +916,7 @@ class SuratKelahiran(CustomModel):
     pegawai = models.ForeignKey(
         Pegawai,
         models.DO_NOTHING,
-        related_name='acc_surat_kelahiran',
+        related_name="acc_surat_kelahiran",
         blank=True,
         null=True,
     )
@@ -937,28 +925,28 @@ class SuratKelahiran(CustomModel):
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name='ayah_surat_lahir',
+        related_name="ayah_surat_lahir",
     )
     ibu = models.ForeignKey(
         SadPenduduk,
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name='ibu_surat_lahir',
+        related_name="ibu_surat_lahir",
     )
     saksi1 = models.ForeignKey(
         SadPenduduk,
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name='saksi1_surat_lahir',
+        related_name="saksi1_surat_lahir",
     )
     saksi2 = models.ForeignKey(
         SadPenduduk,
         models.DO_NOTHING,
         blank=True,
         null=True,
-        related_name='saksi2_surat_lahir',
+        related_name="saksi2_surat_lahir",
     )
     nama = models.CharField(max_length=100, blank=True, null=True)
     jk = models.CharField(max_length=15, blank=True, null=True)

@@ -2,6 +2,7 @@ from rest_framework import permissions, status
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -149,6 +150,7 @@ def create_or_reactivate(model, filter_param, data):
         model.objects.filter(pk=instance.pk).update(**data)
         instance.refresh_from_db()
     else:
+        print(data)
         instance = model.objects.create(**data)
     instance.save()
     return instance
@@ -259,11 +261,23 @@ class SadRwViewSet(CustomView):
     serializer_class = SadRwSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_queryset(self):
+        dusun = self.request.query_params.get("dusun")
+        if dusun:
+            return SadRw.objects.filter(dusun=dusun).all()
+        return SadRw.objects.all()
+
 
 class SadRtViewSet(CustomView):
     queryset = SadRt.objects.all().order_by("id")
     serializer_class = SadRtSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_queryset(self):
+        rw = self.request.query_params.get("rw")
+        if rw:
+            return SadRt.objects.filter(rw_id=rw).all()
+        return SadRt.objects.all()
 
 
 class SadKeluargaViewSet(DynamicModelViewSet):
@@ -367,6 +381,7 @@ class SadPendudukViewSet(CustomView):
 
             format_data_penduduk(item)
             param_filter = {"nik": item["nik"]}
+            penduduk = create_or_reactivate(SadPenduduk, param_filter, item)
             try:
                 penduduk = create_or_reactivate(
                     SadPenduduk, param_filter, item
@@ -375,7 +390,8 @@ class SadPendudukViewSet(CustomView):
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
-            except Exception:
+            except Exception as e:
+                print(str(e))
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
@@ -462,6 +478,21 @@ class SadPindahKeluarViewSet(CustomView):
     serializer_class = SadPindahKeluarSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def retrieve(self, request, pk=None):
+        queryset = SadPindahKeluar.objects.all()
+        sad_pindah = get_object_or_404(queryset, pk=pk)
+        serializer = SadPindahKeluarSerializer(sad_pindah)
+        data = serializer.data
+
+        penduduk_s = sad_pindah.anggota_keluar()
+        penduduk_data = []
+        for item in penduduk_s:
+            temp_data = {"nik": item.nik, "nama": item.nama}
+            penduduk_data.append(temp_data)
+
+        data["anggota_keluar"] = penduduk_data
+        return Response(data)
+
 
 class SadPindahMasukViewSet(CustomView):
     queryset = SadPindahMasuk.objects.all().order_by("id")
@@ -514,7 +545,6 @@ class SigBidangViewSet(CustomView):
     def me(self, request):
         user = request.user
         payload = {"id": user.id, "username": user.username}
-
 
         if hasattr(user.profile, 'pemilik'):
             pemilik = {
@@ -746,6 +776,12 @@ class SliderViewSet(DynamicModelViewSet):
     queryset = Slider.objects.all().order_by("id")
     serializer_class = SliderSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class SliderViewSet(DynamicModelViewSet):
+    queryset = Slider.objects.all().order_by("id")
+    serializer_class = SliderSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class SliderViewSet(DynamicModelViewSet):
     queryset = Slider.objects.all().order_by("id")
