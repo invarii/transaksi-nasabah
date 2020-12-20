@@ -35,9 +35,10 @@ DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-    'http://localhost:8000',
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://demo-desapintar.netlify.app",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -55,13 +56,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "dynamic_rest",
     "rest_framework",
-    'corsheaders',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -142,7 +143,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = 'static/'
+STATIC_ROOT = "static/"
 STATIC_URL = "/static/"
 
 MEDIA_ROOT = env.str("MEDIA_ROOT")
@@ -161,10 +162,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    'DEFAULT_PAGINATION_CLASS': (
-        'rest_framework.pagination.' 'LimitOffsetPagination'
+    "DEFAULT_PAGINATION_CLASS": (
+        "rest_framework.pagination." "LimitOffsetPagination"
     ),
-    'PAGE_SIZE': 50,
+    "PAGE_SIZE": 50,
 }
 
 SIMPLE_JWT = {
