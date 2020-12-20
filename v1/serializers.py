@@ -600,9 +600,7 @@ class KategoriLaporSerializer(DynamicModelSerializer):
 
 
 class LaporSerializer(DynamicModelSerializer):
-    kategori = DynamicRelationField(
-        "KategoriLaporSerializer", deferred=True, embed=True
-    )
+    kategori = serializers.IntegerField(source="kategori.id", read_only=True)
 
     class Meta:
         model = Lapor
