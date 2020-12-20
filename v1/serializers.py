@@ -527,7 +527,7 @@ class SigPemilikSerializer(CustomSerializer):
 class SigBidangSerializer(CustomSerializer):
     sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
     pemilik_warga = DynamicRelationField(
-        "SigPemilikSerializer", deferred=True, embed=True
+        "SadPendudukSerializer", deferred=True, embed=True
     )
 
     class Meta:
