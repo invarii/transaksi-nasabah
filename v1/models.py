@@ -589,11 +589,12 @@ class SigPemilik(CustomModel):
 
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
+    namabidang = models.CharField(max_length=50, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", models.DO_NOTHING, blank=True, null=True
     )
     pemilik_warga = models.ForeignKey(
-        "SigPemilik", models.DO_NOTHING, blank=True, null=True
+        "SadPenduduk", models.DO_NOTHING, blank=True, null=True
     )
     pemilik_nonwarga = models.CharField(max_length=100, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
