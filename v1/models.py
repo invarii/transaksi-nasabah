@@ -1,4 +1,5 @@
 import os
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -209,6 +210,13 @@ class SadKeluarga(CustomModel):
     )
     penghasil = models.IntegerField(blank=True, null=True)
     status_kk = models.CharField(max_length=20, blank=True, null=True)
+    menguasai = models.ForeignKey(
+        "SigBidang",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        related_name="dikuasai",
+    )
 
     def __str__(self):
         return self.no_kk
@@ -587,18 +595,65 @@ class SigPemilik(CustomModel):
         db_table = "sig_pemilik"
 
 
+class PemilikNonWarga(CustomModel):
+    nik = models.CharField(max_length=32, unique=True)
+    nama = models.CharField(max_length=64)
+
+
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     namabidang = models.CharField(max_length=50, blank=True, null=True)
     sig_rt = models.ForeignKey(
-        "SigRt", models.DO_NOTHING, blank=True, null=True
+        "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    pemilik_warga = models.ForeignKey(
-        "SadPenduduk", models.DO_NOTHING, blank=True, null=True
-    )
-    pemilik_nonwarga = models.CharField(max_length=100, blank=True, null=True)
-    penguasa = models.CharField(max_length=100, blank=True, null=True)
+    pemilik_warga = models.ManyToManyField("SadPenduduk")
+    pemilik_non_warga = models.ManyToManyField("PemilikNonWarga")
+    penguasa_nonwarga = JSONField(max_length=64, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
+
+    @property
+    def daftar_pemilik(self):
+        pemilik_warga = [
+            {"nik": i.nik, "nama": i.nama, "is_warga": True}
+            for i in self.pemilik_warga.all()
+        ]
+        pemilik_non_warga = [
+            {"nik": i.nik, "nama": i.nama, "is_warga": False}
+            for i in self.pemilik_non_warga.all()
+        ]
+        return pemilik_warga + pemilik_non_warga
+
+    @daftar_pemilik.setter
+    def daftar_pemilik(self, value):
+        for item in value:
+            if item.get("is_warga"):
+                pemilik = SadPenduduk.objects.get(nik=item["nik"])
+                self.pemilik_warga.add(pemilik)
+                continue
+            obj, created = PemilikNonWarga.objects.get_or_create(
+                nik=item["nik"], defaults={"nama": item["nama"]}
+            )
+            self.pemilik_non_warga.add(obj)
+
+    @property
+    def daftar_penguasa(self):
+        penguasa_warga = [
+            {"no_kk": i.no_kk, "is_warga": True} for i in self.dikuasai.all()
+        ]
+        if not self.penguasa_nonwarga:
+            return penguasa_warga
+        return penguasa_warga + self.penguasa_nonwarga
+
+    @daftar_penguasa.setter
+    def daftar_penguasa(self, value):
+        penguasa_non_warga = []
+        for item in value:
+            if item.get("is_warga"):
+                keluarga = SadKeluarga.objects.get(no_kk=item["no_kk"])
+                self.dikuasai.add(keluarga)
+                continue
+            penguasa_non_warga.append(item)
+        self.penguasa_nonwarga = penguasa_non_warga
 
     class Meta(CustomModel.Meta):
 

@@ -524,16 +524,46 @@ class SigPemilikSerializer(CustomSerializer):
         exclude = []
 
 
-class SigBidangSerializer(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
-    pemilik_warga = DynamicRelationField(
-        "SadPendudukSerializer", deferred=True, embed=True
+class PemilikBidangSerializer(serializers.Serializer):
+    nik = serializers.CharField()
+    nama = serializers.CharField()
+    is_warga = serializers.BooleanField(default=False)
+
+
+class PenguasaBidangSerializer(serializers.Serializer):
+    no_kk = serializers.CharField()
+    is_warga = serializers.BooleanField(default=False)
+
+
+class SigBidangSerializerMini(CustomSerializer):
+    sig_rt = DynamicRelationField("SigRtSerializer")
+
+    class Meta:
+        model = SigBidang
+        name = "data"
+        fields = ["nbt", "namabidang", "sig_rt"]
+
+
+class SigBidangSerializerFull(CustomSerializer):
+    sig_rt = DynamicRelationField("SigRtSerializer", deferred=False)
+    daftar_pemilik = serializers.ListField(
+        child=PemilikBidangSerializer(), required=False
+    )
+    daftar_penguasa = serializers.ListField(
+        child=PenguasaBidangSerializer(), required=False
     )
 
     class Meta:
         model = SigBidang
         name = "data"
-        exclude = []
+        fields = [
+            "id",
+            "nbt",
+            "namabidang",
+            "sig_rt",
+            "daftar_pemilik",
+            "daftar_penguasa",
+        ]
 
 
 class SigSadBidangSerializer(CustomSerializer):

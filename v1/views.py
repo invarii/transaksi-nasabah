@@ -37,7 +37,8 @@ from .serializers import (
     SadInventarisSerializer,
     SadSuratSerializer,
     SadDetailSuratSerializer,
-    SigBidangSerializer,
+    SigBidangSerializerMini,
+    SigBidangSerializerFull,
     SigPemilikSerializer,
     SigSadBidangSerializer,
     SigSadBidang2Serializer,
@@ -538,18 +539,22 @@ class SigSadBidang2ViewSet(CustomView):
 
 class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
-    serializer_class = SigBidangSerializer
+    serializer_class = SigBidangSerializerFull
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_serializer_class(self):
+        if self.action in ["list", "create"]:
+            return SigBidangSerializerMini
+        return SigBidangSerializerFull
 
     @action(detail=False, methods=["get"])
     def me(self, request):
         user = request.user
         payload = {"id": user.id, "username": user.username}
 
-        if hasattr(user.profile, 'pemilik'):
+        if hasattr(user.profile, "pemilik"):
             pemilik = {
-                'pemilik_warga': user.profile.pemilik.pemilik_warga,
+                "pemilik_warga": user.profile.pemilik.pemilik_warga,
             }
             payload["pemilik"] = pemilik
         return Response(payload)
@@ -773,16 +778,6 @@ class ArtikelViewSet(DynamicModelViewSet):
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-class SliderViewSet(DynamicModelViewSet):
-    queryset = Slider.objects.all().order_by("id")
-    serializer_class = SliderSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-class SliderViewSet(DynamicModelViewSet):
-    queryset = Slider.objects.all().order_by("id")
-    serializer_class = SliderSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
 
 class SliderViewSet(DynamicModelViewSet):
     queryset = Slider.objects.all().order_by("id")
@@ -806,6 +801,7 @@ class LaporViewSet(DynamicModelViewSet):
         if kategori:
             return Lapor.objects.filter(kategori=kategori).all()
         return Lapor.objects.all()
+
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
     queryset = KategoriInformasi.objects.all().order_by("id")
