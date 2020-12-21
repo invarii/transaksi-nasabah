@@ -541,7 +541,7 @@ class SigBidangSerializerMini(CustomSerializer):
     class Meta:
         model = SigBidang
         name = "data"
-        fields = ["nbt", "namabidang", "sig_rt"]
+        fields = ["id", "nbt", "namabidang", "sig_rt"]
 
 
 class SigBidangSerializerFull(CustomSerializer):
