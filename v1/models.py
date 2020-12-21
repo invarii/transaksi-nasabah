@@ -598,15 +598,21 @@ class SigPemilik(CustomModel):
 class PemilikNonWarga(CustomModel):
     nik = models.CharField(max_length=32, unique=True)
     nama = models.CharField(max_length=64)
+    namabidang = models.CharField(max_length=64, blank=True, null=True)
+
+
+class Kepemilikan(models.Model):
+    penduduk = models.ForeignKey("SadPenduduk", on_delete=models.DO_NOTHING)
+    bidang = models.ForeignKey("SigBidang", on_delete=models.DO_NOTHING)
+    namabidang = models.CharField(max_length=64, null=True, blank=True)
 
 
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
-    namabidang = models.CharField(max_length=50, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    pemilik_warga = models.ManyToManyField("SadPenduduk")
+    pemilikwarga = models.ManyToManyField("SadPenduduk", through="Kepemilikan")
     pemilik_non_warga = models.ManyToManyField("PemilikNonWarga")
     penguasa_nonwarga = JSONField(max_length=64, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
