@@ -548,6 +548,7 @@ class SigBidangSerializerMini(CustomSerializer):
         name = "data"
         fields = ["id", "nbt", "namabidang", "sig_rt"]
 
+
 class SigBidangSerializerFull(CustomSerializer):
     sig_rt = DynamicRelationField("SigRtSerializer", deferred=False)
     daftar_pemilik = serializers.ListField(
@@ -672,37 +673,27 @@ class PotensiSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
-class SuratDomisiliSerializer(CustomSerializer):
-    class Meta(SuratMeta):
-        model = SuratDomisili
-
-    def create(self, validated_data):
-        surat = SuratDomisili(**validated_data)
-        surat.created_by = self.context["request"].user
-        surat.penduduk = self.context["request"].user.profile
-        surat.save()
-        return surat
 
 class KategoriPendapatanSerializer(CustomSerializer):
-
     class Meta:
         model = KategoriPendapatan
         name = "data"
         exclude = []
 
-class KategoriTahunSerializer(CustomSerializer):
 
+class KategoriTahunSerializer(CustomSerializer):
     class Meta:
         model = KategoriTahun
         name = "data"
         exclude = []
 
-class KategoriBelanjaSerializer(CustomSerializer):
 
+class KategoriBelanjaSerializer(CustomSerializer):
     class Meta:
         model = KategoriBelanja
         name = "data"
         exclude = []
+
 
 class PendapatanSerializer(CustomSerializer):
     kategori = DynamicRelationField(
@@ -717,6 +708,7 @@ class PendapatanSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+
 class BelanjaSerializer(CustomSerializer):
     kategori = DynamicRelationField(
         "KategoriBelanjaSerializer", deferred=True, embed=True
@@ -729,6 +721,7 @@ class BelanjaSerializer(CustomSerializer):
         model = Belanja
         name = "data"
         exclude = []
+
 
 class AdminSuratKelahiranSerializer(DynamicModelSerializer):
     pegawai = DynamicRelationField(PegawaiSerializer)
