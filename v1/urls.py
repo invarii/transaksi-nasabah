@@ -50,6 +50,11 @@ from .views import (
     StatusKKTinggalViewSet,
     StatusKKPindahViewSet,
     SliderViewSet,
+    KategoriBelanjaViewSet,
+    KategoriPendapatanViewSet,
+    KategoriTahunViewSet,
+    BelanjaViewSet,
+    PendapatanViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -102,3 +107,8 @@ router.register(r'alasanpindah', AlasanPindahViewSet)
 router.register(r'statuskktinggal', StatusKKTinggalViewSet)
 router.register(r'statuskkpindah', StatusKKPindahViewSet)
 router.register(r'slider', SliderViewSet)
+router.register(r'kategoribelanja', KategoriBelanjaViewSet)
+router.register(r'kategoripendapatan', KategoriPendapatanViewSet)
+router.register(r'tahun', KategoriTahunViewSet)
+router.register(r'anggaranbelanja', BelanjaViewSet)
+router.register(r'anggaranpendapatan', PendapatanViewSet)

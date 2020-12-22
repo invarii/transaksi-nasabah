@@ -55,6 +55,11 @@ from .models import (
     AlasanPindah,
     StatusKKTinggal,
     StatusKKPindah,
+    KategoriPendapatan,
+    KategoriTahun,
+    KategoriBelanja,
+    Pendapatan,
+    Belanja,
 )
 
 util_columns = [
@@ -407,14 +412,14 @@ class SadSarprasSerializer(CustomSerializer):
     class Meta:
         model = SadSarpras
         name = "data"
-        fields = ["id", "nama_sarpras", "asal"]
+        exclude = []
 
 
 class SadInventarisSerializer(CustomSerializer):
     class Meta:
         model = SadInventaris
         name = "data"
-        fields = ["id", "nama_inventaris", "asal"]
+        exclude = []
 
 
 class SadSuratSerializer(CustomSerializer):
@@ -809,3 +814,50 @@ class SuratDomisiliSerializer(CustomSerializer):
         surat.penduduk = self.context["request"].user.profile
         surat.save()
         return surat
+
+class KategoriPendapatanSerializer(CustomSerializer):
+
+    class Meta:
+        model = KategoriPendapatan
+        name = "data"
+        exclude = []
+
+class KategoriTahunSerializer(CustomSerializer):
+
+    class Meta:
+        model = KategoriTahun
+        name = "data"
+        exclude = []
+
+class KategoriBelanjaSerializer(CustomSerializer):
+
+    class Meta:
+        model = KategoriBelanja
+        name = "data"
+        exclude = []
+
+class PendapatanSerializer(CustomSerializer):
+    kategori = DynamicRelationField(
+        "KategoriPendapatanSerializer", deferred=True, embed=True
+    )
+    tahun = DynamicRelationField(
+        "KategoriTahunSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Pendapatan
+        name = "data"
+        exclude = []
+
+class BelanjaSerializer(CustomSerializer):
+    kategori = DynamicRelationField(
+        "KategoriBelanjaSerializer", deferred=True, embed=True
+    )
+    tahun = DynamicRelationField(
+        "KategoriTahunSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Belanja
+        name = "data"
+        exclude = []
