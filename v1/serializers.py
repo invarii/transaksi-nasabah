@@ -859,3 +859,15 @@ class SuratSkckSerializer(CustomSerializer):
         surat.penduduk = self.context["request"].user.profile
         surat.save()
         return surat
+
+
+class SuratDomisiliSerializer(CustomSerializer):
+    class Meta(SuratMeta):
+        model = SuratDomisili
+
+    def create(self, validated_data):
+        surat = SuratDomisili(**validated_data)
+        surat.created_by = self.context["request"].user
+        surat.penduduk = self.context["request"].user.profile
+        surat.save()
+        return surat
