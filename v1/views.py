@@ -70,6 +70,11 @@ from .serializers import (
     KlasifikasiPindahSerializer,
     StatusKKTinggalSerializer,
     StatusKKPindahSerializer,
+    KategoriBelanjaSerializer,
+    KategoriPendapatanSerializer,
+    KategoriTahunSerializer,
+    PendapatanSerializer,
+    BelanjaSerializer,
 )
 
 from .models import (
@@ -122,6 +127,11 @@ from .models import (
     StatusKKTinggal,
     StatusKKPindah,
     Slider,
+    KategoriBelanja,
+    KategoriTahun,
+    KategoriPendapatan,
+    Belanja,
+    Pendapatan,
 )
 
 
@@ -879,3 +889,28 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         data = self.get_object()
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
+
+class KategoriPendapatanViewSet(DynamicModelViewSet):
+    queryset = KategoriPendapatan.objects.all().order_by("id")
+    serializer_class = KategoriPendapatanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class KategoriBelanjaViewSet(DynamicModelViewSet):
+    queryset = KategoriBelanja.objects.all().order_by("id")
+    serializer_class = KategoriBelanjaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class KategoriTahunViewSet(DynamicModelViewSet):
+    queryset = KategoriTahun.objects.all().order_by("id")
+    serializer_class = KategoriTahunSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PendapatanViewSet(DynamicModelViewSet):
+    queryset = Pendapatan.objects.all().order_by("id")
+    serializer_class = PendapatanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class BelanjaViewSet(DynamicModelViewSet):
+    queryset = Belanja.objects.all().order_by("id")
+    serializer_class = BelanjaSerializer
+    permission_classes = [permissions.IsAuthenticated]

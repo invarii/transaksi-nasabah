@@ -1025,3 +1025,64 @@ class SuratKelahiran(CustomModel):
 
     class Meta:
         db_table = "surat_kelahiran"
+
+class KategoriPendapatan(models.Model):
+    kode = models.CharField(max_length=10, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
+    jumlah_anggaran = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "kategori_pendapatan"
+
+class KategoriTahun(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+
+        db_table = "kategori_tahun"
+
+class Pendapatan(models.Model):
+    kategori = models.ForeignKey(
+        KategoriPendapatan, models.DO_NOTHING, blank=True, null=True
+    )
+    tahun = models.ForeignKey(
+        KategoriTahun, models.DO_NOTHING, blank=True, null=True
+    )
+    kode = models.CharField(max_length=20, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
+    anggaran = models.CharField(max_length=100, blank=True, null=True)
+    sumber_dana = models.CharField(max_length=100, blank=True, null=True)
+    tgl = models.DateField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "pendapatan"
+
+class KategoriBelanja(models.Model):
+    kode = models.CharField(max_length=10, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
+    jumlah_anggaran = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "kategori_belanja"
+
+class Belanja(models.Model):
+    kategori = models.ForeignKey(
+        KategoriBelanja, models.DO_NOTHING, blank=True, null=True
+    )
+    tahun = models.ForeignKey(
+        KategoriTahun, models.DO_NOTHING, blank=True, null=True
+    )
+    kode = models.CharField(max_length=20, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
+    anggaran = models.CharField(max_length=100, blank=True, null=True)
+    sumber_dana = models.CharField(max_length=100, blank=True, null=True)
+    tgl = models.DateField(blank=True, null=True)
+    progres = models.CharField(max_length=100, blank=True, null=True)
+    koordinat = models.TextField(blank=True, null=True)
+
+    class Meta:
+
+        db_table = "belanja"
