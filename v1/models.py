@@ -600,11 +600,17 @@ class PemilikNonWarga(CustomModel):
     nama = models.CharField(max_length=64)
     namabidang = models.CharField(max_length=64, blank=True, null=True)
 
+    class Meta(CustomModel.Meta):
+        db_table = "pemilik_non_warga"
+
 
 class Kepemilikan(models.Model):
     penduduk = models.ForeignKey("SadPenduduk", on_delete=models.DO_NOTHING)
     bidang = models.ForeignKey("SigBidang", on_delete=models.DO_NOTHING)
     namabidang = models.CharField(max_length=64, null=True, blank=True)
+
+    class Meta:
+        db_table = "kepemilikan"
 
 
 class SigBidang(CustomModel):
@@ -1026,6 +1032,7 @@ class SuratKelahiran(CustomModel):
     class Meta:
         db_table = "surat_kelahiran"
 
+
 class KategoriPendapatan(models.Model):
     kode = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
@@ -1035,12 +1042,14 @@ class KategoriPendapatan(models.Model):
 
         db_table = "kategori_pendapatan"
 
+
 class KategoriTahun(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
 
         db_table = "kategori_tahun"
+
 
 class Pendapatan(models.Model):
     kategori = models.ForeignKey(
@@ -1059,6 +1068,7 @@ class Pendapatan(models.Model):
 
         db_table = "pendapatan"
 
+
 class KategoriBelanja(models.Model):
     kode = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
@@ -1067,6 +1077,7 @@ class KategoriBelanja(models.Model):
     class Meta:
 
         db_table = "kategori_belanja"
+
 
 class Belanja(models.Model):
     kategori = models.ForeignKey(
