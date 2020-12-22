@@ -874,12 +874,13 @@ class Potensi(models.Model):
     kategori = models.ForeignKey(
         KategoriPotensi, models.DO_NOTHING, blank=True, null=True
     )
-    bidang = models.CharField(max_length=100, blank=True, null=True)
+    nama_usaha = models.CharField(max_length=100, blank=True, null=True)
+    alamat = models.CharField(max_length=100, blank=True, null=True)
     judul = models.CharField(max_length=100, blank=True, null=True)
     harga = models.CharField(max_length=100, blank=True, null=True)
+    jenis_promosi = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
-    geometry = models.TextField(blank=True, null=True)
-    centroid = models.TextField(blank=True, null=True)
+    koordinat = models.TextField(blank=True, null=True)
     gambar = models.ImageField(
         upload_to=file_destination, blank=True, null=True
     )
