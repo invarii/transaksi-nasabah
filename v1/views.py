@@ -847,6 +847,34 @@ class PotensiViewSet(DynamicModelViewSet):
             return Potensi.objects.filter(kategori=kategori).all()
         return Potensi.objects.all()
 
+class KategoriPendapatanViewSet(DynamicModelViewSet):
+    queryset = KategoriPendapatan.objects.all().order_by("id")
+    serializer_class = KategoriPendapatanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class KategoriBelanjaViewSet(DynamicModelViewSet):
+    queryset = KategoriBelanja.objects.all().order_by("id")
+    serializer_class = KategoriBelanjaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class KategoriTahunViewSet(DynamicModelViewSet):
+    queryset = KategoriTahun.objects.all().order_by("id")
+    serializer_class = KategoriTahunSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class PendapatanViewSet(DynamicModelViewSet):
+    queryset = Pendapatan.objects.all().order_by("id")
+    serializer_class = PendapatanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class BelanjaViewSet(DynamicModelViewSet):
+    queryset = Belanja.objects.all().order_by("id")
+    serializer_class = BelanjaSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
     queryset = SuratKelahiran.objects.all()
@@ -895,32 +923,3 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
 
-
-class KategoriPendapatanViewSet(DynamicModelViewSet):
-    queryset = KategoriPendapatan.objects.all().order_by("id")
-    serializer_class = KategoriPendapatanSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class KategoriBelanjaViewSet(DynamicModelViewSet):
-    queryset = KategoriBelanja.objects.all().order_by("id")
-    serializer_class = KategoriBelanjaSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class KategoriTahunViewSet(DynamicModelViewSet):
-    queryset = KategoriTahun.objects.all().order_by("id")
-    serializer_class = KategoriTahunSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class PendapatanViewSet(DynamicModelViewSet):
-    queryset = Pendapatan.objects.all().order_by("id")
-    serializer_class = PendapatanSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class BelanjaViewSet(DynamicModelViewSet):
-    queryset = Belanja.objects.all().order_by("id")
-    serializer_class = BelanjaSerializer
-    permission_classes = [permissions.IsAuthenticated]
