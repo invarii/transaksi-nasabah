@@ -635,7 +635,9 @@ class KategoriLaporSerializer(DynamicModelSerializer):
 
 
 class LaporSerializer(DynamicModelSerializer):
-    kategori = serializers.IntegerField(source="kategori.id", read_only=True)
+    kategori = DynamicRelationField(
+        "KategoriLaporSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Lapor
@@ -666,7 +668,9 @@ class InformasiSerializer(DynamicModelSerializer):
 
 
 class PotensiSerializer(DynamicModelSerializer):
-    kategori = serializers.IntegerField(source="kategori.id", read_only=True)
+    kategori = DynamicRelationField(
+        "KategoriPotensiSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Potensi
