@@ -549,6 +549,7 @@ class SigBidangSerializerMini(CustomSerializer):
         fields = ["id", "nbt", "sig_rt"]
 
 
+
 class SigBidangSerializerFull(CustomSerializer):
     sig_rt = DynamicRelationField("SigRtSerializer", deferred=False)
     daftar_pemilik = serializers.ListField(
