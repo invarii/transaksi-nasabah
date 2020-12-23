@@ -546,7 +546,8 @@ class SigBidangSerializerMini(CustomSerializer):
     class Meta:
         model = SigBidang
         name = "data"
-        fields = ["id", "nbt", "namabidang", "sig_rt"]
+        fields = ["id", "nbt", "sig_rt"]
+
 
 
 class SigBidangSerializerFull(CustomSerializer):
@@ -564,7 +565,6 @@ class SigBidangSerializerFull(CustomSerializer):
         fields = [
             "id",
             "nbt",
-            "namabidang",
             "sig_rt",
             "daftar_pemilik",
             "daftar_penguasa",
@@ -673,52 +673,6 @@ class PotensiSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
-class KategoriPendapatanSerializer(CustomSerializer):
-
-    class Meta:
-        model = KategoriPendapatan
-        name = "data"
-        exclude = []
-
-class KategoriTahunSerializer(CustomSerializer):
-
-    class Meta:
-        model = KategoriTahun
-        name = "data"
-        exclude = []
-
-class KategoriBelanjaSerializer(CustomSerializer):
-
-    class Meta:
-        model = KategoriBelanja
-        name = "data"
-        exclude = []
-
-class PendapatanSerializer(CustomSerializer):
-    kategori = DynamicRelationField(
-        "KategoriPendapatanSerializer", deferred=True, embed=True
-    )
-    tahun = DynamicRelationField(
-        "KategoriTahunSerializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = Pendapatan
-        name = "data"
-        exclude = []
-
-class BelanjaSerializer(CustomSerializer):
-    kategori = DynamicRelationField(
-        "KategoriBelanjaSerializer", deferred=True, embed=True
-    )
-    tahun = DynamicRelationField(
-        "KategoriTahunSerializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = Belanja
-        name = "data"
-        exclude = []
 
 class KategoriPendapatanSerializer(CustomSerializer):
     class Meta:
@@ -910,4 +864,3 @@ class SuratDomisiliSerializer(CustomSerializer):
         surat.penduduk = self.context["request"].user.profile
         surat.save()
         return surat
-

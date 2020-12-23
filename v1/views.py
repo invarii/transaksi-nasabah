@@ -562,11 +562,16 @@ class SigBidangViewSet(CustomView):
         user = request.user
         payload = {"id": user.id, "username": user.username}
 
-        if hasattr(user.profile, "pemilik"):
-            pemilik = {
-                "pemilik_warga": user.profile.pemilik.pemilik_warga,
-            }
-            payload["pemilik"] = pemilik
+        if hasattr(user, "profile"):
+            kepemilikan = user.profile.kepemilikanwarga_set.all()
+            payload["kepemilikan"] = [
+                {
+                    "bidang": i.bidang.id,
+                    "nbt": i.bidang.nbt,
+                    "namabidang": i.namabidang,
+                }
+                for i in kepemilikan
+            ]
         return Response(payload)
 
     @action(detail=False, methods=["post"])
@@ -890,25 +895,30 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
 
+
 class KategoriPendapatanViewSet(DynamicModelViewSet):
     queryset = KategoriPendapatan.objects.all().order_by("id")
     serializer_class = KategoriPendapatanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class KategoriBelanjaViewSet(DynamicModelViewSet):
     queryset = KategoriBelanja.objects.all().order_by("id")
     serializer_class = KategoriBelanjaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class KategoriTahunViewSet(DynamicModelViewSet):
     queryset = KategoriTahun.objects.all().order_by("id")
     serializer_class = KategoriTahunSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class PendapatanViewSet(DynamicModelViewSet):
     queryset = Pendapatan.objects.all().order_by("id")
     serializer_class = PendapatanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")

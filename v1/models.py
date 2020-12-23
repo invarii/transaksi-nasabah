@@ -595,16 +595,31 @@ class SigPemilik(CustomModel):
         db_table = "sig_pemilik"
 
 
-class PemilikNonWarga(CustomModel):
+class PemilikNonWarga(models.Model):
     nik = models.CharField(max_length=32, unique=True)
     nama = models.CharField(max_length=64)
     namabidang = models.CharField(max_length=64, blank=True, null=True)
 
+    class Meta(CustomModel.Meta):
+        db_table = "pemilik_non_warga"
 
-class Kepemilikan(models.Model):
+
+class KepemilikanNonWarga(models.Model):
+    non_penduduk = models.ForeignKey("PemilikNonWarga", models.DO_NOTHING)
+    bidang = models.ForeignKey("SigBidang", on_delete=models.DO_NOTHING)
+    namabidang = models.CharField(max_length=64, null=True, blank=True)
+
+    class Meta:
+        db_table = "kepemilikan_non_warga"
+
+
+class KepemilikanWarga(models.Model):
     penduduk = models.ForeignKey("SadPenduduk", on_delete=models.DO_NOTHING)
     bidang = models.ForeignKey("SigBidang", on_delete=models.DO_NOTHING)
     namabidang = models.CharField(max_length=64, null=True, blank=True)
+
+    class Meta:
+        db_table = "kepemilikan"
 
 
 class SigBidang(CustomModel):
@@ -612,34 +627,88 @@ class SigBidang(CustomModel):
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    pemilikwarga = models.ManyToManyField("SadPenduduk", through="Kepemilikan")
-    pemilik_non_warga = models.ManyToManyField("PemilikNonWarga")
+    pemilikwarga = models.ManyToManyField(
+        "SadPenduduk", through="KepemilikanWarga"
+    )
+    pemiliknonwarga = models.ManyToManyField(
+        "PemilikNonWarga", through="KepemilikanNonWarga"
+    )
     penguasa_nonwarga = JSONField(max_length=64, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
     @property
     def daftar_pemilik(self):
         pemilik_warga = [
-            {"nik": i.nik, "nama": i.nama, "is_warga": True}
-            for i in self.pemilik_warga.all()
+            {
+                "nik": i.penduduk.nik,
+                "nama": i.penduduk.nama,
+                "namabidang": i.namabidang,
+                "is_warga": True,
+            }
+            for i in self.kepemilikanwarga_set.all()
         ]
         pemilik_non_warga = [
-            {"nik": i.nik, "nama": i.nama, "is_warga": False}
-            for i in self.pemilik_non_warga.all()
+            {
+                "nik": i.non_penduduk.nik,
+                "nama": i.non_penduduk.nama,
+                "namabidang": i.namabidang,
+                "is_warga": False,
+            }
+            for i in self.kepemilikannonwarga_set.all()
         ]
         return pemilik_warga + pemilik_non_warga
 
     @daftar_pemilik.setter
     def daftar_pemilik(self, value):
+        warga_nik = []
+        non_warga_nik = []
         for item in value:
             if item.get("is_warga"):
                 pemilik = SadPenduduk.objects.get(nik=item["nik"])
-                self.pemilik_warga.add(pemilik)
+
+                kepemilikan, created = KepemilikanWarga.objects.get_or_create(
+                    penduduk=pemilik,
+                    bidang=self,
+                    defaults={"namabidang": item["namabidang"]},
+                )
+                (
+                    kepemilikan,
+                    created,
+                ) = KepemilikanWarga.objects.update_or_create(
+                    penduduk=pemilik,
+                    bidang=self,
+                    defaults={"namabidang": item["namabidang"]},
+                )
+                warga_nik.append(pemilik.nik)
                 continue
-            obj, created = PemilikNonWarga.objects.get_or_create(
+            pemilik, created = PemilikNonWarga.objects.get_or_create(
                 nik=item["nik"], defaults={"nama": item["nama"]}
             )
-            self.pemilik_non_warga.add(obj)
+            pemilik, created = PemilikNonWarga.objects.update_or_create(
+                nik=item["nik"], defaults={"nama": item["nama"]}
+            )
+
+            kepemilikan, created = KepemilikanNonWarga.objects.get_or_create(
+                non_penduduk=pemilik,
+                bidang=self,
+                defaults={"namabidang": item["namabidang"]},
+            )
+            (
+                kepemilikan,
+                created,
+            ) = KepemilikanNonWarga.objects.update_or_create(
+                non_penduduk=pemilik,
+                bidang=self,
+                defaults={"namabidang": item["namabidang"]},
+            )
+            non_warga_nik.append(item["nik"])
+        self.kepemilikanwarga_set.exclude(penduduk__nik__in=warga_nik).delete()
+        self.kepemilikannonwarga_set.exclude(
+            non_penduduk__nik__in=non_warga_nik
+        ).delete()
+        PemilikNonWarga.objects.annotate(
+            kepemilikan_s=models.Count("kepemilikannonwarga")
+        ).filter(kepemilikan_s=0).delete()
 
     @property
     def daftar_penguasa(self):
@@ -1026,6 +1095,7 @@ class SuratKelahiran(CustomModel):
     class Meta:
         db_table = "surat_kelahiran"
 
+
 class KategoriPendapatan(models.Model):
     kode = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
@@ -1035,12 +1105,14 @@ class KategoriPendapatan(models.Model):
 
         db_table = "kategori_pendapatan"
 
+
 class KategoriTahun(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
 
         db_table = "kategori_tahun"
+
 
 class Pendapatan(models.Model):
     kategori = models.ForeignKey(
@@ -1059,6 +1131,7 @@ class Pendapatan(models.Model):
 
         db_table = "pendapatan"
 
+
 class KategoriBelanja(models.Model):
     kode = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
@@ -1067,6 +1140,7 @@ class KategoriBelanja(models.Model):
     class Meta:
 
         db_table = "kategori_belanja"
+
 
 class Belanja(models.Model):
     kategori = models.ForeignKey(
