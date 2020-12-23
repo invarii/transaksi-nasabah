@@ -674,28 +674,28 @@ class PotensiSerializer(DynamicModelSerializer):
         exclude = []
 
 
-class KategoriPendapatanSerializer(CustomSerializer):
+class KategoriPendapatanSerializer(DynamicModelSerializer):
     class Meta:
         model = KategoriPendapatan
         name = "data"
         exclude = []
 
 
-class KategoriTahunSerializer(CustomSerializer):
+class KategoriTahunSerializer(DynamicModelSerializer):
     class Meta:
         model = KategoriTahun
         name = "data"
         exclude = []
 
 
-class KategoriBelanjaSerializer(CustomSerializer):
+class KategoriBelanjaSerializer(DynamicModelSerializer):
     class Meta:
         model = KategoriBelanja
         name = "data"
         exclude = []
 
 
-class PendapatanSerializer(CustomSerializer):
+class PendapatanSerializer(DynamicModelSerializer):
     kategori = DynamicRelationField(
         "KategoriPendapatanSerializer", deferred=True, embed=True
     )
@@ -709,7 +709,7 @@ class PendapatanSerializer(CustomSerializer):
         exclude = []
 
 
-class BelanjaSerializer(CustomSerializer):
+class BelanjaSerializer(DynamicModelSerializer):
     kategori = DynamicRelationField(
         "KategoriBelanjaSerializer", deferred=True, embed=True
     )
