@@ -218,6 +218,15 @@ class SadKeluarga(CustomModel):
         related_name="dikuasai",
     )
 
+    @property
+    def kepala_keluarga(self):
+        kepala_keluarga = self.anggota.filter(
+            status_dalam_keluarga="Kepala Keluarga"
+        ).first()
+        if kepala_keluarga:
+            return {"nama": kepala_keluarga.nama, "nik": kepala_keluarga.nik}
+        return {}
+
     def __str__(self):
         return self.no_kk
 

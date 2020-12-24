@@ -221,11 +221,12 @@ class SadRtSerializer(CustomSerializer):
 
 class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField("SadPendudukSerializer", many=True)
+    kepala_keluarga = serializers.DictField(read_only=True)
 
     class Meta:
         model = SadKeluarga
         name = "data"
-        exclude = []
+        exclude = util_columns
         extra_kwargs = {
             "created_by": {"default": serializers.CurrentUserDefault()}
         }
@@ -547,7 +548,6 @@ class SigBidangSerializerMini(CustomSerializer):
         model = SigBidang
         name = "data"
         fields = ["id", "nbt", "sig_rt"]
-
 
 
 class SigBidangSerializerFull(CustomSerializer):
