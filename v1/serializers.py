@@ -202,7 +202,9 @@ class SadDusunSerializer(CustomSerializer):
 
 
 class SadRwSerializer(CustomSerializer):
-    dusun = DynamicRelationField("SadDusunSerializer", deferred=False)
+    dusun = DynamicRelationField(
+        "SadDusunSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadRw
@@ -211,7 +213,7 @@ class SadRwSerializer(CustomSerializer):
 
 
 class SadRtSerializer(CustomSerializer):
-    rw = DynamicRelationField("SadRwSerializer", deferred=False)
+    rw = DynamicRelationField("SadRwSerializer", deferred=True, embed=True)
 
     class Meta:
         model = SadRt
@@ -220,7 +222,9 @@ class SadRtSerializer(CustomSerializer):
 
 
 class SadKeluargaSerializer(CustomSerializer):
-    anggota = DynamicRelationField("SadPendudukSerializer", many=True)
+    anggota = DynamicRelationField(
+        "SadPendudukSerializer", many=True, deferred=True, embed=True
+    )
     kepala_keluarga = serializers.DictField(read_only=True)
 
     class Meta:
@@ -233,7 +237,9 @@ class SadKeluargaSerializer(CustomSerializer):
 
 
 class SadPendudukSerializer(CustomSerializer):
-    keluarga = DynamicRelationField("SadKeluargaSerializer")
+    keluarga = DynamicRelationField(
+        "SadKeluargaSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadPenduduk
@@ -267,7 +273,9 @@ class SadLahirmatiSerializer(CustomSerializer):
 
 
 class SadPindahKeluarSerializer(CustomSerializer):
-    kelurahan_tujuan = DynamicRelationField(SadDesaSerializer)
+    kelurahan_tujuan = DynamicRelationField(
+        SadDesaSerializer, deferred=False, embed=True
+    )
     anggota_pindah = serializers.ListField(
         child=serializers.IntegerField(), write_only=True
     )
@@ -542,7 +550,7 @@ class PenguasaBidangSerializer(serializers.Serializer):
 
 
 class SigBidangSerializerMini(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer")
+    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
 
     class Meta:
         model = SigBidang
@@ -551,7 +559,7 @@ class SigBidangSerializerMini(CustomSerializer):
 
 
 class SigBidangSerializerFull(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=False)
+    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
     daftar_pemilik = serializers.ListField(
         child=PemilikBidangSerializer(), required=False
     )
