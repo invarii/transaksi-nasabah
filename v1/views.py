@@ -572,6 +572,14 @@ class SigBidangViewSet(CustomView):
                 }
                 for i in kepemilikan
             ]
+
+            penguasaan = user.profile.keluarga.menguasai
+            if penguasaan:
+                data = {
+                    "bidang": penguasaan.id,
+                    "nbt": penguasaan.nbt,
+                }
+                payload["kepenguasaan"] = data
         return Response(payload)
 
     @action(detail=False, methods=["post"])
@@ -847,6 +855,7 @@ class PotensiViewSet(DynamicModelViewSet):
             return Potensi.objects.filter(kategori=kategori).all()
         return Potensi.objects.all()
 
+
 class KategoriPendapatanViewSet(DynamicModelViewSet):
     queryset = KategoriPendapatan.objects.all().order_by("id")
     serializer_class = KategoriPendapatanSerializer
@@ -875,6 +884,7 @@ class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")
     serializer_class = BelanjaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
     queryset = SuratKelahiran.objects.all()
@@ -922,4 +932,3 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         data = self.get_object()
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
-

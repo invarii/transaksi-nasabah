@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 import environ
 from pathlib import Path
 from datetime import timedelta
@@ -18,7 +19,26 @@ env = environ.Env()
 environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
+log_dir = os.path.join(os.path.dirname(BASE_DIR), "applog")
+print(log_dir)
+
+if not os.path.isdir(log_dir):
+    os.mkdir(log_dir)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": log_dir + "/applog.log",
+            "maxBytes": 2 * 1024 * 1024,
+            "backupCount": "20",
+        }
+    },
+    "root": {"handlers": ["file"], "level": "INFO"},
+}
 
 
 # Quick-start development settings - unsuitable for production
