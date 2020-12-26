@@ -541,6 +541,7 @@ class SigPemilikSerializer(CustomSerializer):
 class PemilikBidangSerializer(serializers.Serializer):
     nik = serializers.CharField()
     nama = serializers.CharField()
+    namabidang = serializers.CharField()
     is_warga = serializers.BooleanField(default=False)
 
 
@@ -550,7 +551,9 @@ class PenguasaBidangSerializer(serializers.Serializer):
 
 
 class SigBidangSerializerMini(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
 
     class Meta:
         model = SigBidang
@@ -559,7 +562,9 @@ class SigBidangSerializerMini(CustomSerializer):
 
 
 class SigBidangSerializerFull(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=True, embed=True)
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
     daftar_pemilik = serializers.ListField(
         child=PemilikBidangSerializer(), required=False
     )
