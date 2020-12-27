@@ -820,8 +820,8 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class StatusLaporViewSet(DynamicModelViewSet):
-    queryset = KategoriLapor.objects.all().order_by("id")
-    serializer_class = KategoriLaporSerializer
+    queryset = StatusLapor.objects.all().order_by("id")
+    serializer_class = StatusLaporSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class LaporViewSet(DynamicModelViewSet):
