@@ -1008,6 +1008,15 @@ class KategoriLapor(models.Model):
 
         db_table = "KategoriLapor"
 
+class StatusLapor(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.nama
+
+    class Meta:
+
+        db_table = "StatusLapor"
 
 class Lapor(models.Model):
     kategori = models.ForeignKey(
@@ -1017,6 +1026,9 @@ class Lapor(models.Model):
     isi = models.TextField(blank=True, null=True)
     gambar = models.ImageField(
         upload_to=file_destination, blank=True, null=True
+    )
+    status = models.ForeignKey(
+        StatusLapor, models.DO_NOTHING, blank=True, null=True
     )
 
     class Meta:
