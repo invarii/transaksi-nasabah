@@ -946,3 +946,4 @@ class SuratKeluarViewSet(DynamicModelViewSet):
     queryset = SuratKeluar.objects.all().order_by("id")
     serializer_class = SuratKeluarSerializer
     permission_classes = [permissions.IsAuthenticated]
+
