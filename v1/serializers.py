@@ -60,6 +60,8 @@ from .models import (
     KategoriBelanja,
     Pendapatan,
     Belanja,
+    SuratMasuk,
+    SuratKeluar,
 )
 
 util_columns = [
@@ -881,3 +883,15 @@ class SuratDomisiliSerializer(CustomSerializer):
         surat.penduduk = self.context["request"].user.profile
         surat.save()
         return surat
+
+class SuratMasukSerializer(DynamicModelSerializer):
+    class Meta:
+        model = SuratMasuk
+        name = "data"
+        exclude = []
+
+class SuratKeluarSerializer(DynamicModelSerializer):
+    class Meta:
+        model = SuratKeluar
+        name = "data"
+        exclude = []

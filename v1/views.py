@@ -75,6 +75,8 @@ from .serializers import (
     KategoriTahunSerializer,
     PendapatanSerializer,
     BelanjaSerializer,
+    SuratMasukSerializer,
+    SuratKeluarSerializer,
 )
 
 from .models import (
@@ -132,6 +134,8 @@ from .models import (
     KategoriPendapatan,
     Belanja,
     Pendapatan,
+    SuratMasuk,
+    SuratKeluar,
 )
 
 
@@ -932,3 +936,14 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         data = self.get_object()
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
+
+class SuratMasukViewSet(DynamicModelViewSet):
+    queryset = SuratMasuk.objects.all().order_by("id")
+    serializer_class = SuratMasukSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class SuratKeluarViewSet(DynamicModelViewSet):
+    queryset = SuratKeluar.objects.all().order_by("id")
+    serializer_class = SuratKeluarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+

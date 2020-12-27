@@ -1169,3 +1169,42 @@ class Belanja(models.Model):
     class Meta:
 
         db_table = "belanja"
+
+
+class SuratMasuk(models.Model):
+    no_surat = models.CharField(max_length=100, blank=True, null=True)
+    tgl_terima = models.DateField(blank=True, null=True)
+    tgl_surat = models.DateField(blank=True, null=True)
+    pengirim = models.CharField(max_length=100, blank=True, null=True)
+    kepada = models.CharField(max_length=100, blank=True, null=True)
+    perihal = models.CharField(max_length=100, blank=True, null=True)
+    keterangan = models.CharField(max_length=100, blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+
+    def __str__(self):
+        return self.nama
+
+    class Meta:
+
+        db_table = "surat_masuk"
+
+class SuratKeluar(models.Model):
+    no_surat = models.CharField(max_length=100, blank=True, null=True)
+    tgl_kirim = models.DateField(blank=True, null=True)
+    tgl_surat = models.DateField(blank=True, null=True)
+    pengirim = models.CharField(max_length=100, blank=True, null=True)
+    kepada = models.CharField(max_length=100, blank=True, null=True)
+    perihal = models.CharField(max_length=100, blank=True, null=True)
+    keterangan = models.CharField(max_length=100, blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+
+    def __str__(self):
+        return self.nama
+
+    class Meta:
+
+        db_table = "surat_keluar"
