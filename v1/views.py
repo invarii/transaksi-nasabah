@@ -77,6 +77,7 @@ from .serializers import (
     BelanjaSerializer,
     SuratMasukSerializer,
     SuratKeluarSerializer,
+    StatusLaporSerializer,
 )
 
 from .models import (
@@ -136,6 +137,7 @@ from .models import (
     Pendapatan,
     SuratMasuk,
     SuratKeluar,
+    StatusLapor,
 )
 
 
@@ -817,6 +819,10 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     serializer_class = KategoriLaporSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class StatusLaporViewSet(DynamicModelViewSet):
+    queryset = KategoriLapor.objects.all().order_by("id")
+    serializer_class = KategoriLaporSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class LaporViewSet(DynamicModelViewSet):
     queryset = Lapor.objects.all().order_by("id")
