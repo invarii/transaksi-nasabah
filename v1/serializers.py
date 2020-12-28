@@ -655,7 +655,7 @@ class StatusLaporSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
-class LaporSerializer(DynamicModelSerializer):
+class LaporSerializer(CustomSerializer):
     kategori = DynamicRelationField(
         "KategoriLaporSerializer", deferred=True, embed=True
     )
