@@ -1018,7 +1018,7 @@ class StatusLapor(models.Model):
 
         db_table = "StatusLapor"
 
-class Lapor(models.Model):
+class Lapor(CustomModel):
     kategori = models.ForeignKey(
         KategoriLapor, models.DO_NOTHING, blank=True, null=True
     )
