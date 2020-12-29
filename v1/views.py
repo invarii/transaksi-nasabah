@@ -838,12 +838,6 @@ class LaporViewSet(CustomView):
     serializer_class = LaporSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def get_queryset(self):
-        kategori = self.request.query_params.get("kategori")
-        if kategori:
-            return Lapor.objects.filter(kategori=kategori).all()
-        return Lapor.objects.all()
-
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
     queryset = KategoriInformasi.objects.all().order_by("id")
