@@ -302,6 +302,13 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     serializer_class = SadKeluargaSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+
+        if hasattr(user, "profile"):
+            return SadKeluarga.objects.filter(id=user.profile.keluarga.id)
+        return SadKeluarga.objects.all().order_by("id")
+
     @action(detail=False, methods=["post"])
     def upload(self, request):
         status = {
@@ -819,10 +826,12 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     serializer_class = KategoriLaporSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class StatusLaporViewSet(DynamicModelViewSet):
     queryset = StatusLapor.objects.all().order_by("id")
     serializer_class = StatusLaporSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class LaporViewSet(CustomView):
     queryset = Lapor.objects.all().order_by('-id')
@@ -943,13 +952,14 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         pdf = render_mail("skd", data)
         return HttpResponse(pdf, content_type="application/pdf")
 
+
 class SuratMasukViewSet(DynamicModelViewSet):
     queryset = SuratMasuk.objects.all().order_by("id")
     serializer_class = SuratMasukSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class SuratKeluarViewSet(DynamicModelViewSet):
     queryset = SuratKeluar.objects.all().order_by("id")
     serializer_class = SuratKeluarSerializer
     permission_classes = [permissions.IsAuthenticated]
-

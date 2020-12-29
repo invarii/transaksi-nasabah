@@ -1008,6 +1008,7 @@ class KategoriLapor(models.Model):
 
         db_table = "KategoriLapor"
 
+
 class StatusLapor(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
 
@@ -1017,6 +1018,7 @@ class StatusLapor(models.Model):
     class Meta:
 
         db_table = "StatusLapor"
+
 
 class Lapor(CustomModel):
     kategori = models.ForeignKey(
@@ -1089,14 +1091,14 @@ class SuratKelahiran(CustomModel):
         related_name="ibu_surat_lahir",
     )
     saksi1 = models.ForeignKey(
-        SadPenduduk,
+        Pegawai,
         models.DO_NOTHING,
         blank=True,
         null=True,
         related_name="saksi1_surat_lahir",
     )
     saksi2 = models.ForeignKey(
-        SadPenduduk,
+        Pegawai,
         models.DO_NOTHING,
         blank=True,
         null=True,
@@ -1201,6 +1203,7 @@ class SuratMasuk(models.Model):
     class Meta:
 
         db_table = "surat_masuk"
+
 
 class SuratKeluar(models.Model):
     no_surat = models.CharField(max_length=100, blank=True, null=True)

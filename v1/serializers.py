@@ -649,11 +649,13 @@ class KategoriLaporSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
+
 class StatusLaporSerializer(DynamicModelSerializer):
     class Meta:
         model = StatusLapor
         name = "data"
         exclude = []
+
 
 class LaporSerializer(CustomSerializer):
     kategori = DynamicRelationField(
@@ -865,7 +867,18 @@ class SuratMeta:
     ]
 
 
+jenis_kelahiran = ["Tunggal", "Kembar 2", "Kembar 3", "Kembar 4", "Lainnya"]
+tempat_dilahirkan = ["RS/RB", "Puskesmas", "Polindes", "Rumah", "Lainnya"]
+jenis_kelamin = ["Laki-laki", "Perempuan"]
+penolong_kelahiran = ["Dokter", "Bidan/Perawat", "Dukun", "Lainnya"]
+
+
 class SuratKelahiranSerializer(CustomSerializer):
+    jk = serializers.ChoiceField(jenis_kelamin)
+    jenis_kelahiran = serializers.ChoiceField(jenis_kelahiran)
+    tempat_dilahirkan = serializers.ChoiceField(tempat_dilahirkan)
+    penolong_kelahiran = serializers.ChoiceField(penolong_kelahiran)
+
     class Meta(SuratMeta):
         model = SuratKelahiran
 
@@ -893,11 +906,13 @@ class SuratDomisiliSerializer(CustomSerializer):
         surat.save()
         return surat
 
+
 class SuratMasukSerializer(DynamicModelSerializer):
     class Meta:
         model = SuratMasuk
         name = "data"
         exclude = []
+
 
 class SuratKeluarSerializer(DynamicModelSerializer):
     class Meta:
