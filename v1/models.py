@@ -731,13 +731,21 @@ class SigBidang(CustomModel):
     @daftar_penguasa.setter
     def daftar_penguasa(self, value):
         penguasa_non_warga = []
+        penguasa_warga = []
         for item in value:
             if item.get("is_warga"):
                 keluarga = SadKeluarga.objects.get(no_kk=item["no_kk"])
                 self.dikuasai.add(keluarga)
+                penguasa_warga.append(item["no_kk"])
                 continue
             penguasa_non_warga.append(item)
         self.penguasa_nonwarga = penguasa_non_warga
+
+        # Remove relationship from ex-penguasa
+        ex_penguasa = self.dikuasai.exclude(no_kk__in=penguasa_warga)
+        for penguasa in ex_penguasa:
+            penguasa.menguasai_id = None
+            penguasa.save()
 
     class Meta(CustomModel.Meta):
 
