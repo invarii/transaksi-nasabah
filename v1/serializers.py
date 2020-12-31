@@ -229,6 +229,13 @@ class SadKeluargaSerializer(CustomSerializer):
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
     dusun = DynamicRelationField(
+        "SadDusunSerializer", deferred=True, embed=True
+    )
+    rw = DynamicRelationField(
+        "SadRwSerializer", deferred=True, embed=True
+    )
+    rt = DynamicRelationField(
+        "SadRtSerializer", deferred=True, embed=True
         "SadDusunSerializer", many=True, deferred=True, embed=True
     )
     rw = DynamicRelationField(
