@@ -834,7 +834,7 @@ class StatusLaporViewSet(DynamicModelViewSet):
 
 
 class LaporViewSet(CustomView):
-    queryset = Lapor.objects.all().order_by("-id")
+    queryset = Lapor.objects.all().order_by('-id')
     serializer_class = LaporSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
