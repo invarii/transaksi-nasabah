@@ -1,6 +1,7 @@
 import os
 
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
@@ -184,6 +185,16 @@ class SadRt(CustomModel):
     rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.CharField(max_length=10, blank=True, null=True)
 
+    @classmethod
+    def find_rt(cls, rt, rw, dusun):
+        rt = cls.objects.filter(
+            rt=rt,
+            rw__rw=rw,
+            rw__dusun__nama=dusun,
+            rw__dusun__desa__id=settings.DESA_ID,
+        ).first()
+        return rt
+
     class Meta(CustomModel.Meta):
 
         db_table = "sad_rt"
@@ -203,6 +214,10 @@ class SadRw(CustomModel):
 class SadKeluarga(CustomModel):
     no_kk = models.CharField(max_length=16, unique=True)
     jalan_blok = models.CharField(max_length=100, blank=True, null=True)
+    dusun = models.ForeignKey(
+        "SadDusun", models.DO_NOTHING, blank=True, null=True
+    )
+    rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
     status_kesejahteraan = models.CharField(

@@ -156,7 +156,6 @@ def format_data_penduduk(data):
 
 
 def create_or_reactivate(model, filter_param, data):
-    print(data)
     instance = model.all_objects.filter(**filter_param).dead().first()
 
     if instance:
@@ -167,7 +166,6 @@ def create_or_reactivate(model, filter_param, data):
         model.objects.filter(pk=instance.pk).update(**data)
         instance.refresh_from_db()
     else:
-        print(data)
         instance = model.objects.create(**data)
     instance.save()
     return instance
@@ -321,14 +319,17 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
+        data = data.replace({np.nan: None})
         if data[["no_kk", "rt"]].isna().values.any():
             message = "Silahkan lengkapi data no_kk dan rt"
             return Response({"message": message}, status=400)
 
         for item in data.to_dict("records"):
 
-            rt = SadRt.objects.filter(rt=item["rt"]).first()
+            rt = SadRt.find_rt(item["rt"], item["rw"], item["dusun"])
             item["rt"] = rt
+            item.pop("dusun")
+            item.pop("rw")
             if not item["rt"]:
                 status["rt_tidak_ditemukan"] += 1
                 continue
@@ -339,8 +340,9 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
-            except Exception:
-
+            except Exception as e:
+                print(item)
+                print(e)
                 status["data_gagal"] += 1
                 continue
             status["data_diinput"] += 1
@@ -834,7 +836,7 @@ class StatusLaporViewSet(DynamicModelViewSet):
 
 
 class LaporViewSet(CustomView):
-    queryset = Lapor.objects.all().order_by('-id')
+    queryset = Lapor.objects.all().order_by("-id")
     serializer_class = LaporSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
