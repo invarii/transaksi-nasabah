@@ -236,13 +236,6 @@ class SadKeluargaSerializer(CustomSerializer):
     )
     rt = DynamicRelationField(
         "SadRtSerializer", deferred=True, embed=True
-        "SadDusunSerializer", many=True, deferred=True, embed=True
-    )
-    rw = DynamicRelationField(
-        "SadRwSerializer", many=True, deferred=True, embed=True
-    )
-    rt = DynamicRelationField(
-        "SadRtSerializer", many=True, deferred=True, embed=True
     )
     kepala_keluarga = serializers.DictField(read_only=True)
 
