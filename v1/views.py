@@ -326,10 +326,8 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         for item in data.to_dict("records"):
 
-            rt = SadRt.find_rt(item["rt"], item["rw"], item["dusun"])
+            rt = SadRt.objects.filter(rt=item["rt"]).first()
             item["rt"] = rt
-            item.pop("dusun")
-            item.pop("rw")
             if not item["rt"]:
                 status["rt_tidak_ditemukan"] += 1
                 continue

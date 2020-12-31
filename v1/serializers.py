@@ -228,6 +228,7 @@ class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField(
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
+    rt = DynamicRelationField("SadRtSerializer", deferred=True, embed=True)
     kepala_keluarga = serializers.DictField(read_only=True)
 
     class Meta:
