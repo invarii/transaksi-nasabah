@@ -140,7 +140,7 @@ class SadDesa(CustomModel):
     kecamatan = models.ForeignKey(
         "SadKecamatan", models.DO_NOTHING, blank=True, null=True
     )
-    kode_desa = models.CharField(max_length=5, blank=True, null=True)
+    kode_desa = models.CharField(max_length=25, blank=True, null=True)
     nama_desa = models.CharField(max_length=250, blank=True, null=True)
     alamat = models.CharField(max_length=150, blank=True, null=True)
     no_telp = models.CharField(max_length=12, blank=True, null=True)
@@ -202,13 +202,15 @@ class SadRw(CustomModel):
 
 class SadKeluarga(CustomModel):
     no_kk = models.CharField(max_length=16, unique=True)
-    alamat = models.CharField(max_length=100, blank=True, null=True)
+    jalan_blok = models.CharField(max_length=100, blank=True, null=True)
+    dusun = models.ForeignKey("SadDusun", models.DO_NOTHING, blank=True, null=True)
+    rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
     status_kesejahteraan = models.CharField(
         max_length=30, blank=True, null=True
     )
-    penghasil = models.IntegerField(blank=True, null=True)
+    penghasilan = models.IntegerField(blank=True, null=True)
     status_kk = models.CharField(max_length=20, blank=True, null=True)
     menguasai = models.ForeignKey(
         "SigBidang",
