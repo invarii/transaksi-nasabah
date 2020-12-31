@@ -229,13 +229,13 @@ class SadKeluargaSerializer(CustomSerializer):
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
     dusun = DynamicRelationField(
-        "SadDusunSerializer", many=True, deferred=True, embed=True
+        "SadDusunSerializer", deferred=True, embed=True
     )
     rw = DynamicRelationField(
-        "SadRwSerializer", many=True, deferred=True, embed=True
+        "SadRwSerializer", deferred=True, embed=True
     )
     rt = DynamicRelationField(
-        "SadRtSerializer", many=True, deferred=True, embed=True
+        "SadRtSerializer", deferred=True, embed=True
     )
     kepala_keluarga = serializers.DictField(read_only=True)
 
