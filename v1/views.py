@@ -808,7 +808,7 @@ class SigRt2ViewSet(CustomView):
 class KategoriArtikelViewSet(DynamicModelViewSet):
     queryset = KategoriArtikel.objects.all().order_by("id")
     serializer_class = KategoriArtikelSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class ArtikelViewSet(DynamicModelViewSet):
