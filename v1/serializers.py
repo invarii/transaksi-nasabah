@@ -1,10 +1,11 @@
 from django.utils import timezone
-from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
 from rest_framework import serializers
+
+from .utils import create_or_reactivate, create_or_reactivate_user
 from .models import (
     Pegawai,
     SadProvinsi,
@@ -266,6 +267,17 @@ class SadPendudukSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+    def create(self, data):
+        penduduk = create_or_reactivate(
+            SadPenduduk, {"nik": data["nik"]}, data
+        )
+        password = str(data["tgl_lahir"]).replace("-", "")
+        penduduk_user = create_or_reactivate_user(data["nik"], password)
+        penduduk.user = penduduk_user
+        penduduk.save()
+        penduduk.user.save()
+        return penduduk
+
 
 class SadKelahiranSerializer(CustomSerializer):
     class Meta:
@@ -343,38 +355,6 @@ class MiniUserSerializer(DynamicModelSerializer):
     class Meta:
         model = SadPenduduk
         fields = ["nik", "nama", "tgl_lahir", "status_dalam_keluarga"]
-
-
-def create_or_reactivate(model, filter_param, data):
-    instance = model.all_objects.filter(**filter_param).dead().first()
-
-    if instance:
-        instance.deleted_by = None
-        instance.deleted_at = None
-        instance.save()
-
-        model.objects.filter(pk=instance.pk).update(**data)
-        instance.refresh_from_db()
-    else:
-        instance = model.objects.create(**data)
-    instance.save()
-    return instance
-
-
-def create_or_reactivate_user(username, password):
-    user = User.objects.filter(username=username).first()
-    group = Group.objects.get(name="penduduk")
-
-    if not user:
-        user = User.objects.create(username=username)
-        user.set_password(password)
-        user.groups.add(group)
-        user.save()
-    elif not user.is_active:
-        user.is_active = True
-        user.set_password(password)
-        user.save()
-    return user
 
 
 class SadPindahMasukSerializer(CustomSerializer):
