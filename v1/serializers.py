@@ -177,14 +177,12 @@ class SadKecamatanSerializer(CustomSerializer):
 
 
 class SadDesaSerializer(CustomSerializer):
-    kecamatan_id = serializers.IntegerField(
-        source="kecamatan.id", read_only=True
-    )
+    kecamatan = DynamicRelationField(SadKecamatanSerializer)
 
     class Meta:
         model = SadDesa
         name = "data"
-        exclude = ["kecamatan"]
+        exclude = util_columns
 
 
 class BatasDesaSerializer(CustomSerializer):
@@ -199,30 +197,30 @@ class BatasDesaSerializer(CustomSerializer):
 
 
 class SadDusunSerializer(CustomSerializer):
+    desa = DynamicRelationField(SadDesaSerializer)
+
     class Meta:
         model = SadDusun
         name = "data"
-        exclude = []
+        exclude = util_columns
 
 
 class SadRwSerializer(CustomSerializer):
-    dusun = DynamicRelationField(
-        "SadDusunSerializer", deferred=True, embed=True
-    )
+    dusun = DynamicRelationField(SadDusunSerializer)
 
     class Meta:
         model = SadRw
         name = "data"
-        exclude = []
+        exclude = util_columns
 
 
 class SadRtSerializer(CustomSerializer):
-    rw = DynamicRelationField("SadRwSerializer", deferred=True, embed=True)
+    rw = DynamicRelationField(SadRwSerializer)
 
     class Meta:
         model = SadRt
         name = "data"
-        exclude = []
+        exclude = util_columns
 
 
 class MiniSadRtSerializer(CustomSerializer):
