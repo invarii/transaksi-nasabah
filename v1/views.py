@@ -152,7 +152,7 @@ def format_data_penduduk(data):
         else:
             data.pop(col)
 
-
+            
 class CustomView(DynamicModelViewSet):
     def destroy(self, request, pk, format=None):
         data = self.get_object()
@@ -292,8 +292,10 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         for item in data.to_dict("records"):
 
-            rt = SadRt.objects.filter(rt=item["rt"]).first()
+            rt = SadRt.find_rt(item["rt"], item["rw"], item["dusun"])
             item["rt"] = rt
+            item.pop("dusun")
+            item.pop("rw")
             if not item["rt"]:
                 status["rt_tidak_ditemukan"] += 1
                 continue
