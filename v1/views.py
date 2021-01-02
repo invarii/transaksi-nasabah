@@ -872,31 +872,31 @@ class PotensiViewSet(DynamicModelViewSet):
 class KategoriPendapatanViewSet(DynamicModelViewSet):
     queryset = KategoriPendapatan.objects.all().order_by("id")
     serializer_class = KategoriPendapatanSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class KategoriBelanjaViewSet(DynamicModelViewSet):
     queryset = KategoriBelanja.objects.all().order_by("id")
     serializer_class = KategoriBelanjaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class KategoriTahunViewSet(DynamicModelViewSet):
     queryset = KategoriTahun.objects.all().order_by("id")
     serializer_class = KategoriTahunSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class PendapatanViewSet(DynamicModelViewSet):
     queryset = Pendapatan.objects.all().order_by("id")
     serializer_class = PendapatanSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")
     serializer_class = BelanjaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
