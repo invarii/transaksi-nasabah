@@ -1,13 +1,11 @@
 from rest_framework import permissions, status
 from django.conf import settings
-from django.db import IntegrityError
+from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from django.contrib.auth.models import User, Group
 
 import pandas
 import json
@@ -15,7 +13,7 @@ from io import BytesIO
 import numpy as np
 
 from users.permissions import IsAdminUserOrReadOnly
-from .utils import render_mail
+from .utils import render_mail, create_or_reactivate, create_or_reactivate_user
 from .serializers import (
     PegawaiSerializer,
     SadProvinsiSerializer,
@@ -153,38 +151,6 @@ def format_data_penduduk(data):
             data[col] = str(data[col]).split(" ")[0]
         else:
             data.pop(col)
-
-
-def create_or_reactivate(model, filter_param, data):
-    instance = model.all_objects.filter(**filter_param).dead().first()
-
-    if instance:
-        instance.deleted_by = None
-        instance.deleted_at = None
-        instance.save()
-
-        model.objects.filter(pk=instance.pk).update(**data)
-        instance.refresh_from_db()
-    else:
-        instance = model.objects.create(**data)
-    instance.save()
-    return instance
-
-
-def create_or_reactivate_user(username, password):
-    user = User.objects.filter(username=username).first()
-    group = Group.objects.get(name="penduduk")
-
-    if not user:
-        user = User.objects.create(username=username)
-        user.set_password(password)
-        user.groups.add(group)
-        user.save()
-    elif not user.is_active:
-        user.is_active = True
-        user.set_password(password)
-        user.save()
-    return user
 
 
 class CustomView(DynamicModelViewSet):
@@ -405,25 +371,26 @@ class SadPendudukViewSet(CustomView):
 
             format_data_penduduk(item)
             param_filter = {"nik": item["nik"]}
-            penduduk = create_or_reactivate(SadPenduduk, param_filter, item)
             try:
                 penduduk = create_or_reactivate(
                     SadPenduduk, param_filter, item
                 )
+                status["data_diinput"] += 1
 
             except IntegrityError:
+                print("Test Error")
                 status["data_redundan"] += 1
-                continue
+                penduduk = SadPenduduk.objects.get(nik=item["nik"])
             except Exception as e:
                 print(str(e))
                 status["data_gagal"] += 1
                 continue
-            status["data_diinput"] += 1
 
             user = create_or_reactivate_user(
                 item["nik"], item["tgl_lahir"].replace("-", "")
             )
             penduduk.user = user
+            penduduk.user.save()
             penduduk.save()
 
         if not status["data_diinput"]:
