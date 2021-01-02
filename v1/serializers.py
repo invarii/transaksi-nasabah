@@ -256,6 +256,10 @@ class SadPendudukSerializer(CustomSerializer):
     keluarga = DynamicRelationField(
         "SadKeluargaSerializer", deferred=True, embed=True
     )
+    tgl_cerai = serializers.DateField()
+    tgl_kawin = serializers.DateField()
+    tgl_exp_paspor = serializers.DateField()
+    foto = serializers.FileField()
 
     class Meta:
         model = SadPenduduk
