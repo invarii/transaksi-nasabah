@@ -59,6 +59,7 @@ from .views import (
     SuratKeluarViewSet,
     StatusLaporViewSet,
     PekerjaanViewSet,
+    PendidikanViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -121,3 +122,4 @@ router.register(r"suratkeluar", SuratKeluarViewSet)
 router.register(r"statuslapor", StatusLaporViewSet)
 router.register(r"suratkeluar", SuratKeluarViewSet)
 router.register(r"pekerjaan", PekerjaanViewSet)
+router.register(r"pendidikan", PendidikanViewSet)
