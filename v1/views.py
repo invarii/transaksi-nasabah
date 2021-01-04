@@ -76,6 +76,7 @@ from .serializers import (
     SuratMasukSerializer,
     SuratKeluarSerializer,
     StatusLaporSerializer,
+    PekerjaanSerializer,
 )
 
 from .models import (
@@ -136,6 +137,7 @@ from .models import (
     SuratMasuk,
     SuratKeluar,
     StatusLapor,
+    Pekerjaan,
 )
 
 
@@ -925,4 +927,9 @@ class SuratMasukViewSet(DynamicModelViewSet):
 class SuratKeluarViewSet(DynamicModelViewSet):
     queryset = SuratKeluar.objects.all().order_by("id")
     serializer_class = SuratKeluarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PekerjaanViewSet(DynamicModelViewSet):
+    queryset = Pekerjaan.objects.all().order_by("id")
+    serializer_class = PekerjaanSerializer
     permission_classes = [permissions.IsAuthenticated]
