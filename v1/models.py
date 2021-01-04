@@ -1251,10 +1251,12 @@ class Pekerjaan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
+      
         db_table = "pekerjaan"
 
 class Pendidikan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
+      
         db_table = "pendidikan"
