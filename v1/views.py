@@ -592,7 +592,7 @@ class SigPemilikViewSet(CustomView):
 class SigDesaViewSet(CustomView):
     queryset = SigDesa.objects.all().order_by("id")
     serializer_class = SigDesaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
