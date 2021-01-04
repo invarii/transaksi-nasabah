@@ -1246,3 +1246,9 @@ class SuratKeluar(models.Model):
     class Meta:
 
         db_table = "surat_keluar"
+
+class Pekerjaan(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "pekerjaan"
