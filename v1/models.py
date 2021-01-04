@@ -318,7 +318,7 @@ class SadKelahiran(CustomModel):
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
     tempat_dilahirkan = models.CharField(max_length=20, blank=True, null=True)
     tempat_kelahiran = models.CharField(max_length=20, blank=True, null=True)
-    waktu_kelahiran = models.DateField(blank=True, null=True)
+    waktu_kelahiran = models.DateTimeField(blank=True, null=True)
     jenis_kelahiran = models.CharField(max_length=20, blank=True, null=True)
     kelahiran_ke = models.CharField(max_length=5, blank=True, null=True)
     penolong_kelahiran = models.CharField(max_length=30, blank=True, null=True)
@@ -341,7 +341,7 @@ class SadKematian(CustomModel):
     penduduk = models.ForeignKey(
         "SadPenduduk", models.DO_NOTHING, blank=True, null=True
     )
-    tanggal_kematian = models.DateField(blank=True, null=True)
+    tanggal_kematian = models.DateTimeField(blank=True, null=True)
     sebab_kematian = models.CharField(max_length=50, blank=True, null=True)
     tempat_kematian = models.CharField(max_length=50, blank=True, null=True)
     yang_menerangkan = models.CharField(max_length=50, blank=True, null=True)
@@ -357,7 +357,7 @@ class SadKematian(CustomModel):
 class SadLahirmati(CustomModel):
     lama_kandungan = models.CharField(max_length=20, blank=True, null=True)
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
-    tanggal_lahir = models.DateField(blank=True, null=True)
+    tanggal_lahir = models.DateTimeField(blank=True, null=True)
     jenis_kelahiran = models.CharField(max_length=20, blank=True, null=True)
     kelahiran_ke = models.CharField(max_length=5, blank=True, null=True)
     tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
