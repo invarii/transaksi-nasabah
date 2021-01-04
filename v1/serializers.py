@@ -65,6 +65,7 @@ from .models import (
     SuratMasuk,
     SuratKeluar,
     Pekerjaan,
+    Pendidikan,
 )
 
 util_columns = [
@@ -913,5 +914,11 @@ class SuratKeluarSerializer(DynamicModelSerializer):
 class PekerjaanSerializer(DynamicModelSerializer):
     class Meta:
         model = Pekerjaan
+        name = "data"
+        exclude = []
+
+class PendidikanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Pendidikan
         name = "data"
         exclude = []
