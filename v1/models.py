@@ -648,6 +648,8 @@ class KepemilikanWarga(models.Model):
 
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
+    gambar_atas = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_depan= models.ImageField(upload_to=file_destination, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
