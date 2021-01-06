@@ -78,6 +78,13 @@ from .serializers import (
     StatusLaporSerializer,
     PekerjaanSerializer,
     PendidikanSerializer,
+    AgamaSerializer,
+    KelainanFisikSerializer,
+    CacatSerializer,
+    StatusPerkawinanSerializer,
+    KewarganegaraanSerializer,
+    GoldarSerializer,
+    StatusDlmKeluargaSerializer,
 )
 
 from .models import (
@@ -140,6 +147,13 @@ from .models import (
     StatusLapor,
     Pekerjaan,
     Pendidikan,
+    Agama,
+    KelainanFisik,
+    Cacat,
+    StatusPerkawinan,
+    Kewarganegaraan,
+    Goldar,
+    StatusDlmKeluarga,
 )
 
 
@@ -941,4 +955,39 @@ class PekerjaanViewSet(DynamicModelViewSet):
 class PendidikanViewSet(DynamicModelViewSet):
     queryset = Pendidikan.objects.all().order_by("id")
     serializer_class = PendidikanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class AgamaViewSet(DynamicModelViewSet):
+    queryset = Agama.objects.all().order_by("id")
+    serializer_class = AgamaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class KelainanFisikViewSet(DynamicModelViewSet):
+    queryset = KelainanFisik.objects.all().order_by("id")
+    serializer_class = KelainanFisikSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CacatViewSet(DynamicModelViewSet):
+    queryset = Cacat.objects.all().order_by("id")
+    serializer_class = CacatSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusPerkawinanViewSet(DynamicModelViewSet):
+    queryset = StatusPerkawinan.objects.all().order_by("id")
+    serializer_class = StatusPerkawinanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class KewarganegaraanViewSet(DynamicModelViewSet):
+    queryset = Kewarganegaraan.objects.all().order_by("id")
+    serializer_class = KewarganegaraanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GoldarViewSet(DynamicModelViewSet):
+    queryset = Goldar.objects.all().order_by("id")
+    serializer_class = GoldarSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusDlmKeluargaViewSet(DynamicModelViewSet):
+    queryset = StatusDlmKeluarga.objects.all().order_by("id")
+    serializer_class = StatusDlmKeluargaSerializer
     permission_classes = [permissions.IsAuthenticated]

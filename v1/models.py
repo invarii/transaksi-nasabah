@@ -299,7 +299,8 @@ class SadPenduduk(CustomModel):
     tgl_kawin = models.DateField(blank=True, null=True)
     akta_cerai = models.CharField(max_length=18, blank=True, null=True)
     tgl_cerai = models.DateField(blank=True, null=True)
-    kelainan_fisik = models.CharField(max_length=50, blank=True, null=True)
+    kelainan_fisik = models.CharField(max_length=100, blank=True, null=True)
+    cacat = models.CharField(max_length=100, blank=True, null=True)
     foto = models.ImageField(upload_to=file_destination, blank=True, null=True)
     pass_field = models.CharField(
         db_column="pass", max_length=20, blank=True, null=True
@@ -1262,3 +1263,52 @@ class Pendidikan(models.Model):
     class Meta:
       
         db_table = "pendidikan"
+
+class Agama(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "agama"
+
+class KelainanFisik(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "kelainanfisik"
+
+class Cacat(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "cacat"
+
+class StatusPerkawinan(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "status_perkawinan"
+
+class Kewarganegaraan(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "kewarganegaraan"
+
+class Goldar(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "goldar"
+
+class StatusDlmKeluarga(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+      
+        db_table = "status_dalam_keluarga"

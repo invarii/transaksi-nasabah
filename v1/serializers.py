@@ -66,6 +66,13 @@ from .models import (
     SuratKeluar,
     Pekerjaan,
     Pendidikan,
+    Agama,
+    KelainanFisik,
+    Cacat,
+    StatusPerkawinan,
+    Kewarganegaraan,
+    Goldar,
+    StatusDlmKeluarga,
 )
 
 util_columns = [
@@ -922,5 +929,47 @@ class PekerjaanSerializer(DynamicModelSerializer):
 class PendidikanSerializer(DynamicModelSerializer):
     class Meta:
         model = Pendidikan
+        name = "data"
+        exclude = []
+
+class AgamaSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Agama
+        name = "data"
+        exclude = []
+
+class KelainanFisikSerializer(DynamicModelSerializer):
+    class Meta:
+        model = KelainanFisik
+        name = "data"
+        exclude = []
+
+class CacatSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Cacat
+        name = "data"
+        exclude = []
+
+class StatusPerkawinanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusPerkawinan
+        name = "data"
+        exclude = []
+
+class KewarganegaraanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Kewarganegaraan
+        name = "data"
+        exclude = []
+
+class GoldarSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Goldar
+        name = "data"
+        exclude = []
+
+class StatusDlmKeluargaSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusDlmKeluarga
         name = "data"
         exclude = []
