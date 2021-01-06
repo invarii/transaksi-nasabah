@@ -60,6 +60,13 @@ from .views import (
     StatusLaporViewSet,
     PekerjaanViewSet,
     PendidikanViewSet,
+    AgamaViewSet,
+    KelainanFisikViewSet,
+    CacatViewSet,
+    StatusPerkawinanViewSet,
+    KewarganegaraanViewSet,
+    GoldarViewSet,
+    StatusDlmKeluargaViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -123,3 +130,10 @@ router.register(r"statuslapor", StatusLaporViewSet)
 router.register(r"suratkeluar", SuratKeluarViewSet)
 router.register(r"pekerjaan", PekerjaanViewSet)
 router.register(r"pendidikan", PendidikanViewSet)
+router.register(r"agama", AgamaViewSet)
+router.register(r"kelainanfisik", KelainanFisikViewSet)
+router.register(r"cacat", CacatViewSet)
+router.register(r"statusperkawinan", StatusPerkawinanViewSet)
+router.register(r"kewarganegaraan", KewarganegaraanViewSet)
+router.register(r"goldar", GoldarViewSet)
+router.register(r"statusdlmkeluarga", StatusDlmKeluargaViewSet)
