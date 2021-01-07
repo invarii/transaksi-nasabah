@@ -1029,4 +1029,3 @@ class GolonganSerializer(DynamicModelSerializer):
         model = Golongan
         name = "data"
         exclude = []
-
