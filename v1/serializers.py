@@ -73,6 +73,14 @@ from .models import (
     Kewarganegaraan,
     Goldar,
     StatusDlmKeluarga,
+    StatusKesejahteraan,
+    StatusWarga,
+    StatusDatangMasuk,
+    Asal,
+    KeadaanAwal,
+    Jabatan,
+    StatusPns,
+    Golongan,
 )
 
 util_columns = [
@@ -971,5 +979,53 @@ class GoldarSerializer(DynamicModelSerializer):
 class StatusDlmKeluargaSerializer(DynamicModelSerializer):
     class Meta:
         model = StatusDlmKeluarga
+        name = "data"
+        exclude = []
+
+class StatusKesejahteraanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusKesejahteraan
+        name = "data"
+        exclude = []
+
+class StatusWargaSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusWarga
+        name = "data"
+        exclude = []
+
+class StatusDatangMasukSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusDatangMasuk
+        name = "data"
+        exclude = []
+
+class AsalSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Asal
+        name = "data"
+        exclude = []
+
+class KeadaanAwalSerializer(DynamicModelSerializer):
+    class Meta:
+        model = KeadaanAwal
+        name = "data"
+        exclude = []
+
+class JabatanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Jabatan
+        name = "data"
+        exclude = []
+
+class StatusPnsSerializer(DynamicModelSerializer):
+    class Meta:
+        model = StatusPns
+        name = "data"
+        exclude = []
+
+class GolonganSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Golongan
         name = "data"
         exclude = []
