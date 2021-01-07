@@ -85,6 +85,14 @@ from .serializers import (
     KewarganegaraanSerializer,
     GoldarSerializer,
     StatusDlmKeluargaSerializer,
+    StatusKesejahteraanSerializer,
+    StatusWargaSerializer,
+    StatusDatangMasukSerializer,
+    AsalSerializer,
+    KeadaanAwalSerializer,
+    JabatanSerializer,
+    StatusPnsSerializer,
+    GolonganSerializer,
 )
 
 from .models import (
@@ -154,6 +162,14 @@ from .models import (
     Kewarganegaraan,
     Goldar,
     StatusDlmKeluarga,
+    StatusKesejahteraan,
+    StatusWarga,
+    StatusDatangMasuk,
+    Asal,
+    KeadaanAwal,
+    Jabatan,
+    StatusPns,
+    Golongan,
 )
 
 
@@ -990,4 +1006,44 @@ class GoldarViewSet(DynamicModelViewSet):
 class StatusDlmKeluargaViewSet(DynamicModelViewSet):
     queryset = StatusDlmKeluarga.objects.all().order_by("id")
     serializer_class = StatusDlmKeluargaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusKesejahteraanViewSet(DynamicModelViewSet):
+    queryset = StatusKesejahteraan.objects.all().order_by("id")
+    serializer_class = StatusKesejahteraanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusWargaViewSet(DynamicModelViewSet):
+    queryset = StatusWarga.objects.all().order_by("id")
+    serializer_class = StatusWargaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusDatangMasukViewSet(DynamicModelViewSet):
+    queryset = StatusDatangMasuk.objects.all().order_by("id")
+    serializer_class = StatusDatangMasukSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class AsalViewSet(DynamicModelViewSet):
+    queryset = Asal.objects.all().order_by("id")
+    serializer_class = AsalSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class KeadaanAwalViewSet(DynamicModelViewSet):
+    queryset = KeadaanAwal.objects.all().order_by("id")
+    serializer_class = KeadaanAwalSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class JabatanViewSet(DynamicModelViewSet):
+    queryset = Jabatan.objects.all().order_by("id")
+    serializer_class = JabatanSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class StatusPnsViewSet(DynamicModelViewSet):
+    queryset = StatusPns.objects.all().order_by("id")
+    serializer_class = StatusPnsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GolonganViewSet(DynamicModelViewSet):
+    queryset = Golongan.objects.all().order_by("id")
+    serializer_class = GolonganSerializer
     permission_classes = [permissions.IsAuthenticated]
