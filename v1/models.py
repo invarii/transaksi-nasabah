@@ -90,7 +90,7 @@ class CustomModel(models.Model):
 
 class Pegawai(CustomModel):
     nip = models.CharField(max_length=18, blank=True, null=True)
-    nama = models.CharField(max_length=50, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
@@ -105,7 +105,7 @@ class Pegawai(CustomModel):
 
 class SadProvinsi(CustomModel):
     kode_provinsi = models.CharField(max_length=5, blank=True, null=True)
-    nama_provinsi = models.CharField(max_length=50, blank=True, null=True)
+    nama_provinsi = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -117,7 +117,7 @@ class SadKabKota(CustomModel):
         "SadProvinsi", models.DO_NOTHING, blank=True, null=True
     )
     kode_kab_kota = models.CharField(max_length=5, blank=True, null=True)
-    nama_kab_kota = models.CharField(max_length=50, blank=True, null=True)
+    nama_kab_kota = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -271,7 +271,7 @@ class SadPenduduk(CustomModel):
 
     nik = models.CharField(max_length=16, unique=True)
     chip_ektp = models.CharField(max_length=10, blank=True, null=True)
-    nama = models.CharField(max_length=50, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
     tgl_lahir = models.DateField(blank=True, null=True)
     tempat_lahir = models.CharField(max_length=50, blank=True, null=True)
     jk = models.CharField(max_length=12, blank=True, null=True)
@@ -293,8 +293,8 @@ class SadPenduduk(CustomModel):
     no_hp = models.CharField(max_length=13, blank=True, null=True)
     nik_ayah = models.CharField(max_length=18, blank=True, null=True)
     nik_ibu = models.CharField(max_length=18, blank=True, null=True)
-    nama_ayah = models.CharField(max_length=45, blank=True, null=True)
-    nama_ibu = models.CharField(max_length=45, blank=True, null=True)
+    nama_ayah = models.CharField(max_length=100, blank=True, null=True)
+    nama_ibu = models.CharField(max_length=100, blank=True, null=True)
     tgl_exp_paspor = models.DateField(blank=True, null=True)
     akta_lahir = models.CharField(max_length=18, blank=True, null=True)
     akta_kawin = models.CharField(max_length=18, blank=True, null=True)
@@ -317,7 +317,7 @@ class SadPenduduk(CustomModel):
 
 
 class SadKelahiran(CustomModel):
-    nama = models.CharField(max_length=50, blank=True, null=True)
+    nama = models.CharField(max_length=100, blank=True, null=True)
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
     tempat_dilahirkan = models.CharField(max_length=20, blank=True, null=True)
     tempat_kelahiran = models.CharField(max_length=20, blank=True, null=True)
@@ -330,9 +330,9 @@ class SadKelahiran(CustomModel):
     panjang_bayi = models.CharField(max_length=10, blank=True, null=True)
     nik_ayah = models.CharField(max_length=16, blank=True, null=True)
     nik_ibu = models.CharField(max_length=16, blank=True, null=True)
-    nama_ayah = models.CharField(max_length=50, blank=True, null=True)
-    nama_ibu = models.CharField(max_length=50, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
+    nama_ayah = models.CharField(max_length=100, blank=True, null=True)
+    nama_ibu = models.CharField(max_length=100, blank=True, null=True)
+    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
     nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
     nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
 
@@ -350,9 +350,9 @@ class SadKematian(CustomModel):
     sebab_kematian = models.CharField(max_length=50, blank=True, null=True)
     tempat_kematian = models.CharField(max_length=50, blank=True, null=True)
     yang_menerangkan = models.CharField(max_length=50, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
-    nama_saksi_satu = models.CharField(max_length=50, blank=True, null=True)
-    nama_saksi_dua = models.CharField(max_length=50, blank=True, null=True)
+    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
+    nama_saksi_satu = models.CharField(max_length=100, blank=True, null=True)
+    nama_saksi_dua = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -373,9 +373,9 @@ class SadLahirmati(CustomModel):
     tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
     nik_ayah = models.CharField(max_length=16, blank=True, null=True)
     nik_ibu = models.CharField(max_length=16, blank=True, null=True)
-    nama_ayah = models.CharField(max_length=50, blank=True, null=True)
-    nama_ibu = models.CharField(max_length=50, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=50, blank=True, null=True)
+    nama_ayah = models.CharField(max_length=100, blank=True, null=True)
+    nama_ibu = models.CharField(max_length=100, blank=True, null=True)
+    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
