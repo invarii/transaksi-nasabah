@@ -184,6 +184,7 @@ class SadDusun(CustomModel):
 class SadRt(CustomModel):
     rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.CharField(max_length=10, blank=True, null=True)
+    namart = models.CharField(max_length=100, blank=True, null=True)
 
     @classmethod
     def find_rt(cls, rt, rw, dusun):
@@ -205,6 +206,7 @@ class SadRw(CustomModel):
         SadDusun, models.DO_NOTHING, blank=True, null=True
     )
     rw = models.CharField(max_length=10, blank=True, null=True)
+    namarw = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
