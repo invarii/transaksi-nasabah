@@ -80,6 +80,9 @@ from .serializers import (
     JabatanSerializer,
     StatusPnsSerializer,
     GolonganSerializer,
+    JenisKelahiranSerializer,
+    JenisTempatSerializer,
+    TenagaKesehatanSerializer,
 )
 
 from .models import (
@@ -144,6 +147,9 @@ from .models import (
     Jabatan,
     StatusPns,
     Golongan,
+    JenisKelahiran,
+    JenisTempat,
+    TenagaKesehatan,
 )
 
 
@@ -908,3 +914,20 @@ class GolonganViewSet(DynamicModelViewSet):
     serializer_class = GolonganSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
+class JenisKelahiranViewSet(DynamicModelViewSet):
+    queryset = JenisKelahiran.objects.all().order_by("id")
+    serializer_class = JenisKelahiranSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class JenisTempatViewSet(DynamicModelViewSet):
+    queryset = JenisTempat.objects.all().order_by("id")
+    serializer_class = JenisTempatSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class TenagaKesehatanViewSet(DynamicModelViewSet):
+    queryset = TenagaKesehatan.objects.all().order_by("id")
+    serializer_class = TenagaKesehatanSerializer
+    permission_classes = [permissions.IsAuthenticated]

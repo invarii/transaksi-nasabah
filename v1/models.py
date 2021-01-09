@@ -1015,3 +1015,24 @@ class Golongan(models.Model):
 
     class Meta:
         db_table = "golongan"
+
+
+class JenisKelahiran(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "jenis_kelahiran"
+
+
+class JenisTempat(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "jenis_tempat"
+
+
+class TenagaKesehatan(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "tenaga_kesehatan"
