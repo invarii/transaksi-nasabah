@@ -633,7 +633,7 @@ class StatusDatangMasukSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
-
+        
 class AsalSerializer(DynamicModelSerializer):
     class Meta:
         model = Asal
