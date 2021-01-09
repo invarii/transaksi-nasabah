@@ -907,3 +907,4 @@ class GolonganViewSet(DynamicModelViewSet):
     queryset = Golongan.objects.all().order_by("id")
     serializer_class = GolonganSerializer
     permission_classes = [permissions.IsAuthenticated]
+

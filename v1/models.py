@@ -233,7 +233,6 @@ class SadPenduduk(CustomModel):
 
         db_table = "sad_penduduk"
 
-
 class SadSarpras(CustomModel):
     nama_sarpras = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
@@ -962,28 +961,24 @@ class StatusDlmKeluarga(models.Model):
 
         db_table = "status_dalam_keluarga"
 
-
 class StatusKesejahteraan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "status_kesejahteraan"
 
-
+        
 class StatusWarga(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "status_warga"
 
-
+        
 class StatusDatangMasuk(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "status_datang_masuk"
 
 
@@ -991,15 +986,13 @@ class Asal(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "asal"
 
-
+  
 class KeadaanAwal(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "keadaan_awal"
 
 
@@ -1007,7 +1000,6 @@ class Jabatan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "jabatan"
 
 
@@ -1015,7 +1007,6 @@ class StatusPns(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "status_pns"
 
 
@@ -1023,5 +1014,4 @@ class Golongan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-
         db_table = "golongan"
