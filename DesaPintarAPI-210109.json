@@ -1,0 +1,6648 @@
+{
+	"info": {
+		"_postman_id": "13735c6f-0ab8-4038-812d-22a830f83dc0",
+		"name": "Desa Pintar API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "get token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"access_token\", body.access);\r",
+									"pm.globals.set(\"refresh_token\", body.refresh);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}/v1/token/",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login penduduk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const body = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"access_token\", body.access);\r",
+									"pm.globals.set(\"refresh_token\", body.refresh);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nik",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "pass",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/token/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const body = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"access_token\", body.access);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "refresh",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/token/refresh/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users dan Groups",
+			"item": [
+				{
+					"name": "get user list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.istudios.id/v1/users/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "dika8",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "invaridewi@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "groups",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/users/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get group list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.istudios.id/v1/groups",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create groups",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "karyawan",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/groups/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}/v1/users/me",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "dika9",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ridwan@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/users/id/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"users",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "dika9",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "ridwan@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/users/id/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"users",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pegawai",
+			"item": [
+				{
+					"name": "get pegawai",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/pegawai/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"pegawai",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create pegawai",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nip",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "nama",
+									"value": "Yun Fransiska Abdulgias, S. IP",
+									"type": "text"
+								},
+								{
+									"key": "jabatan",
+									"value": "Kepala Desa",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "PNS",
+									"type": "text"
+								},
+								{
+									"key": "golongan",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/pegawai/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"pegawai",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Keluarga",
+			"item": [
+				{
+					"name": "get keluarga",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.istudios.id/v1/keluarga/?include[]=anggota.status_dalam_keluarga",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"keluarga",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "anggota.status_dalam_keluarga"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update keluarga",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/keluarga/id/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"keluarga",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create keluarga",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "no_kk",
+									"value": "1111111111111111",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/keluarga/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"keluarga",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/agung/Documents/backend_sad/keluargaRW1.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}/v1/keluarga/upload/",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"keluarga",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ekspor keluarga",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/keluarga/ekspor/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"keluarga",
+								"ekspor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Penduduk",
+			"item": [
+				{
+					"name": "get penduduk",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/penduduk/?include[]=keluarga.no_kk",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "keluarga.no_kk"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/penduduk/?include[]=keluarga.no_kk",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "keluarga.no_kk"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload penduduk",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/agung/Documents/backend_sad/copy-pendudukRW1.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}/v1/penduduk/upload/",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ekspor penduduk",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/penduduk/ekspor/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								"ekspor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kelahiran",
+			"item": [
+				{
+					"name": "get kelahiran",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/kelahiran",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"kelahiran"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create kelahiran",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "karyawan3",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "karyawan3",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "karyawan3@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "groups",
+									"value": "http://localhost:8000/v1/groups/2/",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/kelahiran/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"kelahiran",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload kelahiran",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/penduduk_isi.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/kelahiran/upload/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"kelahiran",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ekspor kelahiran",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/kelahiran/ekspor/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"kelahiran",
+								"ekspor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Kematian",
+			"item": [
+				{
+					"name": "get kematian",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/kematian",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"kematian"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create kelahiran",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "karyawan3",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "karyawan3",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "karyawan3@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "groups",
+									"value": "http://localhost:8000/v1/groups/2/",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/kelahiran/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"kelahiran",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload kelahiran",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/penduduk_isi.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/penduduk/upload/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ekspor kelahiran",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/penduduk/ekspor/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"penduduk",
+								"ekspor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Kecamatan",
+			"item": [
+				{
+					"name": "get kecamatan",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/v1/kecamatan/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"kecamatan",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "kab_kota.*",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create kecamatan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kode_kecamatan",
+									"value": "1001",
+									"type": "text"
+								},
+								{
+									"key": "nama_kecamatan",
+									"value": "Prambanan",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/v1/kecamatan/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"v1",
+								"kecamatan",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Slider",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "judul",
+									"value": "Slider 1",
+									"type": "text"
+								},
+								{
+									"key": "deskripsi",
+									"value": "Gambar 1",
+									"type": "text"
+								},
+								{
+									"key": "gambar",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/36081864414_d9514e3a53_b.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/slider/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"slider",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/slider/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"slider",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/slider/id/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"slider",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/slider/id/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"slider",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://156.67.219.143/v1/slider/id/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"slider",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Berita",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kategori",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "tgl",
+									"value": "2020-10-10",
+									"type": "text"
+								},
+								{
+									"key": "judul",
+									"value": "Ridwan Yasin Salurkan Bantuan ke 183 Warga Kecamatan Biau",
+									"type": "text"
+								},
+								{
+									"key": "isi",
+									"value": "Sekretaris Daerah (Sekda) Gorontalo Utara (Gorut), Ridwan Yasin, kembali menyalurkan bantuan Empat Bahan Pokok (Embako) ke 183 masyarakat yang terbagi di enam desa yang ada di Kecamatan Biau, Selasa (9/06/2020).\n\n“Jangan dilihat dari Jumlahnya. Ini ada empat macam, berarti bukan sembako namanya, tapi embako (empat bahan pokok),” ujar Ridwan.",
+									"type": "text"
+								},
+								{
+									"key": "gambar",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/bpr2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/artikel/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"artikel",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/artikel/?include[]=kategori.*",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"artikel",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "kategori.*"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/artikel/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"artikel",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/artikel/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"artikel",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/artikel/3/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"artikel",
+								"3",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Informasi",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kategori",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "judul",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tempat",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "tanggal",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "mulai",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "selesai",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/informasi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"informasi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/informasi/?include[]=kategori.*",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"informasi",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "kategori.*"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/informasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"informasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/informasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"informasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/informasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"informasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Potensi",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kategori",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "bidang",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "judul",
+									"value": "Kue",
+									"type": "text"
+								},
+								{
+									"key": "isi",
+									"value": "Kue Aneka Buah dan Sayur",
+									"type": "text"
+								},
+								{
+									"key": "geometry",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "centroid",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "gambar",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/2017-03-16.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/potensi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"potensi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/potensi/?include[]=kategori.*",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"potensi",
+								""
+							],
+							"query": [
+								{
+									"key": "include[]",
+									"value": "kategori.*"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/potensi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"potensi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/potensi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"potensi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/potensi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"potensi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lapor",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kategori",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "judul",
+									"value": "Hama wereng menyerah sawah warga",
+									"type": "text"
+								},
+								{
+									"key": "isi",
+									"value": "Sawah di RT 02",
+									"type": "text"
+								},
+								{
+									"key": "gambar",
+									"type": "file",
+									"src": "/C:/Users/INVARIE/Downloads/tikus.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/lapor/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"lapor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/lapor/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"lapor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/lapor/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"lapor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/lapor/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"lapor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/lapor/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"lapor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Layanan Surat",
+			"item": [
+				{
+					"name": "Domisili",
+					"item": [
+						{
+							"name": "create (penduduk)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "keperluan",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratdomisili/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratdomisili",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratdomisili/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratdomisili",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/domisili/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"domisili",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update (admin)",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "pegawai",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "no_surat",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/domisili/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"domisili",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/domisili/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"domisili",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Kelahiran",
+					"item": [
+						{
+							"name": "create (penduduk)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "jk",
+											"value": "Perempuan",
+											"description": "Laki-laki | Perempuan",
+											"type": "text"
+										},
+										{
+											"key": "jenis_kelahiran",
+											"value": "Tunggal",
+											"description": "Tunggal | Kembar 2 | Kembar 3 | Kembar 4 | Lainnya",
+											"type": "text"
+										},
+										{
+											"key": "tempat_dilahirkan",
+											"value": "RS/RB",
+											"description": "RS/RB | Puskesmas | Polindes | Rumah | Lainnya",
+											"type": "text"
+										},
+										{
+											"key": "penolong_kelahiran",
+											"value": "Bidan/Perawat",
+											"description": "Dokter | Bidan/Perawat | Dukun | Lainnya",
+											"type": "text"
+										},
+										{
+											"key": "nama",
+											"value": "Anita",
+											"type": "text"
+										},
+										{
+											"key": "tempat_kelahiran",
+											"value": "Yogya",
+											"type": "text"
+										},
+										{
+											"key": "tgl",
+											"value": "2020-01-02",
+											"type": "text"
+										},
+										{
+											"key": "kelahiran_ke",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "berat",
+											"value": "20",
+											"type": "text"
+										},
+										{
+											"key": "panjang",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "ayah",
+											"value": "26",
+											"description": "id anggota dari /v1/keluarga/?include[]=anggota.*",
+											"type": "text"
+										},
+										{
+											"key": "ibu",
+											"value": "43",
+											"description": "id anggota dari /v1/keluarga/?include[]=anggota.*",
+											"type": "text"
+										},
+										{
+											"key": "saksi1",
+											"value": "1",
+											"description": "id pegawai",
+											"type": "text"
+										},
+										{
+											"key": "saksi2",
+											"value": "1",
+											"description": "id pegawai",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratkelahiran/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratkelahiran",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratkelahiran/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratkelahiran",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratkelahiran/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratkelahiran",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update (admin",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "pegawai",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "no_surat",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratkelahiran/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratkelahiran",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratkelahiran/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratkelahiran",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SKCK",
+					"item": [
+						{
+							"name": "create (penduduk)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "kategori",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "tgl",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "judul",
+											"value": "Ridwan Yasin Salurkan Bantuan ke 183 Warga Kecamatan Biau",
+											"type": "text"
+										},
+										{
+											"key": "isi",
+											"value": "Sekretaris Daerah (Sekda) Gorontalo Utara (Gorut), Ridwan Yasin, kembali menyalurkan bantuan Empat Bahan Pokok (Embako) ke 183 masyarakat yang terbagi di enam desa yang ada di Kecamatan Biau, Selasa (9/06/2020).\n\n“Jangan dilihat dari Jumlahnya. Ini ada empat macam, berarti bukan sembako namanya, tapi embako (empat bahan pokok),” ujar Ridwan.",
+											"type": "text"
+										},
+										{
+											"key": "gambar",
+											"type": "file",
+											"src": "/C:/Users/INVARIE/Downloads/bpr2.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratskck/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratskck",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratskck/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratskck",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratskck/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratskck",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update (admin)",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratskck/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratskck",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/suratskck/id/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"suratskck",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Kategori Berita",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "Prestasi Desa",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriartikel/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriartikel",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriartikel/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriartikel",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriartikel/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriartikel",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriartikel/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriartikel",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriartikel/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriartikel",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kategori Informasi",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "kategori",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "judul",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "isi",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "gambar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriinformasi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriinformasi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriinformasi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriinformasi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriinformasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriinformasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriinformasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriinformasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoriinformasi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoriinformasi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kategori Potensi",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "Potensi Masyarakat",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoripotensi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoripotensi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoripotensi/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoripotensi",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoripotensi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoripotensi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "Potensi Bidang",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoripotensi/2/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoripotensi",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategoripotensi/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategoripotensi",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kategori Lapor",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "Lainnya",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategorilapor/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategorilapor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategorilapor/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategorilapor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategorilapor/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategorilapor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nama",
+									"value": "Sawah dan Kebun",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategorilapor/2/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategorilapor",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "https://api.istudios.id/v1/kategorilapor/id/",
+							"protocol": "https",
+							"host": [
+								"api",
+								"istudios",
+								"id"
+							],
+							"path": [
+								"v1",
+								"kategorilapor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SIG",
+			"item": [
+				{
+					"name": "SIG Desa",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_dusun",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "luas",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "keliling",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusundukuh/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusundukuh",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/Desa_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdesa/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdesa",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdesa/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdesa",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdesa/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdesa",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdesa/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdesa",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdesa/18/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdesa",
+										"18",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG Dusun",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_dusun",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "luas",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "keliling",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/Dusun_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/16/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										"16",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdusun/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdusun",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG Dukuh",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_dukuh",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "luas",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "keliling",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/Dukuh_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh/17/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh",
+										"17",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG Dukuh tanpa Dusun",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_dukuh",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "luas",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "keliling",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/INVARIE/projects/api_sad_sig/api_sad_sig/v1/storage/Dukuh_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/?include[]=sig_desa.*",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										""
+									],
+									"query": [
+										{
+											"key": "include[]",
+											"value": "sig_desa.*"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigdukuh2/9/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigdukuh2",
+										"9",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG RW",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rw",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/RW_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/?include[]=sig_dukuh.*/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										""
+									],
+									"query": [
+										{
+											"key": "include[]",
+											"value": "sig_dukuh.*/"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG RW tanpa Dusun",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rw",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrw2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrw2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG RT",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "rt",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "geometry",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/RT_LL.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.istudios.id/v1/sigrt/upload/",
+									"protocol": "https",
+									"host": [
+										"api",
+										"istudios",
+										"id"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG RT tanpa Dusun",
+					"item": [
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt2/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt2",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigrt2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigrt2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG Bidang tanpa Dusun",
+					"item": [
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang2/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang2",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang2/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang2",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang2/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang2",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SIG Bidang",
+					"item": [
+						{
+							"name": "upload",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/H:/WEBGIS/pundungan/data/New folder/bidang3.geojson"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang/upload/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang",
+										"upload",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang/?include[]=sig_rt.*",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang",
+										""
+									],
+									"query": [
+										{
+											"key": "include[]",
+											"value": "sig_rt.*"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sigbidang/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sigbidang",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Peristiwa",
+			"item": [
+				{
+					"name": "SadPindahMasuk",
+					"item": [
+						{
+							"name": "LIST",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://156.67.219.143/v1/pindahmasuk/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pindahmasuk",
+										""
+									]
+								},
+								"description": "Ambil semua data"
+							},
+							"response": []
+						},
+						{
+							"name": "CREATE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"rt_id\": 4, //id rt bukan nama rt\n    \"anggota\": [\n        {\n            \"nama\": \"Person A\",\n            \"nik\": \"2224445556661\",\n            \"tgl_lahir\": \"1997-01-02\",\n            \"status_dalam_keluarga\": \"Kepala Keluarga\"\n        },\n        {\n            \"nama\": \"Person B\",\n            \"nik\": \"2224445556662\",\n            \"tgl_lahir\": \"1997-02-02\",\n            \"status_dalam_keluarga\": \"Istri\"\n        }\n    ],\n    \"no_kk\": \"222444555666000\",\n    \"tanggal_kedatangan\": \"2020-01-01\",\n    \"alamat\": \"This here\",\n    \"status_kk_pindah\": 2 //ini dari statuskkpindah\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/pindahmasuk/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pindahmasuk",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SadPindahKeluar",
+					"item": [
+						{
+							"name": "LIST",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://156.67.219.143/v1/pindahkeluar/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pindahkeluar",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CREATE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"kelurahan_tujuan\": 3403100013,\n    \"anggota_pindah\": [\n        104 // id penduduk\n    ],\n    \"nomor_kk\": \"222444555666000\",\n    \"nik_pemohon\": \"2224445556661\",\n    \"dusun_tujuan\": \"Banaran\",\n    \"rt_tujuan\": \"1\",\n    \"rw_tujuan\": \"1\",\n    \"kodepos_tujuan\": \"\",\n    \"no_telp\": \"\",\n    \"rencana_tgl_pindah\": \"2021-01-01\",\n    \"alasan\": 1,\n    \"klasifikasi_pindah\": 5,\n    \"jenis_kepindahan\": 1,\n    \"status_kk_pindah\": 2,\n    \"status_kk_tinggal\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RETRIEVE",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://156.67.219.143/v1/pindahkeluar/1",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pindahkeluar",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PecahKK",
+					"item": [
+						{
+							"name": "CREATE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"no_kk\": \"1234561234563\",\n    \"anggota_kk\": [\n        {\"nik\":\"3242432\", \"status_dalam_keluarga\":\"Kepala Keluarga\"}\n    ],\n    \"rt\": 1\n}"
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/pecahkk/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pecahkk",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LIST",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://156.67.219.143/v1/pecahkk/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"pecahkk",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "LIST - AlasanPindah",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/alasanpindah/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"alasanpindah",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST - KlasifikasiPindah",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/klasifikasipindah/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"klasifikasipindah",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST - JenisPindah",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/jenispindah/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"jenispindah",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST - StatusKKPindah",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST - StatusKKTinggal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://156.67.219.143/v1/statuskktinggal/",
+							"protocol": "http",
+							"host": [
+								"156",
+								"67",
+								"219",
+								"143"
+							],
+							"path": [
+								"v1",
+								"statuskktinggal",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Endpoint Wilayah",
+			"item": [
+				{
+					"name": "RT",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "rt",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8000/v1/sadrt/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"v1",
+										"sadrt",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrt/?rw",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrt",
+										""
+									],
+									"query": [
+										{
+											"key": "rw",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/rt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"rt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/rt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"rt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/rt/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"rt",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "RW",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "kategori",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "judul",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "isi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "gambar",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrw/?rw=01",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrw",
+										""
+									],
+									"query": [
+										{
+											"key": "rw",
+											"value": "01"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrw/?dusun",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrw",
+										""
+									],
+									"query": [
+										{
+											"key": "dusun",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/sadrw/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"sadrw",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Dusun Dukuh",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "kategori",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "judul",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "isi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "gambar",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/saddusundukuh/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"saddusundukuh",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/saddusundukuh/?desa=99",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"saddusundukuh",
+										""
+									],
+									"query": [
+										{
+											"key": "desa",
+											"value": "99"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/saddusundukuh/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"saddusundukuh",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/saddusundukuh/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"saddusundukuh",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/saddusundukuh/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"saddusundukuh",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Desa",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "kategori",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "judul",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "isi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "gambar",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/desa/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"desa",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/desa/?kecamatan=3403100",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"desa",
+										""
+									],
+									"query": [
+										{
+											"key": "kecamatan",
+											"value": "3403100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/desa/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"desa",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/desa/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"desa",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/desa/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"desa",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Kecamatan",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "provinsi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "kode_kab_kota",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_kab_kota",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kecamatan/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kecamatan",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kecamatan/?kabkota=3403",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kecamatan",
+										""
+									],
+									"query": [
+										{
+											"key": "kabkota",
+											"value": "3403"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kecamatan/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kecamatan",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kecamatan/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kecamatan",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kecamatan/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kecamatan",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Kab/Kota",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "provinsi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "kode_kab_kota",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_kab_kota",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kabkota/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kabkota",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kabkota/?provinsi=34",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kabkota",
+										""
+									],
+									"query": [
+										{
+											"key": "provinsi",
+											"value": "34"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kabkota/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kabkota",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kabkota/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kabkota",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/kabkota/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"kabkota",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Provinsi",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "kode_provinsi",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "nama_provinsi",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/provinsi/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"provinsi",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/provinsi/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"provinsi",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "detail",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/provinsi/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"provinsi",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/provinsi/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"provinsi",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://156.67.219.143/v1/provinsi/id/",
+									"protocol": "http",
+									"host": [
+										"156",
+										"67",
+										"219",
+										"143"
+									],
+									"path": [
+										"v1",
+										"provinsi",
+										"id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

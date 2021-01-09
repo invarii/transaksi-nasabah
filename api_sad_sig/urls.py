@@ -21,10 +21,12 @@ from rest_framework import routers
 
 import v1.urls as v1_urls
 import users.urls as users_urls
+import layananperistiwa.urls as layanan_urls
 
 router = routers.DefaultRouter()
 router.registry.extend(users_urls.router.registry)
 router.registry.extend(v1_urls.router.registry)
+router.registry.extend(layanan_urls.router.registry)
 
 url_collections = []
 url_collections.extend(users_urls.urlpatterns)

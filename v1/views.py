@@ -1,8 +1,7 @@
-from rest_framework import permissions, status
+from rest_framework import permissions
 from django.conf import settings
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,8 +11,12 @@ import json
 from io import BytesIO
 import numpy as np
 
+from api_sad_sig.util import (
+    CustomView,
+    create_or_reactivate,
+    create_or_reactivate_user,
+)
 from users.permissions import IsAdminUserOrReadOnly
-from .utils import render_mail, create_or_reactivate, create_or_reactivate_user
 from .serializers import (
     PegawaiSerializer,
     SadProvinsiSerializer,
@@ -26,11 +29,6 @@ from .serializers import (
     SadRtSerializer,
     SadKeluargaSerializer,
     SadPendudukSerializer,
-    SadKelahiranSerializer,
-    SadKematianSerializer,
-    SadLahirmatiSerializer,
-    SadPindahMasukSerializer,
-    SadPindahKeluarSerializer,
     SadSarprasSerializer,
     SadInventarisSerializer,
     SadSuratSerializer,
@@ -57,17 +55,6 @@ from .serializers import (
     PotensiSerializer,
     KategoriInformasiSerializer,
     InformasiSerializer,
-    SuratKelahiranSerializer,
-    AdminSuratKelahiranSerializer,
-    SuratSkckSerializer,
-    AdminSuratSkckSerializer,
-    SuratDomisiliSerializer,
-    AdminSuratDomisiliSerializer,
-    JenisPindahSerializer,
-    AlasanPindahSerializer,
-    KlasifikasiPindahSerializer,
-    StatusKKTinggalSerializer,
-    StatusKKPindahSerializer,
     KategoriBelanjaSerializer,
     KategoriPendapatanSerializer,
     KategoriTahunSerializer,
@@ -107,11 +94,6 @@ from .models import (
     SadRt,
     SadKeluarga,
     SadPenduduk,
-    SadKelahiran,
-    SadKematian,
-    SadLahirmati,
-    SadPindahKeluar,
-    SadPindahMasuk,
     SadSarpras,
     SadInventaris,
     SadSurat,
@@ -136,14 +118,6 @@ from .models import (
     KategoriInformasi,
     Potensi,
     KategoriPotensi,
-    SuratKelahiran,
-    SuratSkck,
-    SuratDomisili,
-    JenisPindah,
-    KlasifikasiPindah,
-    AlasanPindah,
-    StatusKKTinggal,
-    StatusKKPindah,
     Slider,
     KategoriBelanja,
     KategoriTahun,
@@ -185,14 +159,6 @@ def format_data_penduduk(data):
             data[col] = str(data[col]).split(" ")[0]
         else:
             data.pop(col)
-
-            
-class CustomView(DynamicModelViewSet):
-    def destroy(self, request, pk, format=None):
-        data = self.get_object()
-        data.deleted_by = request.user
-        data.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SadProvinsiViewSet(CustomView):
@@ -450,81 +416,6 @@ class SadPendudukViewSet(CustomView):
                     "officedocument.spreadsheetml.sheet"
                 ),
             )
-
-
-class SadKelahiranViewSet(CustomView):
-    queryset = SadKelahiran.objects.all().order_by("id")
-    serializer_class = SadKelahiranSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class SadKematianViewSet(CustomView):
-    queryset = SadKematian.objects.all().order_by("id")
-    serializer_class = SadKematianSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class SadLahirmatiViewSet(CustomView):
-    queryset = SadLahirmati.objects.all().order_by("id")
-    serializer_class = SadLahirmatiSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class JenisPindahViewSet(CustomView):
-    queryset = JenisPindah.objects.all()
-    serializer_class = JenisPindahSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class AlasanPindahViewSet(CustomView):
-    queryset = AlasanPindah.objects.all()
-    serializer_class = AlasanPindahSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class KlasifikasiPindahViewSet(CustomView):
-    queryset = KlasifikasiPindah.objects.all()
-    serializer_class = KlasifikasiPindahSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class StatusKKTinggalViewSet(CustomView):
-    queryset = StatusKKTinggal.objects.all()
-    serializer_class = StatusKKTinggalSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class StatusKKPindahViewSet(CustomView):
-    queryset = StatusKKPindah.objects.all()
-    serializer_class = StatusKKPindahSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class SadPindahKeluarViewSet(CustomView):
-    queryset = SadPindahKeluar.objects.all().order_by("id")
-    serializer_class = SadPindahKeluarSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-    def retrieve(self, request, pk=None):
-        queryset = SadPindahKeluar.objects.all()
-        sad_pindah = get_object_or_404(queryset, pk=pk)
-        serializer = SadPindahKeluarSerializer(sad_pindah)
-        data = serializer.data
-
-        penduduk_s = sad_pindah.anggota_keluar()
-        penduduk_data = []
-        for item in penduduk_s:
-            temp_data = {"nik": item.nik, "nama": item.nama}
-            penduduk_data.append(temp_data)
-
-        data["anggota_keluar"] = penduduk_data
-        return Response(data)
-
-
-class SadPindahMasukViewSet(CustomView):
-    queryset = SadPindahMasuk.objects.all().order_by("id")
-    serializer_class = SadPindahMasukSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
 
 
 class SadSarprasViewSet(CustomView):
@@ -904,54 +795,6 @@ class BelanjaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class SuratKelahiranViewSet(DynamicModelViewSet):
-    queryset = SuratKelahiran.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_serializer_class(self):
-        if self.request.user.groups.first().name == "admin":
-            return AdminSuratKelahiranSerializer
-        return SuratKelahiranSerializer
-
-    @action(detail=True, methods=["get"])
-    def print(self, request, pk=None):
-        data = self.get_object()
-        pdf = render_mail("skl", data)
-        return HttpResponse(pdf, content_type="application/pdf")
-
-
-class SuratSkckViewSet(DynamicModelViewSet):
-    queryset = SuratSkck.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_serializer_class(self):
-        if self.request.user.groups.first().name == "admin":
-            return AdminSuratSkckSerializer
-        return SuratSkckSerializer
-
-    @action(detail=True, methods=["get"])
-    def print(self, request, pk=None):
-        data = self.get_object()
-        pdf = render_mail("skck", data)
-        return HttpResponse(pdf, content_type="application/pdf")
-
-
-class SuratDomisiliViewSet(DynamicModelViewSet):
-    queryset = SuratDomisili.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_serializer_class(self):
-        if self.request.user.groups.first().name == "admin":
-            return AdminSuratDomisiliSerializer
-        return SuratDomisiliSerializer
-
-    @action(detail=True, methods=["get"])
-    def print(self, request, pk=None):
-        data = self.get_object()
-        pdf = render_mail("skd", data)
-        return HttpResponse(pdf, content_type="application/pdf")
-
-
 class SuratMasukViewSet(DynamicModelViewSet):
     queryset = SuratMasuk.objects.all().order_by("id")
     serializer_class = SuratMasukSerializer
@@ -963,87 +806,105 @@ class SuratKeluarViewSet(DynamicModelViewSet):
     serializer_class = SuratKeluarSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class PekerjaanViewSet(DynamicModelViewSet):
     queryset = Pekerjaan.objects.all().order_by("id")
     serializer_class = PekerjaanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class PendidikanViewSet(DynamicModelViewSet):
     queryset = Pendidikan.objects.all().order_by("id")
     serializer_class = PendidikanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class AgamaViewSet(DynamicModelViewSet):
     queryset = Agama.objects.all().order_by("id")
     serializer_class = AgamaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class KelainanFisikViewSet(DynamicModelViewSet):
     queryset = KelainanFisik.objects.all().order_by("id")
     serializer_class = KelainanFisikSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class CacatViewSet(DynamicModelViewSet):
     queryset = Cacat.objects.all().order_by("id")
     serializer_class = CacatSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class StatusPerkawinanViewSet(DynamicModelViewSet):
     queryset = StatusPerkawinan.objects.all().order_by("id")
     serializer_class = StatusPerkawinanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class KewarganegaraanViewSet(DynamicModelViewSet):
     queryset = Kewarganegaraan.objects.all().order_by("id")
     serializer_class = KewarganegaraanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class GoldarViewSet(DynamicModelViewSet):
     queryset = Goldar.objects.all().order_by("id")
     serializer_class = GoldarSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class StatusDlmKeluargaViewSet(DynamicModelViewSet):
     queryset = StatusDlmKeluarga.objects.all().order_by("id")
     serializer_class = StatusDlmKeluargaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class StatusKesejahteraanViewSet(DynamicModelViewSet):
     queryset = StatusKesejahteraan.objects.all().order_by("id")
     serializer_class = StatusKesejahteraanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class StatusWargaViewSet(DynamicModelViewSet):
     queryset = StatusWarga.objects.all().order_by("id")
     serializer_class = StatusWargaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class StatusDatangMasukViewSet(DynamicModelViewSet):
     queryset = StatusDatangMasuk.objects.all().order_by("id")
     serializer_class = StatusDatangMasukSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class AsalViewSet(DynamicModelViewSet):
     queryset = Asal.objects.all().order_by("id")
     serializer_class = AsalSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class KeadaanAwalViewSet(DynamicModelViewSet):
     queryset = KeadaanAwal.objects.all().order_by("id")
     serializer_class = KeadaanAwalSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class JabatanViewSet(DynamicModelViewSet):
     queryset = Jabatan.objects.all().order_by("id")
     serializer_class = JabatanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class StatusPnsViewSet(DynamicModelViewSet):
     queryset = StatusPns.objects.all().order_by("id")
     serializer_class = StatusPnsSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class GolonganViewSet(DynamicModelViewSet):
     queryset = Golongan.objects.all().order_by("id")
     serializer_class = GolonganSerializer
     permission_classes = [permissions.IsAuthenticated]
+
