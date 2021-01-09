@@ -319,10 +319,10 @@ class MiniUserSerializer(DynamicModelSerializer):
 
 class SadPindahMasukSerializer(CustomSerializer):
     rt_id = DynamicRelationField(
-        "v1.SadRtSerializer", many=True, deferred=True, embed=True
+        "SadRtSerializer", deferred=False, embed=True
     )
     status_kk_pindah = DynamicRelationField(
-        "StatusKKPindahSerializer", many=True, deferred=True, embed=True
+        "StatusKKPindahSerializer", deferred=False, embed=True
     )
     anggota = serializers.ListField(
         child=MiniUserSerializer(), write_only=True
