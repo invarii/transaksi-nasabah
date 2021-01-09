@@ -62,6 +62,9 @@ from .views import (
     JabatanViewSet,
     StatusPnsViewSet,
     GolonganViewSet,
+    JenisKelahiranViewSet,
+    JenisTempatViewSet,
+    TenagaKesehatanViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -127,3 +130,6 @@ router.register(r"keadaanawal", KeadaanAwalViewSet)
 router.register(r"jabatan", JabatanViewSet)
 router.register(r"statuspns", StatusPnsViewSet)
 router.register(r"golongan", GolonganViewSet)
+router.register(r"jeniskelahiran", JenisKelahiranViewSet)
+router.register(r"jenistempat", JenisTempatViewSet)
+router.register(r"tenagakesehatan", TenagaKesehatanViewSet)

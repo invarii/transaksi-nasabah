@@ -70,6 +70,9 @@ from .models import (
     Jabatan,
     StatusPns,
     Golongan,
+    JenisKelahiran,
+    JenisTempat,
+    TenagaKesehatan,
 )
 
 
@@ -665,5 +668,26 @@ class StatusPnsSerializer(DynamicModelSerializer):
 class GolonganSerializer(DynamicModelSerializer):
     class Meta:
         model = Golongan
+        name = "data"
+        exclude = []
+
+
+class JenisKelahiranSerializer(DynamicModelSerializer):
+    class Meta:
+        model = JenisKelahiran
+        name = "data"
+        exclude = []
+
+
+class JenisTempatSerializer(DynamicModelSerializer):
+    class Meta:
+        model = JenisTempat
+        name = "data"
+        exclude = []
+
+
+class TenagaKesehatanSerializer(DynamicModelSerializer):
+    class Meta:
+        model = TenagaKesehatan
         name = "data"
         exclude = []
