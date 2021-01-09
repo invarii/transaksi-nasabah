@@ -1,91 +1,9 @@
-import os
-
 from django.db import models
 from django.conf import settings
-from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-
-def file_destination(instance, filename):
-    extension = os.path.splitext(filename)[1]
-    new_filename = timezone.now().strftime("%Y%m%d%H%M%S")
-    folder_name = instance.__class__.__name__.lower()
-    return f"{folder_name}/{new_filename}{extension}"
-
-
-class CustomModelQuerySet(models.QuerySet):
-    def delete(self):
-        return super().update(deleted_at=timezone.now())
-
-    def hard_delete(self):
-        return super().delete()
-
-    def alive(self):
-        return self.filter(deleted_at=None)
-
-    def dead(self):
-        return self.exclude(deleted_at=None)
-
-
-class CustomModelManager(models.Manager):
-    def __init__(self, *args, **kwargs):
-        self.alive_only = kwargs.pop("alive_only", True)
-        super().__init__(*args, **kwargs)
-
-    def get_queryset(self):
-        if self.alive_only:
-            return CustomModelQuerySet(self.model).filter(deleted_at=None)
-        return CustomModelQuerySet(self.model)
-
-    def hard_delete(self):
-        return self.get_queryset().hard_delete()
-
-
-class CustomModel(models.Model):
-    created_at = models.DateTimeField(blank=True, auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(blank=True, auto_now=True, null=True)
-    deleted_at = models.DateTimeField(blank=True, null=True)
-
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.DO_NOTHING,
-        related_name="created_%(class)ss",
-        blank=True,
-        null=True,
-    )
-    updated_by = models.ForeignKey(
-        User,
-        on_delete=models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="updated_%(class)ss",
-    )
-    deleted_by = models.ForeignKey(
-        User,
-        on_delete=models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="deleted_%(class)ss",
-    )
-
-    # Untuk query object hidup gunakan model_name.objects
-    # Untuk query semua object gunakan model.all_objects
-    objects = CustomModelManager()
-    all_objects = CustomModelManager(alive_only=False)
-
-    class Meta:
-        abstract = True
-
-    def delete(self):
-        # Tidak menghapus record dari database
-        # hanya menandai bahwa data ini sudah tidak aktif
-        self.deleted_at = timezone.now()
-        self.save()
-
-    def hard_delete(self):
-        # Menghapus data dari database
-        super().delete()
+from api_sad_sig.util import CustomModel, file_destination
 
 
 class Pegawai(CustomModel):
@@ -316,212 +234,6 @@ class SadPenduduk(CustomModel):
         db_table = "sad_penduduk"
 
 
-class SadKelahiran(CustomModel):
-    nama = models.CharField(max_length=100, blank=True, null=True)
-    jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
-    tempat_dilahirkan = models.CharField(max_length=20, blank=True, null=True)
-    tempat_kelahiran = models.CharField(max_length=20, blank=True, null=True)
-    tanggal_kelahiran = models.DateField(blank=True, null=True)
-    jam = models.TimeField(blank=True, null=True)
-    jenis_kelahiran = models.CharField(max_length=20, blank=True, null=True)
-    kelahiran_ke = models.CharField(max_length=5, blank=True, null=True)
-    penolong_kelahiran = models.CharField(max_length=30, blank=True, null=True)
-    berat_bayi = models.CharField(max_length=10, blank=True, null=True)
-    panjang_bayi = models.CharField(max_length=10, blank=True, null=True)
-    nik_ayah = models.CharField(max_length=16, blank=True, null=True)
-    nik_ibu = models.CharField(max_length=16, blank=True, null=True)
-    nama_ayah = models.CharField(max_length=100, blank=True, null=True)
-    nama_ibu = models.CharField(max_length=100, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
-    nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
-    nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sad_kelahiran"
-
-
-class SadKematian(CustomModel):
-    penduduk = models.ForeignKey(
-        "SadPenduduk", models.DO_NOTHING, blank=True, null=True
-    )
-    tanggal_kematian = models.DateField(blank=True, null=True)
-    jam = models.TimeField(blank=True, null=True)
-    sebab_kematian = models.CharField(max_length=50, blank=True, null=True)
-    tempat_kematian = models.CharField(max_length=50, blank=True, null=True)
-    yang_menerangkan = models.CharField(max_length=50, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
-    nama_saksi_satu = models.CharField(max_length=100, blank=True, null=True)
-    nama_saksi_dua = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sad_kematian"
-
-
-class SadLahirmati(CustomModel):
-    lama_kandungan = models.CharField(max_length=20, blank=True, null=True)
-    jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
-    tanggal_lahir = models.DateField(blank=True, null=True)
-    jam = models.TimeField(blank=True, null=True)
-    jenis_kelahiran = models.CharField(max_length=20, blank=True, null=True)
-    kelahiran_ke = models.CharField(max_length=5, blank=True, null=True)
-    tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
-    penolong_kelahiran = models.CharField(max_length=50, blank=True, null=True)
-    sebab_lahirmati = models.CharField(max_length=50, blank=True, null=True)
-    yang_menentukan = models.CharField(max_length=50, blank=True, null=True)
-    tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
-    nik_ayah = models.CharField(max_length=16, blank=True, null=True)
-    nik_ibu = models.CharField(max_length=16, blank=True, null=True)
-    nama_ayah = models.CharField(max_length=100, blank=True, null=True)
-    nama_ibu = models.CharField(max_length=100, blank=True, null=True)
-    nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sad_lahirmati"
-
-
-class JenisPindah(CustomModel):
-    nama = models.CharField(max_length=64)
-    label = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.label
-
-    class Meta(CustomModel.Meta):
-        db_table = "jenis_pindah"
-
-
-class AlasanPindah(CustomModel):
-    id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default="label")
-    label = models.CharField(max_length=128, default="nama")
-
-    def __str__(self):
-        return self.label
-
-    class Meta(CustomModel.Meta):
-        db_table = "alasan_pindah"
-
-
-class KlasifikasiPindah(CustomModel):
-    id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default="label")
-    label = models.CharField(max_length=128, default="nama")
-
-    def __str__(self):
-        return self.label
-
-    class Meta(CustomModel.Meta):
-        db_table = "klasifikasi_pindah"
-
-
-class StatusKKTinggal(CustomModel):
-    id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default="label")
-    label = models.CharField(max_length=128, default="nama")
-
-    def __str__(self):
-        return self.label
-
-    class Meta(CustomModel.Meta):
-        db_table = "status_kk_tinggal"
-
-
-class StatusKKPindah(CustomModel):
-    id = models.IntegerField(primary_key=True, default=1)
-    nama = models.CharField(max_length=64, default="label")
-    label = models.CharField(max_length=128, default="nama")
-
-    def __str__(self):
-        return self.label
-
-    class Meta(CustomModel.Meta):
-        db_table = "status_kk_pindah"
-
-
-class SadPindahKeluar(CustomModel):
-    nomor_kk = models.CharField(max_length=54, default="")
-    nik_pemohon = models.CharField(max_length=54, default="")
-    alasan = models.ForeignKey(
-        AlasanPindah,
-        models.DO_NOTHING,
-        related_name="data_keluar_alasan",
-        blank=True,
-        null=True,
-    )
-    kelurahan_tujuan = models.ForeignKey(
-        SadDesa, models.DO_NOTHING, blank=True, null=True
-    )
-    dusun_tujuan = models.CharField(max_length=20, blank=True, null=True)
-    rt_tujuan = models.CharField(max_length=5, blank=True, null=True)
-    rw_tujuan = models.CharField(max_length=5, blank=True, null=True)
-    kodepos_tujuan = models.CharField(max_length=5, blank=True, null=True)
-    no_telp = models.CharField(max_length=13, blank=True, null=True)
-    klasifikasi_pindah = models.ForeignKey(
-        KlasifikasiPindah,
-        models.DO_NOTHING,
-        related_name="data_keluar_klasifikasi",
-        blank=True,
-        null=True,
-    )
-    jenis_kepindahan = models.ForeignKey(
-        JenisPindah,
-        models.DO_NOTHING,
-        related_name="data_keluar_jenis",
-        blank=True,
-        null=True,
-    )
-    status_kk_pindah = models.ForeignKey(
-        StatusKKPindah,
-        models.DO_NOTHING,
-        related_name="data_keluar_kk_pindah",
-        blank=True,
-        null=True,
-    )
-    status_kk_tinggal = models.ForeignKey(
-        StatusKKTinggal,
-        models.DO_NOTHING,
-        related_name="data_keluar_kk_tinggal",
-        blank=True,
-        null=True,
-    )
-    rencana_tgl_pindah = models.DateField(blank=True, null=True)
-    nik_pindah = models.CharField(max_length=72, default="")
-
-    def anggota_keluar(self):
-        nik_s = list(self.nik_pindah.split(","))
-        if nik_s:
-            return SadPenduduk.all_objects.filter(pk__in=nik_s)
-        return []
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sad_pindah_keluar"
-
-
-class SadPindahMasuk(CustomModel):
-    no_kk = models.CharField(max_length=18, blank=True, null=True)
-    status_kk_pindah = models.ForeignKey(
-        StatusKKPindah, models.DO_NOTHING, blank=True, null=True
-    )
-    tanggal_kedatangan = models.DateField(blank=True, null=True)
-    alamat = models.CharField(max_length=100, blank=True, null=True)
-    rt_id = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
-    nik_datang = models.CharField(max_length=128, blank=True, null=True)
-
-    def anggota_masuk(self):
-        nik_s = list(self.nik_datang.split(","))
-        if nik_s:
-            return SadPenduduk.all_objects.filter(pk__in=nik_s)
-        return []
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sad_pindah_masuk"
-
-
 class SadSarpras(CustomModel):
     nama_sarpras = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
@@ -654,8 +366,12 @@ class KepemilikanWarga(models.Model):
 
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
-    gambar_atas = models.ImageField(upload_to=file_destination, blank=True, null=True)
-    gambar_depan= models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_atas = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    gambar_depan = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
@@ -1069,87 +785,6 @@ class Lapor(CustomModel):
         db_table = "Lapor"
 
 
-class SuratDomisili(CustomModel):
-    no_surat = models.CharField(max_length=50, blank=True, null=True)
-    pegawai = models.ForeignKey(
-        Pegawai, models.DO_NOTHING, blank=True, null=True
-    )
-    penduduk = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
-    )
-    keperluan = models.TextField(blank=True, null=True)
-
-    class Meta:
-        db_table = "surat_domisili"
-
-
-class SuratSkck(CustomModel):
-    no_surat = models.CharField(max_length=50, blank=True, null=True)
-    pegawai = models.ForeignKey(
-        Pegawai, models.DO_NOTHING, blank=True, null=True
-    )
-    penduduk = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
-    )
-    keterangan = models.TextField(blank=True, null=True)
-    keperluan = models.TextField(blank=True, null=True)
-
-    class Meta:
-        db_table = "surat_skck"
-
-
-class SuratKelahiran(CustomModel):
-    no_surat = models.CharField(max_length=50, blank=True, null=True)
-    pegawai = models.ForeignKey(
-        Pegawai,
-        models.DO_NOTHING,
-        related_name="acc_surat_kelahiran",
-        blank=True,
-        null=True,
-    )
-    ayah = models.ForeignKey(
-        SadPenduduk,
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="ayah_surat_lahir",
-    )
-    ibu = models.ForeignKey(
-        SadPenduduk,
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="ibu_surat_lahir",
-    )
-    saksi1 = models.ForeignKey(
-        Pegawai,
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="saksi1_surat_lahir",
-    )
-    saksi2 = models.ForeignKey(
-        Pegawai,
-        models.DO_NOTHING,
-        blank=True,
-        null=True,
-        related_name="saksi2_surat_lahir",
-    )
-    nama = models.CharField(max_length=100, blank=True, null=True)
-    jk = models.CharField(max_length=15, blank=True, null=True)
-    tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
-    tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
-    tgl = models.DateField(blank=True, null=True)
-    jenis_kelahiran = models.CharField(max_length=15, blank=True, null=True)
-    kelahiran_ke = models.CharField(max_length=15, blank=True, null=True)
-    penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
-    berat = models.CharField(max_length=15, blank=True, null=True)
-    panjang = models.CharField(max_length=15, blank=True, null=True)
-
-    class Meta:
-        db_table = "surat_kelahiran"
-
-
 class KategoriPendapatan(models.Model):
     kode = models.CharField(max_length=10, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
@@ -1255,121 +890,138 @@ class SuratKeluar(models.Model):
 
         db_table = "surat_keluar"
 
+
 class Pekerjaan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "pekerjaan"
+
 
 class Pendidikan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "pendidikan"
+
 
 class Agama(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "agama"
+
 
 class KelainanFisik(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "kelainanfisik"
+
 
 class Cacat(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "cacat"
+
 
 class StatusPerkawinan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_perkawinan"
+
 
 class Kewarganegaraan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "kewarganegaraan"
+
 
 class Goldar(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "goldar"
+
 
 class StatusDlmKeluarga(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_dalam_keluarga"
+
 
 class StatusKesejahteraan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_kesejahteraan"
+
 
 class StatusWarga(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_warga"
+
 
 class StatusDatangMasuk(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_datang_masuk"
+
 
 class Asal(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "asal"
+
 
 class KeadaanAwal(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "keadaan_awal"
+
 
 class Jabatan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "jabatan"
+
 
 class StatusPns(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "status_pns"
+
 
 class Golongan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-      
+
         db_table = "golongan"

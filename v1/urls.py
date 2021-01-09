@@ -12,11 +12,6 @@ from .views import (
     SadRtViewSet,
     SadKeluargaViewSet,
     SadPendudukViewSet,
-    SadKelahiranViewSet,
-    SadKematianViewSet,
-    SadLahirmatiViewSet,
-    SadPindahKeluarViewSet,
-    SadPindahMasukViewSet,
     SadSarprasViewSet,
     SadInventarisViewSet,
     SadSuratViewSet,
@@ -41,14 +36,6 @@ from .views import (
     LaporViewSet,
     InformasiViewSet,
     PotensiViewSet,
-    SuratKelahiranViewSet,
-    SuratSkckViewSet,
-    SuratDomisiliViewSet,
-    JenisPindahViewSet,
-    AlasanPindahViewSet,
-    KlasifikasiPindahViewSet,
-    StatusKKTinggalViewSet,
-    StatusKKPindahViewSet,
     SliderViewSet,
     KategoriBelanjaViewSet,
     KategoriPendapatanViewSet,
@@ -89,11 +76,6 @@ router.register(r"sadrw", SadRwViewSet)
 router.register(r"sadrt", SadRtViewSet)
 router.register(r"keluarga", SadKeluargaViewSet)
 router.register(r"penduduk", SadPendudukViewSet)
-router.register(r"kelahiran", SadKelahiranViewSet)
-router.register(r"kematian", SadKematianViewSet)
-router.register(r"lahirmati", SadLahirmatiViewSet)
-router.register(r"pindahkeluar", SadPindahKeluarViewSet)
-router.register(r"pindahmasuk", SadPindahMasukViewSet)
 router.register(r"sarpras", SadSarprasViewSet)
 router.register(r"inventaris", SadInventarisViewSet)
 router.register(r"surat", SadSuratViewSet)
@@ -118,14 +100,6 @@ router.register(r"berita", ArtikelViewSet)
 router.register(r"informasi", InformasiViewSet)
 router.register(r"potensi", PotensiViewSet)
 router.register(r"lapor", LaporViewSet)
-router.register(r"suratkelahiran", SuratKelahiranViewSet)
-router.register(r"suratskck", SuratSkckViewSet)
-router.register(r"domisili", SuratDomisiliViewSet)
-router.register(r"jenispindah", JenisPindahViewSet)
-router.register(r"klasifikasipindah", KlasifikasiPindahViewSet)
-router.register(r"alasanpindah", AlasanPindahViewSet)
-router.register(r"statuskktinggal", StatusKKTinggalViewSet)
-router.register(r"statuskkpindah", StatusKKPindahViewSet)
 router.register(r"slider", SliderViewSet)
 router.register(r"kategoribelanja", KategoriBelanjaViewSet)
 router.register(r"kategoripendapatan", KategoriPendapatanViewSet)

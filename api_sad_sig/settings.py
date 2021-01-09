@@ -69,6 +69,7 @@ CORS_ALLOWED_ORIGINS = [
 INSTALLED_APPS = [
     "v1.apps.V1Config",
     "users.apps.UsersConfig",
+    "layananperistiwa.apps.LayananConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
