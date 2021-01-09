@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterModelTable("JenisPindah", "jenis_pindah"),
         migrations.AlterModelTable("AlasanPindah", "alasan_pindah"),
         migrations.AlterModelTable("KlasifikasiPindah", "klasifikasi_pindah"),
-        migrations.AlterModelTable("StatusKKTinggal", "state_operations"),
+        migrations.AlterModelTable("StatusKKTinggal", "status_kk_tinggal"),
         migrations.AlterModelTable("StatusKKPindah", "status_kk_pindah"),
         migrations.AlterModelTable("SadPindahKeluar", "sad_pindah_keluar"),
         migrations.AlterModelTable("SadPindahMasuk", "sad_pindah_masuk"),
