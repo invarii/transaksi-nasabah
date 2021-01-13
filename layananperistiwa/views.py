@@ -1,10 +1,10 @@
-from rest_framework import permissions
+from rest_framework import permissions, viewsets, mixins
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, APIException
 from dynamic_rest.viewsets import DynamicModelViewSet
 
 from api_sad_sig.util import CustomView
@@ -45,6 +45,8 @@ from .serializers import (
     SadPindahKeluarSerializer,
     SadPindahMasukSerializer,
     SadPecahKKSerializer,
+    LaporanKelahiranSerializer,
+    LaporanKematianSerializer,
 )
 
 
@@ -96,10 +98,55 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         return HttpResponse(pdf, content_type="application/pdf")
 
 
+class LaporanKelahiranViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = SadKelahiran.objects.all().order_by("id")
+    serializer_class = LaporanKelahiranSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_queryset(self):
+        quarter = self.request.query_params.get("rentang")
+        year, month = quarter.split("-")
+        if not year or not month:
+            raise APIException('Wrong format for "rentang"', 400)
+        if not year.isdigit() or not month.isdigit():
+            raise APIException("Year and Month need to be integer format", 400)
+
+        start = 3 * (int(month) - 1) + 1
+        end = start + 3
+
+        return SadKelahiran.objects.filter(created_at__year=int(year)).filter(
+            created_at__month__in=tuple(i for i in range(start, end))
+        )
+
+
 class SadKelahiranViewSet(CustomView):
     queryset = SadKelahiran.objects.all().order_by("id")
     serializer_class = SadKelahiranSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+
+class LaporanKematianViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = SadKematian.objects.all().order_by("id")
+    serializer_class = LaporanKematianSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_queryset(self):
+        quarter = self.request.query_params.get("rentang")
+        if not quarter:
+            raise APIException("Need rentang parameter")
+
+        year, month = quarter.split("-")
+        if not year or not month:
+            raise APIException('Wrong format for "rentang"', 400)
+        if not year.isdigit() or not month.isdigit():
+            raise APIException("Year and Month need to be integer format", 400)
+
+        start = 3 * (int(month) - 1) + 1
+        end = start + 3
+
+        return SadKematian.objects.filter(created_at__year=int(year)).filter(
+            created_at__month__in=tuple(i for i in range(start, end))
+        )
 
 
 class SadKematianViewSet(CustomView):

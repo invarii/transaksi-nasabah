@@ -15,6 +15,8 @@ from .views import (
     SadPindahKeluarViewSet,
     SadPindahMasukViewSet,
     SadPecahKKViewSet,
+    LaporanKelahiranViewSet,
+    LaporanKematianViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -33,3 +35,9 @@ router.register(r"lahirmati", SadLahirmatiViewSet)
 router.register(r"pindahkeluar", SadPindahKeluarViewSet)
 router.register(r"pindahmasuk", SadPindahMasukViewSet)
 router.register(r"pecahkk", SadPecahKKViewSet)
+router.register(
+    r"laporan-kelahiran", LaporanKelahiranViewSet, basename="rekap_kelahiran"
+)
+router.register(
+    r"laporan-kematian", LaporanKematianViewSet, basename="rekap_kematian"
+)

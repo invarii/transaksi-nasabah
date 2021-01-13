@@ -226,12 +226,17 @@ class SadPenduduk(CustomModel):
         db_column="pass", max_length=20, blank=True, null=True
     )  # Field renamed because it was a Python reserved word.
 
+    @property
+    def no_kk(self):
+        return self.keluarga.no_kk
+
     def __str__(self):
         return f"{self.nama} ({self.nik})"
 
     class Meta(CustomModel.Meta):
 
         db_table = "sad_penduduk"
+
 
 class SadSarpras(CustomModel):
     nama_sarpras = models.CharField(max_length=100, blank=True, null=True)
@@ -961,20 +966,21 @@ class StatusDlmKeluarga(models.Model):
 
         db_table = "status_dalam_keluarga"
 
+
 class StatusKesejahteraan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "status_kesejahteraan"
 
-        
+
 class StatusWarga(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "status_warga"
 
-        
+
 class StatusDatangMasuk(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
@@ -988,7 +994,7 @@ class Asal(models.Model):
     class Meta:
         db_table = "asal"
 
-  
+
 class KeadaanAwal(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 

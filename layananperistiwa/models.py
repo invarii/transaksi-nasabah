@@ -105,6 +105,24 @@ class SadKelahiran(CustomModel):
     nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
     nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
 
+    def find_penduduk(self, element):
+        reference = getattr(self, element)
+        if reference:
+            return SadPenduduk.objects.filter(nik=reference).first()
+        return None
+
+    @property
+    def tanggal_kawin(self):
+        return self.ayah.tgl_kawin
+
+    @property
+    def ayah(self):
+        return self.find_penduduk("nik_ayah")
+
+    @property
+    def ibu(self):
+        return self.find_penduduk("nik_ibu")
+
     class Meta(CustomModel.Meta):
 
         db_table = "sad_kelahiran"
