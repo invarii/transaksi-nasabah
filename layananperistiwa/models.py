@@ -72,12 +72,18 @@ class SuratKelahiran(CustomModel):
     )
     nama = models.CharField(max_length=100, blank=True, null=True)
     jk = models.CharField(max_length=15, blank=True, null=True)
-    tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
+    tempat_dilahirkan = models.ForeignKey(
+        "v1.JenisTempat", models.DO_NOTHING, blank=True, null=True
+    )
     tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
-    jenis_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    jenis_kelahiran = models.ForeignKey(
+        "v1.JenisKelahiran", models.DO_NOTHING, blank=True, null=True
+    )
     kelahiran_ke = models.CharField(max_length=15, blank=True, null=True)
-    penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    penolong_kelahiran = models.ForeignKey(
+        "v1.TenagaKesehatan", models.DO_NOTHING, blank=True, null=True
+    )
     berat = models.CharField(max_length=15, blank=True, null=True)
     panjang = models.CharField(max_length=15, blank=True, null=True)
 
@@ -104,6 +110,24 @@ class SadKelahiran(CustomModel):
     nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
     nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
     nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
+
+    def find_penduduk(self, element):
+        reference = getattr(self, element)
+        if reference:
+            return SadPenduduk.objects.filter(nik=reference).first()
+        return None
+
+    @property
+    def tanggal_kawin(self):
+        return self.ayah.tgl_kawin
+
+    @property
+    def ayah(self):
+        return self.find_penduduk("nik_ayah")
+
+    @property
+    def ibu(self):
+        return self.find_penduduk("nik_ibu")
 
     class Meta(CustomModel.Meta):
 

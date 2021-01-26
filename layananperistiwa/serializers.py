@@ -17,8 +17,6 @@ from v1.models import SadKeluarga, SadPenduduk, SadRt
 from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
-    SadRtSerializer,
-    SadPendudukSerializer,
 )
 
 from .models import (
@@ -208,9 +206,6 @@ penolong_kelahiran = ["Dokter", "Bidan/Perawat", "Dukun", "Lainnya"]
 
 class SuratKelahiranSerializer(CustomSerializer):
     jk = serializers.ChoiceField(jenis_kelamin)
-    jenis_kelahiran = serializers.ChoiceField(jenis_kelahiran)
-    tempat_dilahirkan = serializers.ChoiceField(tempat_dilahirkan)
-    penolong_kelahiran = serializers.ChoiceField(penolong_kelahiran)
 
     class Meta(SuratMeta):
         model = SuratKelahiran
@@ -240,6 +235,36 @@ class SuratDomisiliSerializer(CustomSerializer):
         return surat
 
 
+class OrangTuaSerializer(CustomSerializer):
+    class Meta:
+        model = SadPenduduk
+        name = "data"
+        fields = ["nik", "nama", "tempat_lahir", "tgl_lahir", "alamat"]
+
+
+class LaporanKelahiranSerializer(CustomSerializer):
+    ayah = OrangTuaSerializer()
+    ibu = OrangTuaSerializer()
+
+    class Meta:
+        model = SadKelahiran
+        name = "data"
+        fields = [
+            "nama",
+            "jenis_kelamin",
+            "tempat_kelahiran",
+            "penolong_kelahiran",
+            "tanggal_kelahiran",
+            "kelahiran_ke",
+            "berat_bayi",
+            "panjang_bayi",
+            "ayah",
+            "ibu",
+            "tanggal_kawin",
+            "jenis_kelahiran",
+        ]
+
+
 class SadKelahiranSerializer(CustomSerializer):
     class Meta:
         model = SadKelahiran
@@ -247,9 +272,39 @@ class SadKelahiranSerializer(CustomSerializer):
         exclude = []
 
 
+class PendudukMeninggal(CustomSerializer):
+    class Meta:
+        model = SadPenduduk
+        name = "data"
+        fields = [
+            "nama",
+            "nik",
+            "jk",
+            "tempat_lahir",
+            "tgl_lahir",
+            "pekerjaan",
+            "alamat",
+            "no_kk",
+        ]
+
+
+class LaporanKematianSerializer(CustomSerializer):
+    penduduk = PendudukMeninggal()
+
+    class Meta:
+        model = SadKematian
+        name = "data"
+        fields = [
+            "penduduk",
+            "tanggal_kematian",
+            "tempat_kematian",
+            "sebab_kematian",
+        ]
+
+
 class SadKematianSerializer(CustomSerializer):
     penduduk = DynamicRelationField(
-        "SadPendudukSerializer", deferred=True, embed=True
+        "v1.serializers.SadPendudukSerializer", deferred=True, embed=True
     )
 
     class Meta:
@@ -319,9 +374,7 @@ class MiniUserSerializer(DynamicModelSerializer):
 
 
 class SadPindahMasukSerializer(CustomSerializer):
-    rt_id = DynamicRelationField(
-        "SadRtSerializer", deferred=False, embed=True
-    )
+    rt_id = DynamicRelationField("SadRtSerializer", deferred=False, embed=True)
     status_kk_pindah = DynamicRelationField(
         "StatusKKPindahSerializer", deferred=False, embed=True
     )
