@@ -86,6 +86,9 @@ class StatusKKPindahSerializer(CustomSerializer):
 
 class AdminSuratKelahiranSerializer(DynamicModelSerializer):
     pegawai = DynamicRelationField(PegawaiSerializer)
+    keterangan_penolong_kelahiran = serializers.CharField(read_only=True)
+    keterangan_tempat_dilahirkan = serializers.CharField(read_only=True)
+    keterangan_jenis_kelahiran = serializers.CharField(read_only=True)
 
     class Meta:
         model = SuratKelahiran
@@ -206,6 +209,9 @@ penolong_kelahiran = ["Dokter", "Bidan/Perawat", "Dukun", "Lainnya"]
 
 class SuratKelahiranSerializer(CustomSerializer):
     jk = serializers.ChoiceField(jenis_kelamin)
+    keterangan_penolong_kelahiran = serializers.CharField(read_only=True)
+    keterangan_tempat_dilahirkan = serializers.CharField(read_only=True)
+    keterangan_jenis_kelahiran = serializers.CharField(read_only=True)
 
     class Meta(SuratMeta):
         model = SuratKelahiran

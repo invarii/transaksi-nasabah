@@ -87,6 +87,24 @@ class SuratKelahiran(CustomModel):
     berat = models.CharField(max_length=15, blank=True, null=True)
     panjang = models.CharField(max_length=15, blank=True, null=True)
 
+    @property
+    def keterangan_tempat_dilahirkan(self):
+        if self.tempat_dilahirkan:
+            return self.tempat_dilahirkan.nama
+        return None
+
+    @property
+    def keterangan_penolong_kelahiran(self):
+        if self.penolong_kelahiran:
+            return self.penolong_kelahiran.nama
+        return None
+
+    @property
+    def keterangan_jenis_kelahiran(self):
+        if self.jenis_kelahiran:
+            return self.jenis_kelahiran.nama
+        return None
+
     class Meta:
         db_table = "surat_kelahiran"
 
