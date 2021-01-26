@@ -18,6 +18,7 @@ from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
     SadRtSerializer,
+    SadPendudukSerializer,
 )
 
 from .models import (
