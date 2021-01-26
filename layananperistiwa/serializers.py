@@ -206,9 +206,6 @@ penolong_kelahiran = ["Dokter", "Bidan/Perawat", "Dukun", "Lainnya"]
 
 class SuratKelahiranSerializer(CustomSerializer):
     jk = serializers.ChoiceField(jenis_kelamin)
-    jenis_kelahiran = serializers.ChoiceField(jenis_kelahiran)
-    tempat_dilahirkan = serializers.ChoiceField(tempat_dilahirkan)
-    penolong_kelahiran = serializers.ChoiceField(penolong_kelahiran)
 
     class Meta(SuratMeta):
         model = SuratKelahiran

@@ -72,12 +72,18 @@ class SuratKelahiran(CustomModel):
     )
     nama = models.CharField(max_length=100, blank=True, null=True)
     jk = models.CharField(max_length=15, blank=True, null=True)
-    tempat_dilahirkan = models.CharField(max_length=50, blank=True, null=True)
+    tempat_dilahirkan = models.ForeignKey(
+        "v1.JenisTempat", models.DO_NOTHING, blank=True, null=True
+    )
     tempat_kelahiran = models.CharField(max_length=50, blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
-    jenis_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    jenis_kelahiran = models.ForeignKey(
+        "v1.JenisKelahiran", models.DO_NOTHING, blank=True, null=True
+    )
     kelahiran_ke = models.CharField(max_length=15, blank=True, null=True)
-    penolong_kelahiran = models.CharField(max_length=15, blank=True, null=True)
+    penolong_kelahiran = models.ForeignKey(
+        "v1.TenagaKesehatan", models.DO_NOTHING, blank=True, null=True
+    )
     berat = models.CharField(max_length=15, blank=True, null=True)
     panjang = models.CharField(max_length=15, blank=True, null=True)
 
