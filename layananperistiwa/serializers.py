@@ -291,21 +291,24 @@ class PendudukMeninggal(CustomSerializer):
 
 
 class LaporanKematianSerializer(CustomSerializer):
-    nama = serializers.CharField(source="penduduk.nama")
-    nik = serializers.CharField(source="penduduk.nik")
-    jenis_kelamin = serializers.CharField(source="penduduk.jk")
-    tgl_lahir = serializers.CharField(source="penduduk.tgl_lahir")
-    pekerjaan = serializers.CharField(source="penduduk.pekerjaan")
-    alamat = serializers.CharField(source="penduduk.alamat")
-    no_kk = serializers.CharField(source="penduduk.keluarga.no_kk")
+    nama = serializers.CharField(source="penduduk.nama", read_only=True)
+    nik = serializers.CharField(source="penduduk.nik", read_only=True)
+    jenis_kelamin = serializers.CharField(source="penduduk.jk", read_only=True)
+    tgl_lahir = serializers.CharField(
+        source="penduduk.tgl_lahir", read_only=True
+    )
+    pekerjaan = serializers.CharField(
+        source="penduduk.pekerjaan", read_only=True
+    )
+    alamat = serializers.CharField(source="penduduk.alamat", read_only=True)
+    no_kk = serializers.CharField(
+        source="penduduk.keluarga.no_kk", read_only=True
+    )
 
     class Meta:
         model = SadKematian
         name = "data"
         exclude = util_columns + [
-            "penduduk",
-            "jam",
-            "yang_menerangkan",
             "nama_saksi_satu",
             "nama_saksi_dua",
             "nama_pelapor",
