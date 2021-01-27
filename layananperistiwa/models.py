@@ -137,7 +137,10 @@ class SadKelahiran(CustomModel):
 
     @property
     def tanggal_kawin(self):
-        return self.find_penduduk("nik_ayah").tgl_kawin
+        ayah = self.find_penduduk("nik_ayah")
+        if ayah:
+            return ayah.tgl_kawin
+        return None
 
     class Meta(CustomModel.Meta):
 
