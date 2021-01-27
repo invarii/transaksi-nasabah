@@ -168,8 +168,12 @@ class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField(
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
-    dusun = serializers.CharField(read_only=True, source="rt.rw.dusun.nama")
-    rw = serializers.CharField(read_only=True, source="rt.rw.rw")
+    dusun = DynamicRelationField(
+        "SadDusunSerializer", many=True, deferred=True, embed=True
+    )
+    rw = DynamicRelationField(
+        "SadRwSerializer", many=True, deferred=True, embed=True
+    )
     rt = DynamicRelationField("MiniSadRtSerializer", deferred=True, embed=True)
     kepala_keluarga = serializers.DictField(read_only=True)
 
