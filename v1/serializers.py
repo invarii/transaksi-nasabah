@@ -163,16 +163,30 @@ class MiniSadRtSerializer(CustomSerializer):
         name = "data"
         fields = ["rw", "id", "rt"]
 
+class MiniSadRwSerializer(CustomSerializer):
+    dusun = DynamicRelationField("SadDusunSerializer", deferred=True, embed=True)
+
+    class Meta:
+        model = SadRw
+        name = "data"
+        fields = ["dusun", "id", "rw"]
+
+class MiniSadDusunSerializer(CustomSerializer):
+
+    class Meta:
+        model = SadDusun
+        name = "data"
+        fields = ["id", "dusun"]
 
 class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField(
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
     dusun = DynamicRelationField(
-        "SadDusunSerializer", many=True, deferred=True, embed=True
+        "MiniSadDusunSerializer", deferred=True, embed=True
     )
     rw = DynamicRelationField(
-        "SadRwSerializer", many=True, deferred=True, embed=True
+        "MiniSadRwSerializer", deferred=True, embed=True
     )
     rt = DynamicRelationField("MiniSadRtSerializer", deferred=True, embed=True)
     kepala_keluarga = serializers.DictField(read_only=True)
