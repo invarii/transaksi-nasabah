@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import filters
 
 import pandas
 import json
@@ -346,6 +347,9 @@ class SadPendudukViewSet(CustomView):
     serializer_class = SadPendudukSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+    
     def get_queryset(self):
         keluarga = self.request.query_params.get("keluarga")
         if keluarga:
