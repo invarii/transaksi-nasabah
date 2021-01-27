@@ -255,25 +255,12 @@ class LaporanMonografiSerializer(CustomSerializer):
 
 
 class LaporanKelahiranSerializer(CustomSerializer):
-    ibu_nama = serializers.CharField()
-    ibu_nik = serializers.CharField(source="nik_ibu")
-    ibu_tempat_lahir = serializers.CharField()
-    ibu_tgl_lahir = serializers.CharField()
-    ibu_alamat = serializers.CharField()
-    ayah_nama = serializers.CharField()
-    ayah_nik = serializers.CharField(source="nik_ayah")
-    ayah_tempat_lahir = serializers.CharField()
-    ayah_tgl_lahir = serializers.CharField()
-    ayah_alamat = serializers.CharField()
+    tanggal_kawin = serializers.CharField()
 
     class Meta:
         model = SadKelahiran
         name = "data"
         exclude = util_columns + [
-            "tempat_dilahirkan",
-            "jam",
-            "nik_ayah",
-            "nik_ibu",
             "nama_pelapor",
             "nik_saksi_satu",
             "nik_saksi_dua",
