@@ -241,33 +241,42 @@ class SuratDomisiliSerializer(CustomSerializer):
         return surat
 
 
-class OrangTuaSerializer(CustomSerializer):
+class OrangTuaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SadPenduduk
-        name = "data"
         fields = ["nik", "nama", "tempat_lahir", "tgl_lahir", "alamat"]
 
 
+class LaporanMonografiSerializer(CustomSerializer):
+    class Meta:
+        model = SadPenduduk
+        name = "data"
+        fields = ["no_kk", "nik", "nama", "jk", "status_kawin", "alamat"]
+
+
 class LaporanKelahiranSerializer(CustomSerializer):
-    ayah = OrangTuaSerializer()
-    ibu = OrangTuaSerializer()
+    ibu_nama = serializers.CharField()
+    ibu_nik = serializers.CharField(source="nik_ibu")
+    ibu_tempat_lahir = serializers.CharField()
+    ibu_tgl_lahir = serializers.CharField()
+    ibu_alamat = serializers.CharField()
+    ayah_nama = serializers.CharField()
+    ayah_nik = serializers.CharField(source="nik_ayah")
+    ayah_tempat_lahir = serializers.CharField()
+    ayah_tgl_lahir = serializers.CharField()
+    ayah_alamat = serializers.CharField()
 
     class Meta:
         model = SadKelahiran
         name = "data"
-        fields = [
-            "nama",
-            "jenis_kelamin",
-            "tempat_kelahiran",
-            "penolong_kelahiran",
-            "tanggal_kelahiran",
-            "kelahiran_ke",
-            "berat_bayi",
-            "panjang_bayi",
-            "ayah",
-            "ibu",
-            "tanggal_kawin",
-            "jenis_kelahiran",
+        exclude = util_columns + [
+            "tempat_dilahirkan",
+            "jam",
+            "nik_ayah",
+            "nik_ibu",
+            "nama_pelapor",
+            "nik_saksi_satu",
+            "nik_saksi_dua",
         ]
 
 
@@ -295,16 +304,24 @@ class PendudukMeninggal(CustomSerializer):
 
 
 class LaporanKematianSerializer(CustomSerializer):
-    penduduk = PendudukMeninggal()
+    nama = serializers.CharField(source="penduduk.nama")
+    nik = serializers.CharField(source="penduduk.nik")
+    jenis_kelamin = serializers.CharField(source="penduduk.jk")
+    tgl_lahir = serializers.CharField(source="penduduk.tgl_lahir")
+    pekerjaan = serializers.CharField(source="penduduk.pekerjaan")
+    alamat = serializers.CharField(source="penduduk.alamat")
+    no_kk = serializers.CharField(source="penduduk.keluarga.no_kk")
 
     class Meta:
         model = SadKematian
         name = "data"
-        fields = [
+        exclude = util_columns + [
             "penduduk",
-            "tanggal_kematian",
-            "tempat_kematian",
-            "sebab_kematian",
+            "jam",
+            "yang_menerangkan",
+            "nama_saksi_satu",
+            "nama_saksi_dua",
+            "nama_pelapor",
         ]
 
 

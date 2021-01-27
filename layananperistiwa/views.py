@@ -1,5 +1,8 @@
-from rest_framework import permissions, viewsets, mixins
+import pytz
+from datetime import datetime
+from rest_framework import permissions
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
@@ -9,6 +12,7 @@ from dynamic_rest.viewsets import DynamicModelViewSet
 
 from api_sad_sig.util import CustomView
 from users.permissions import IsAdminUserOrReadOnly
+from v1.models import SadPenduduk
 
 from .utils import render_mail
 from .models import (
@@ -47,6 +51,7 @@ from .serializers import (
     SadPecahKKSerializer,
     LaporanKelahiranSerializer,
     LaporanKematianSerializer,
+    LaporanMonografiSerializer,
 )
 
 
@@ -98,16 +103,53 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
         return HttpResponse(pdf, content_type="application/pdf")
 
 
-class LaporanKelahiranViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = SadKelahiran.objects.all().order_by("id")
+def string_to_date(text):
+    return datetime.strptime(text, "%Y-%m-%d").astimezone(
+        pytz.timezone(settings.TIME_ZONE)
+    )
+
+
+class LaporanMonografiViewSet(DynamicModelViewSet):
+    queryset = SadPenduduk.objects.order_by("id").all()
+    serializer_class = LaporanMonografiSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_serializer_class(self):
+        print(self.action)
+        if self.action != "list":
+            raise NotFound("Operasi ini tidak tersedia")
+        return self.serializer_class
+
+    def get_queryset(self):
+        start = self.request.query_params.get("start")
+        end = self.request.query_params.get("end")
+        if not start or not end:
+            raise APIException(
+                "Need start date and end date for filtering", 400
+            )
+        start_date = string_to_date(start)
+        end_date = string_to_date(end)
+
+        queryset = (
+            SadPenduduk.objects.filter(
+                created_at__gte=start_date, created_at__lte=end_date
+            )
+            .order_by("id")
+            .all()
+        )
+
+        return queryset
+
+
+class LaporanKelahiranViewSet(CustomView):
     serializer_class = LaporanKelahiranSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        quarter = self.request.query_params.get("rentang")
+        quarter = self.request.query_params.get("triwulan")
         year, month = quarter.split("-")
         if not year or not month:
-            raise APIException('Wrong format for "rentang"', 400)
+            raise APIException('Wrong format for "triwulan"', 400)
         if not year.isdigit() or not month.isdigit():
             raise APIException("Year and Month need to be integer format", 400)
 
@@ -125,27 +167,34 @@ class SadKelahiranViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
 
-class LaporanKematianViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class LaporanKematianViewSet(DynamicModelViewSet):
     queryset = SadKematian.objects.all().order_by("id")
     serializer_class = LaporanKematianSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def get_serializer_class(self):
+        if self.action not in ["list", "create"]:
+            raise NotFound("Operasi ini tidak tersedia")
+        return self.serializer_class
+
     def get_queryset(self):
-        quarter = self.request.query_params.get("rentang")
+        quarter = self.request.query_params.get("triwulan")
         if not quarter:
-            raise APIException("Need rentang parameter")
+            raise APIException("Need triwulan parameter")
 
         year, month = quarter.split("-")
         if not year or not month:
-            raise APIException('Wrong format for "rentang"', 400)
+            raise APIException('Wrong format for "triwulan"', 400)
         if not year.isdigit() or not month.isdigit():
             raise APIException("Year and Month need to be integer format", 400)
 
         start = 3 * (int(month) - 1) + 1
         end = start + 3
 
-        return SadKematian.objects.filter(created_at__year=int(year)).filter(
-            created_at__month__in=tuple(i for i in range(start, end))
+        return (
+            SadKematian.objects.filter(created_at__year=int(year))
+            .filter(created_at__month__in=tuple(i for i in range(start, end)))
+            .order_by("id")
         )
 
 
