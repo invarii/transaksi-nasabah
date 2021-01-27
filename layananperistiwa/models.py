@@ -141,11 +141,45 @@ class SadKelahiran(CustomModel):
 
     @property
     def ayah(self):
-        return self.find_penduduk("nik_ayah")
+        rv = self.find_penduduk("nik_ayah")
+        return rv
 
     @property
     def ibu(self):
-        return self.find_penduduk("nik_ibu")
+        rv = self.find_penduduk("nik_ibu")
+        return rv
+
+    @property
+    def ibu_nama(self):
+        return self.ibu.nama
+
+    @property
+    def ibu_tempat_lahir(self):
+        return self.ibu.tempat_lahir
+
+    @property
+    def ibu_tgl_lahir(self):
+        return self.ibu.tgl_lahir
+
+    @property
+    def ibu_alamat(self):
+        return self.ibu.alamat
+
+    @property
+    def ayah_nama(self):
+        return self.ayah.nama
+
+    @property
+    def ayah_tempat_lahir(self):
+        return self.ayah.tempat_lahir
+
+    @property
+    def ayah_tgl_lahir(self):
+        return self.ayah.tgl_lahir
+
+    @property
+    def ayah_alamat(self):
+        return self.ibu.alamat
 
     class Meta(CustomModel.Meta):
 
