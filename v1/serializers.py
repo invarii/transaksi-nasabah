@@ -176,7 +176,7 @@ class MiniSadDusunSerializer(CustomSerializer):
     class Meta:
         model = SadDusun
         name = "data"
-        fields = ["id", "dusun"]
+        fields = ["id", "nama"]
 
 class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField(
