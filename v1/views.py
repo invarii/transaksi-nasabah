@@ -37,8 +37,6 @@ from .serializers import (
     SigBidangSerializerMini,
     SigBidangSerializerFull,
     SigPemilikSerializer,
-    SigSadBidangSerializer,
-    SigSadBidang2Serializer,
     SigDesaSerializer,
     SigRtSerializer,
     SigRwSerializer,
@@ -104,8 +102,6 @@ from .models import (
     SadDetailSurat,
     SigBidang,
     SigPemilik,
-    SigSadBidang,
-    SigSadBidang2,
     SigDesa,
     SigRt,
     SigRw,
@@ -173,11 +169,17 @@ class SadProvinsiViewSet(CustomView):
     serializer_class = SadProvinsiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'nama_provinsi']
+
 
 class PegawaiViewSet(CustomView):
     queryset = Pegawai.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama', 'jabatan']
 
 
 class BatasDesaViewSet(CustomView):
@@ -185,11 +187,17 @@ class BatasDesaViewSet(CustomView):
     serializer_class = BatasDesaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['utara', 'selatan', 'timur', 'barat']
+
 
 class SadKabKotaViewSet(CustomView):
     queryset = SadKabKota.objects.all().order_by("id")
     serializer_class = SadKabKotaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'nama_kab_kota']
 
     def get_queryset(self):
         provinsi = self.request.query_params.get("provinsi")
@@ -207,6 +215,9 @@ class SadKecamatanViewSet(CustomView):
     serializer_class = SadKecamatanSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'nama_kecamatan']
+
     def get_queryset(self):
         kabkota = self.request.query_params.get("kabkota")
         if kabkota:
@@ -218,6 +229,9 @@ class SadDesaViewSet(CustomView):
     queryset = SadDesa.objects.all().order_by("id")
     serializer_class = SadDesaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['id', 'nama_desa']
 
     def get_queryset(self):
         kecamatan = self.request.query_params.get("kecamatan")
@@ -237,6 +251,9 @@ class SadDusunViewSet(CustomView):
     serializer_class = SadDusunSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
     def get_queryset(self):
         desa = self.request.query_params.get("desa")
         if desa:
@@ -248,6 +265,9 @@ class SadRwViewSet(CustomView):
     queryset = SadRw.objects.all().order_by("id")
     serializer_class = SadRwSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['rw']
 
     def get_queryset(self):
         dusun = self.request.query_params.get("dusun")
@@ -261,6 +281,9 @@ class SadRtViewSet(CustomView):
     serializer_class = SadRtSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['rt']
+
     def get_queryset(self):
         rw = self.request.query_params.get("rw")
         if rw:
@@ -272,6 +295,9 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     queryset = SadKeluarga.objects.all().order_by("id")
     serializer_class = SadKeluargaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['no_kk']
 
     def get_queryset(self):
         user = self.request.user
@@ -433,35 +459,23 @@ class SadSarprasViewSet(CustomView):
     serializer_class = SadSarprasSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama_sarpras', 'asal']
+
 
 class SadInventarisViewSet(CustomView):
     queryset = SadInventaris.objects.all().order_by("id")
     serializer_class = SadInventarisSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama_inventaris', 'asal']
+
 
 class SadSuratViewSet(CustomView):
     queryset = SadSurat.objects.all().order_by("id")
     serializer_class = SadSuratSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
-
-class SadDetailSuratViewSet(CustomView):
-    queryset = SadDetailSurat.objects.all().order_by("id")
-    serializer_class = SadDetailSuratSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-
-class SigSadBidangViewSet(CustomView):
-    queryset = SigSadBidang.objects.all().order_by("id")
-    serializer_class = SigSadBidangSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class SigSadBidang2ViewSet(CustomView):
-    queryset = SigSadBidang2.objects.all().order_by("id")
-    serializer_class = SigSadBidang2Serializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class SigBidangViewSet(CustomView):
@@ -714,11 +728,17 @@ class KategoriArtikelViewSet(DynamicModelViewSet):
     serializer_class = KategoriArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class ArtikelViewSet(DynamicModelViewSet):
     queryset = Artikel.objects.all().order_by("id")
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['judul']
 
 
 class SliderViewSet(DynamicModelViewSet):
@@ -732,6 +752,9 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     serializer_class = KategoriLaporSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class StatusLaporViewSet(DynamicModelViewSet):
     queryset = StatusLapor.objects.all().order_by("id")
@@ -743,6 +766,9 @@ class LaporViewSet(CustomView):
     queryset = Lapor.objects.all().order_by("-id")
     serializer_class = LaporSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['judul']
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
@@ -750,11 +776,17 @@ class KategoriInformasiViewSet(DynamicModelViewSet):
     serializer_class = KategoriInformasiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class InformasiViewSet(DynamicModelViewSet):
     queryset = Informasi.objects.all().order_by("id")
     serializer_class = InformasiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['judul']
 
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
@@ -762,11 +794,17 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
     serializer_class = KategoriPotensiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("id")
     serializer_class = PotensiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['judul']
 
     def get_queryset(self):
         kategori = self.request.query_params.get("kategori")
@@ -780,11 +818,17 @@ class KategoriPendapatanViewSet(DynamicModelViewSet):
     serializer_class = KategoriPendapatanSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class KategoriBelanjaViewSet(DynamicModelViewSet):
     queryset = KategoriBelanja.objects.all().order_by("id")
     serializer_class = KategoriBelanjaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
 
 
 class KategoriTahunViewSet(DynamicModelViewSet):
@@ -798,11 +842,17 @@ class PendapatanViewSet(DynamicModelViewSet):
     serializer_class = PendapatanSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
+
 
 class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")
     serializer_class = BelanjaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
 
 
 class SuratMasukViewSet(DynamicModelViewSet):
@@ -810,11 +860,17 @@ class SuratMasukViewSet(DynamicModelViewSet):
     serializer_class = SuratMasukSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['perihal', 'keterangan']
+
 
 class SuratKeluarViewSet(DynamicModelViewSet):
     queryset = SuratKeluar.objects.all().order_by("id")
     serializer_class = SuratKeluarSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['perihal', 'keterangan']
 
 
 class PekerjaanViewSet(DynamicModelViewSet):

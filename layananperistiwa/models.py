@@ -166,6 +166,7 @@ class SadKematian(CustomModel):
 
 
 class SadLahirmati(CustomModel):
+    nama = models.CharField(max_length=100, blank=True, null=True)
     lama_kandungan = models.CharField(max_length=20, blank=True, null=True)
     jenis_kelamin = models.CharField(max_length=20, blank=True, null=True)
     tanggal_lahir = models.DateField(blank=True, null=True)
