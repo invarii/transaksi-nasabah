@@ -847,12 +847,6 @@ class Belanja(models.Model):
     anggaran = models.CharField(max_length=100, blank=True, null=True)
     sumber_dana = models.CharField(max_length=100, blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
-    foto_sebelum = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
-    foto_sesudah = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
     progres = models.CharField(max_length=100, blank=True, null=True)
     koordinat = models.TextField(blank=True, null=True)
 
@@ -869,7 +863,7 @@ class SuratMasuk(models.Model):
     kepada = models.CharField(max_length=100, blank=True, null=True)
     perihal = models.CharField(max_length=100, blank=True, null=True)
     keterangan = models.CharField(max_length=100, blank=True, null=True)
-    gambar = models.ImageField(
+    arsip = models.FileField(
         upload_to=file_destination, blank=True, null=True
     )
 
@@ -889,7 +883,7 @@ class SuratKeluar(models.Model):
     kepada = models.CharField(max_length=100, blank=True, null=True)
     perihal = models.CharField(max_length=100, blank=True, null=True)
     keterangan = models.CharField(max_length=100, blank=True, null=True)
-    gambar = models.ImageField(
+    arsip = models.FileField(
         upload_to=file_destination, blank=True, null=True
     )
 
