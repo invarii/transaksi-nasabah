@@ -14,12 +14,8 @@ from .views import (
     SadPendudukViewSet,
     SadSarprasViewSet,
     SadInventarisViewSet,
-    SadSuratViewSet,
-    SadDetailSuratViewSet,
     SigPemilikViewSet,
     SigBidangViewSet,
-    SigSadBidangViewSet,
-    SigSadBidang2ViewSet,
     SigDesaViewSet,
     SigDusunViewSet,
     SigDukuhViewSet,
@@ -81,12 +77,8 @@ router.register(r"keluarga", SadKeluargaViewSet)
 router.register(r"penduduk", SadPendudukViewSet)
 router.register(r"sarpras", SadSarprasViewSet)
 router.register(r"inventaris", SadInventarisViewSet)
-router.register(r"surat", SadSuratViewSet)
-router.register(r"detailsurat", SadDetailSuratViewSet)
 router.register(r"sigpemilik", SigPemilikViewSet)
 router.register(r"sigbidang", SigBidangViewSet)
-router.register(r"sigsadbidang", SigSadBidangViewSet)
-router.register(r"sigsadbidang2", SigSadBidang2ViewSet)
 router.register(r"sigdesa", SigDesaViewSet)
 router.register(r"sigdusun", SigDusunViewSet)
 router.register(r"sigdukuh", SigDukuhViewSet)
