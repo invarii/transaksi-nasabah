@@ -847,6 +847,12 @@ class Belanja(models.Model):
     anggaran = models.CharField(max_length=100, blank=True, null=True)
     sumber_dana = models.CharField(max_length=100, blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
+    foto_sebelum = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    foto_sesudah = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
     progres = models.CharField(max_length=100, blank=True, null=True)
     koordinat = models.TextField(blank=True, null=True)
 
