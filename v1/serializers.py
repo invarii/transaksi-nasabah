@@ -138,7 +138,9 @@ class SadDusunSerializer(CustomSerializer):
 
 
 class SadRwSerializer(CustomSerializer):
-    dusun = DynamicRelationField(SadDusunSerializer)
+    dusun = DynamicRelationField(
+        "SadDusunSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadRw
@@ -147,7 +149,9 @@ class SadRwSerializer(CustomSerializer):
 
 
 class SadRtSerializer(CustomSerializer):
-    rw = DynamicRelationField(SadRwSerializer)
+    rw = DynamicRelationField(
+        "SadRwSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadRt
