@@ -8,6 +8,7 @@ from api_sad_sig.util import CustomModel, file_destination
 
 class Pegawai(CustomModel):
     nip = models.CharField(max_length=18, blank=True, null=True)
+    chip_ektp = models.CharField(max_length=20, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
@@ -19,6 +20,18 @@ class Pegawai(CustomModel):
     class Meta(CustomModel.Meta):
 
         db_table = "pegawai"
+
+
+class Absensi(CustomModel):
+    pegawai = models.ForeignKey("Pegawai", models.DO_NOTHING, blank=True, null=True)
+    jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
+    jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
+    alasan_izin =  models.CharField(max_length=100, blank=True, null=True)
+    jumlah = models.IntegerField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "absensi"
 
 
 class SadProvinsi(CustomModel):
@@ -193,13 +206,13 @@ class SadPenduduk(CustomModel):
     tgl_lahir = models.DateField(blank=True, null=True)
     tempat_lahir = models.CharField(max_length=50, blank=True, null=True)
     jk = models.CharField(max_length=12, blank=True, null=True)
-    alamat = models.CharField(max_length=100, blank=True, null=True)
+    alamat = models.CharField(max_length=200, blank=True, null=True)
     agama = models.CharField(max_length=20, blank=True, null=True)
-    pendidikan = models.CharField(max_length=20, blank=True, null=True)
-    pekerjaan = models.CharField(max_length=50, blank=True, null=True)
+    pendidikan = models.CharField(max_length=100, blank=True, null=True)
+    pekerjaan = models.CharField(max_length=100, blank=True, null=True)
     status_kawin = models.CharField(max_length=20, blank=True, null=True)
     status_penduduk = models.CharField(max_length=20, blank=True, null=True)
-    kewarganegaraan = models.CharField(max_length=5, blank=True, null=True)
+    kewarganegaraan = models.CharField(max_length=20, blank=True, null=True)
     anak_ke = models.CharField(max_length=5, blank=True, null=True)
     golongan_darah = models.CharField(max_length=5, blank=True, null=True)
     status_dalam_keluarga = models.CharField(
