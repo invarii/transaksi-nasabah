@@ -882,7 +882,7 @@ class SuratMasuk(models.Model):
     kepada = models.CharField(max_length=100, blank=True, null=True)
     perihal = models.CharField(max_length=100, blank=True, null=True)
     keterangan = models.CharField(max_length=100, blank=True, null=True)
-    gambar = models.ImageField(
+    arsip_suratmasuk = models.FileField(
         upload_to=file_destination, blank=True, null=True
     )
 
@@ -902,7 +902,7 @@ class SuratKeluar(models.Model):
     kepada = models.CharField(max_length=100, blank=True, null=True)
     perihal = models.CharField(max_length=100, blank=True, null=True)
     keterangan = models.CharField(max_length=100, blank=True, null=True)
-    gambar = models.ImageField(
+    arsip_suratkeluar = models.FileField(
         upload_to=file_destination, blank=True, null=True
     )
 
