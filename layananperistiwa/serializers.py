@@ -17,6 +17,7 @@ from v1.models import SadKeluarga, SadPenduduk, SadRt
 from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
+    SadRtSerializer,
 )
 
 from .models import (
