@@ -50,7 +50,7 @@ from .models import (
     KategoriTahun,
     KategoriBelanja,
     Pendapatan,
-    Belanja,
+    # Belanja,
     SuratMasuk,
     SuratKeluar,
     Pekerjaan,
@@ -543,18 +543,18 @@ class PendapatanSerializer(DynamicModelSerializer):
         exclude = []
 
 
-class BelanjaSerializer(DynamicModelSerializer):
-    kategori = DynamicRelationField(
-        "KategoriBelanjaSerializer", deferred=True, embed=True
-    )
-    tahun = DynamicRelationField(
-        "KategoriTahunSerializer", deferred=True, embed=True
-    )
+# class BelanjaSerializer(DynamicModelSerializer):
+#     kategori = DynamicRelationField(
+#         "KategoriBelanjaSerializer", deferred=True, embed=True
+#     )
+#     tahun = DynamicRelationField(
+#         "KategoriTahunSerializer", deferred=True, embed=True
+#     )
 
-    class Meta:
-        model = Belanja
-        name = "data"
-        exclude = []
+#     class Meta:
+#         model = Belanja
+#         name = "data"
+#         exclude = []
 
 
 class SuratMasukSerializer(DynamicModelSerializer):
