@@ -58,7 +58,7 @@ from .serializers import (
     KategoriPendapatanSerializer,
     KategoriTahunSerializer,
     PendapatanSerializer,
-    # BelanjaSerializer,
+    BelanjaSerializer,
     SuratMasukSerializer,
     SuratKeluarSerializer,
     StatusLaporSerializer,
@@ -122,7 +122,7 @@ from .models import (
     KategoriBelanja,
     KategoriTahun,
     KategoriPendapatan,
-    # Belanja,
+    Belanja,
     Pendapatan,
     SuratMasuk,
     SuratKeluar,
@@ -846,13 +846,13 @@ class PendapatanViewSet(DynamicModelViewSet):
     search_fields = ['nama']
 
 
-# class BelanjaViewSet(DynamicModelViewSet):
-#     queryset = Belanja.objects.all().order_by("id")
-#     serializer_class = BelanjaSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+class BelanjaViewSet(DynamicModelViewSet):
+    queryset = Belanja.objects.all().order_by("id")
+    serializer_class = BelanjaSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-#     filter_backends = [filters.SearchFilter]
-#     search_fields = ['nama']
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nama']
 
 
 class SuratMasukViewSet(DynamicModelViewSet):
