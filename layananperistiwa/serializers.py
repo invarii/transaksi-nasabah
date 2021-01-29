@@ -460,12 +460,6 @@ class MiniPendudukSerializer(serializers.Serializer):
 class SadPecahKKSerializer(CustomSerializer):
     no_kk = serializers.CharField(write_only=True)
     anggota_kk = MiniPendudukSerializer(many=True, write_only=True)
-    penduduk = DynamicRelationField(
-        "MiniUserSerializer", deferred=True, embed=True
-    )
-    keluarga = DynamicRelationField(
-        "SadKeluargaSerializer", deferred=True, embed=True
-    )
     rt = serializers.IntegerField(write_only=True)
 
     def create(self, validated_data):
