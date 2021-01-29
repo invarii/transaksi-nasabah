@@ -374,7 +374,7 @@ class SadPendudukViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ['nama', 'nik', 'chip_ektp']
     
     def get_queryset(self):
         keluarga = self.request.query_params.get("keluarga")
