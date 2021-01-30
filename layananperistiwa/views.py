@@ -61,7 +61,7 @@ class SuratKelahiranViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_serializer_class(self):
         if self.request.user.groups.first().name == "admin":
@@ -80,7 +80,7 @@ class SuratSkckViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_serializer_class(self):
         if self.request.user.groups.first().name == "admin":
@@ -99,7 +99,7 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_serializer_class(self):
         if self.request.user.groups.first().name == "admin":
@@ -126,7 +126,7 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
 
     def get_serializer_class(self):
         print(self.action)
-        if self.action != "list":
+        if self.action not in ["list", "create"]:
             raise NotFound("Operasi ini tidak tersedia")
         return self.serializer_class
 
@@ -140,15 +140,18 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
         start_date = string_to_date(start)
         end_date = string_to_date(end)
 
-        queryset = (
-            SadPenduduk.objects.filter(
-                created_at__gte=start_date, created_at__lte=end_date
-            )
-            .order_by("id")
-            .all()
+        queryset = SadPenduduk.objects.filter(
+            created_at__gte=start_date, created_at__lte=end_date
         )
 
-        return queryset
+        allowed_param = ("jk", "pekerjaan", "status_kawin")
+        param = self.request.query_params.get("param")
+        value = self.request.query_params.get("value")
+        if param and value and param in allowed_param:
+            dict_params = {param: value}
+            queryset = queryset.filter(**dict_params)
+
+        return queryset.order_by("id").all()
 
 
 class LaporanKelahiranViewSet(CustomView):
@@ -177,7 +180,7 @@ class SadKelahiranViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama', 'nama_ayah', 'nama_ibu']
+    search_fields = ["nama", "nama_ayah", "nama_ibu"]
 
 
 class LaporanKematianViewSet(DynamicModelViewSet):
@@ -217,7 +220,7 @@ class SadKematianViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama', 'sebab_kematian']
+    search_fields = ["nama", "sebab_kematian"]
 
 
 class SadLahirmatiViewSet(CustomView):
@@ -226,7 +229,7 @@ class SadLahirmatiViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class JenisPindahViewSet(CustomView):
@@ -265,7 +268,7 @@ class SadPindahKeluarViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nomor_kk', 'nik_pemohon']
+    search_fields = ["nomor_kk", "nik_pemohon"]
 
     def retrieve(self, request, pk=None):
         queryset = SadPindahKeluar.objects.all()
@@ -289,7 +292,7 @@ class SadPindahMasukViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['no_kk']
+    search_fields = ["no_kk"]
 
 
 class SadPecahKKViewSet(CustomView):
@@ -298,7 +301,7 @@ class SadPecahKKViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['keluarga', 'penduduk']
+    search_fields = ["keluarga", "penduduk"]
 
     def get_serializer_class(self):
         if self.action in ["update", "retrieve", "delete"]:

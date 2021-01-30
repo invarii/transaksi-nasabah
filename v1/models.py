@@ -23,10 +23,12 @@ class Pegawai(CustomModel):
 
 
 class Absensi(CustomModel):
-    pegawai = models.ForeignKey("Pegawai", models.DO_NOTHING, blank=True, null=True)
+    pegawai = models.ForeignKey(
+        "Pegawai", models.DO_NOTHING, blank=True, null=True
+    )
     jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
     jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
-    alasan_izin =  models.CharField(max_length=100, blank=True, null=True)
+    alasan_izin = models.CharField(max_length=100, blank=True, null=True)
     jumlah = models.IntegerField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):
@@ -147,10 +149,6 @@ class SadRw(CustomModel):
 class SadKeluarga(CustomModel):
     no_kk = models.CharField(max_length=16, unique=True)
     jalan_blok = models.CharField(max_length=100, blank=True, null=True)
-    dusun = models.ForeignKey(
-        "SadDusun", models.DO_NOTHING, blank=True, null=True
-    )
-    rw = models.ForeignKey("SadRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
     status_kesejahteraan = models.CharField(
