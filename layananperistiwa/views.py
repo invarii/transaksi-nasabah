@@ -1,5 +1,5 @@
 import pytz
-from datetime import datetime
+from datetime import datetime, date
 from rest_framework import permissions
 from rest_framework import filters
 
@@ -147,9 +147,35 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
         allowed_param = ("jk", "pekerjaan", "status_kawin")
         param = self.request.query_params.get("param")
         value = self.request.query_params.get("value")
+        if param not in ("dpt", "child") and not value:
+            raise APIException("Param needs Value", 400)
+
         if param and value and param in allowed_param:
             dict_params = {param: value}
             queryset = queryset.filter(**dict_params)
+
+        if param == "age" and not value.isdigit():
+            raise APIException("Value needs to be integer", 400)
+        if param == "age":
+            today = date.today()
+            min_date = date(
+                today.year - (int(value) + 1), today.month, today.day
+            )
+            max_date = date(today.year - int(value), today.month, today.day)
+            queryset = queryset.filter(
+                tgl_lahir__gt=min_date, tgl_lahir__lte=max_date
+            )
+        if param == "dpt":
+            today = date.today()
+            max_date = date(today.year - 17, today.month, today.day)
+            queryset = queryset.filter(tgl_lahir__lte=max_date)
+        if param == "child":
+            today = date.today()
+            min_date = date(today.year - 12, today.month, today.day)
+            max_date = date(today.year - 5, today.month, today.day)
+            queryset = queryset.filter(
+                tgl_lahir__gt=min_date, tgl_lahir__lte=max_date
+            )
 
         return queryset.order_by("id").all()
 
