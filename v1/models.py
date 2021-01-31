@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -240,6 +242,20 @@ class SadPenduduk(CustomModel):
     @property
     def no_kk(self):
         return self.keluarga.no_kk
+
+    @property
+    def age(self):
+        if not self.tgl_lahir:
+            return None
+
+        today = date.today()
+        birthday = self.tgl_lahir
+        age = (
+            today.year
+            - birthday.year
+            - ((today.month, today.day) < (birthday.month, birthday.day))
+        )
+        return age
 
     def __str__(self):
         return f"{self.nama} ({self.nik})"
