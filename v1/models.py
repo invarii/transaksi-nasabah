@@ -873,6 +873,7 @@ class Belanja(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
     anggaran = models.CharField(max_length=100, blank=True, null=True)
     sumber_dana = models.CharField(max_length=100, blank=True, null=True)
+    deskripsi = models.TextField(blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
     foto_sebelum = models.ImageField(
         upload_to=file_destination, blank=True, null=True
