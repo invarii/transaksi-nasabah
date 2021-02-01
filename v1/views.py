@@ -483,6 +483,11 @@ class SigBidangViewSet(CustomView):
     serializer_class = SigBidangSerializerFull
     permission_classes = [IsAdminUserOrReadOnly]
 
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigBidang.objects.all().delete()
+        return Response()
+
     def get_serializer_class(self):
         if self.action in ["list", "create"]:
             return SigBidangSerializerMini
@@ -543,6 +548,11 @@ class SigDesaViewSet(CustomView):
     serializer_class = SigDesaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigDesa.objects.all().delete()
+        return Response()
+
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -564,6 +574,11 @@ class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
     serializer_class = SigDusunSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigDusun.objects.all().delete()
+        return Response()
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -590,6 +605,11 @@ class SigDukuhViewSet(CustomView):
     serializer_class = SigDukuhSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigDukuh.objects.all().delete()
+        return Response()
+
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -614,6 +634,11 @@ class SigDukuh2ViewSet(CustomView):
     queryset = SigDukuh2.objects.all().order_by("id")
     serializer_class = SigDukuh2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigDukuh2.objects.all().delete()
+        return Response()
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -640,6 +665,11 @@ class SigRwViewSet(CustomView):
     serializer_class = SigRwSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigRw.objects.all().delete()
+        return Response()
+
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -662,6 +692,11 @@ class SigRw2ViewSet(CustomView):
     queryset = SigRw2.objects.all().order_by("id")
     serializer_class = SigRw2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigRw2.objects.all().delete()
+        return Response()
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
@@ -686,6 +721,11 @@ class SigRtViewSet(CustomView):
     serializer_class = SigRtSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigRt.objects.all().delete()
+        return Response()
+
     @action(detail=False, methods=["post"])
     def upload(self, request):
         file = request.FILES["file"]
@@ -706,6 +746,11 @@ class SigRt2ViewSet(CustomView):
     queryset = SigRt2.objects.all().order_by("id")
     serializer_class = SigRt2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigRt2.objects.all().delete()
+        return Response()
 
     @action(detail=False, methods=["post"])
     def upload(self, request):
