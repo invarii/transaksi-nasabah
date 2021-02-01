@@ -342,7 +342,7 @@ class SigPemilikSerializer(CustomSerializer):
 
 
 class PemilikBidangSerializer(serializers.Serializer):
-    nik = serializers.CharField()
+    nik = serializers.CharField(allow_null=True, allow_blank=True)
     nama = serializers.CharField()
     namabidang = serializers.CharField()
     is_warga = serializers.BooleanField(default=False)
