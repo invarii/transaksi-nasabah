@@ -369,7 +369,7 @@ class SigPemilik(CustomModel):
 
 
 class PemilikNonWarga(models.Model):
-    nik = models.CharField(max_length=32, unique=True)
+    nik = models.CharField(max_length=32, blank=True, null=True)
     nama = models.CharField(max_length=64)
     namabidang = models.CharField(max_length=64, blank=True, null=True)
 
