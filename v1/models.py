@@ -428,7 +428,7 @@ class SigBidang(CustomModel):
         ]
         pemilik_non_warga = [
             {
-                "nik": i.non_penduduk.nik,
+                # "nik": i.non_penduduk.nik,
                 "nama": i.non_penduduk.nama,
                 "namabidang": i.namabidang,
                 "is_warga": False,
@@ -440,7 +440,7 @@ class SigBidang(CustomModel):
     @daftar_pemilik.setter
     def daftar_pemilik(self, value):
         warga_nik = []
-        non_warga_nik = []
+        non_warga_nama = []
         for item in value:
             if item.get("is_warga"):
                 pemilik = SadPenduduk.objects.get(nik=item["nik"])
@@ -461,10 +461,10 @@ class SigBidang(CustomModel):
                 warga_nik.append(pemilik.nik)
                 continue
             pemilik, created = PemilikNonWarga.objects.get_or_create(
-                nik=item["nik"], defaults={"nama": item["nama"]}
+                nama=item["nama"], defaults={"nama": item["nama"]}
             )
             pemilik, created = PemilikNonWarga.objects.update_or_create(
-                nik=item["nik"], defaults={"nama": item["nama"]}
+                nama=item["nama"], defaults={"nama": item["nama"]}
             )
 
             kepemilikan, created = KepemilikanNonWarga.objects.get_or_create(
@@ -480,10 +480,10 @@ class SigBidang(CustomModel):
                 bidang=self,
                 defaults={"namabidang": item["namabidang"]},
             )
-            non_warga_nik.append(item["nik"])
+            non_warga_nama.append(item["nama"])
         self.kepemilikanwarga_set.exclude(penduduk__nik__in=warga_nik).delete()
         self.kepemilikannonwarga_set.exclude(
-            non_penduduk__nik__in=non_warga_nik
+            non_penduduk__nama__in=non_warga_nama
         ).delete()
         PemilikNonWarga.objects.annotate(
             kepemilikan_s=models.Count("kepemilikannonwarga")
