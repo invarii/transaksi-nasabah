@@ -361,7 +361,16 @@ class SigBidangSerializerMini(CustomSerializer):
     class Meta:
         model = SigBidang
         name = "data"
-        fields = ["id", "nbt", "gambar_atas", "gambar_depan", "daftar_pemilik", "daftar_penguasa", "geometry", "sig_rt"]
+        fields = [
+            "id",
+            "nbt",
+            "gambar_atas",
+            "gambar_depan",
+            "daftar_pemilik",
+            "daftar_penguasa",
+            "geometry",
+            "sig_rt",
+        ]
 
 
 class SigBidangSerializerFull(CustomSerializer):

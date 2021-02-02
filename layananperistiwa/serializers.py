@@ -17,7 +17,6 @@ from v1.models import SadKeluarga, SadPenduduk, SadRt
 from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
-    SadRtSerializer,
 )
 
 from .models import (
@@ -457,10 +456,26 @@ class MiniPendudukSerializer(serializers.Serializer):
     )
 
 
+class PecahKKPenduduk(serializers.ModelSerializer):
+    class Meta:
+        model = SadPenduduk
+        fields = ["nama", "nik"]
+        read_only_fields = ["nama", "nik"]
+
+
+class PecahKKKeluarga(serializers.ModelSerializer):
+    class Meta:
+        model = SadKeluarga
+        fields = ["kepala_keluarga", "no_kk"]
+        read_only_fields = ["kepala_keluarga", "no_kk"]
+
+
 class SadPecahKKSerializer(CustomSerializer):
     no_kk = serializers.CharField(write_only=True)
     anggota_kk = MiniPendudukSerializer(many=True, write_only=True)
     rt = serializers.IntegerField(write_only=True)
+    penduduk = PecahKKPenduduk(many=True, read_only=True)
+    keluarga = PecahKKKeluarga(read_only=True)
 
     def create(self, validated_data):
         rt = get_object_or_404(SadRt, id=validated_data["rt"])
