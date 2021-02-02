@@ -8,72 +8,7 @@ from api_sad_sig.util import (
     create_or_reactivate,
     create_or_reactivate_user,
 )
-from .models import (
-    Pegawai,
-    SadProvinsi,
-    SadKabKota,
-    SadKecamatan,
-    SadDesa,
-    BatasDesa,
-    SadDusun,
-    SadRw,
-    SadRt,
-    SadKeluarga,
-    SadPenduduk,
-    SadSarpras,
-    SadInventaris,
-    SadSurat,
-    SadDetailSurat,
-    SigSadBidang,
-    SigSadBidang2,
-    SigPemilik,
-    SigBidang,
-    SigDesa,
-    SigRw,
-    SigRt,
-    SigRw2,
-    SigRt2,
-    SigDusun,
-    SigDukuh,
-    SigDukuh2,
-    Slider,
-    KategoriArtikel,
-    Artikel,
-    KategoriInformasi,
-    Informasi,
-    KategoriPotensi,
-    Potensi,
-    KategoriLapor,
-    StatusLapor,
-    Lapor,
-    KategoriPendapatan,
-    KategoriTahun,
-    KategoriBelanja,
-    Pendapatan,
-    Belanja,
-    SuratMasuk,
-    SuratKeluar,
-    Pekerjaan,
-    Pendidikan,
-    Agama,
-    KelainanFisik,
-    Cacat,
-    StatusPerkawinan,
-    Kewarganegaraan,
-    Goldar,
-    StatusDlmKeluarga,
-    StatusKesejahteraan,
-    StatusWarga,
-    StatusDatangMasuk,
-    Asal,
-    KeadaanAwal,
-    Jabatan,
-    StatusPns,
-    Golongan,
-    JenisKelahiran,
-    JenisTempat,
-    TenagaKesehatan,
-)
+from .models import *
 
 
 class PegawaiSerializer(CustomSerializer):
@@ -716,3 +651,88 @@ class TenagaKesehatanSerializer(DynamicModelSerializer):
         model = TenagaKesehatan
         name = "data"
         exclude = []
+
+
+class SadKeluarga3Serializer(CustomSerializer):
+    anggota = DynamicRelationField(
+        "SadPendudukSerializer", many=True, deferred=True, embed=True
+    )
+    dusun = MiniSadDusunSerializer(
+        source="dusun", read_only=True, embed=True
+    )
+    kepala_keluarga = serializers.DictField(read_only=True)
+
+    class Meta:
+        model = SadKeluarga
+        name = "data"
+        exclude = util_columns
+        extra_kwargs = {
+            "created_by": {"default": serializers.CurrentUserDefault()}
+        }
+
+class SigPemilik3Serializer(CustomSerializer):
+    pemilik = DynamicRelationField(
+        "SadPendudukSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = SigPemilik
+        name = "data"
+        exclude = []
+
+
+class PemilikBidang3Serializer(serializers.Serializer):
+    nik = serializers.CharField(allow_null=True, allow_blank=True)
+    nama = serializers.CharField()
+    namabidang = serializers.CharField()
+    is_warga = serializers.BooleanField(default=False)
+
+
+class PenguasaBidang3Serializer(serializers.Serializer):
+    no_kk = serializers.CharField()
+    is_warga = serializers.BooleanField(default=False)
+
+
+class SigBidang3SerializerMini(CustomSerializer):
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
+
+    class Meta:
+        model = SigBidang
+        name = "data"
+        fields = [
+            "id",
+            "nbt",
+            "gambar_atas",
+            "gambar_depan",
+            "daftar_pemilik",
+            "daftar_penguasa",
+            "geometry",
+            "sig_rt",
+        ]
+
+
+class SigBidang3SerializerFull(CustomSerializer):
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
+    daftar_pemilik = serializers.ListField(
+        child=PemilikBidangSerializer(), required=False
+    )
+    daftar_penguasa = serializers.ListField(
+        child=PenguasaBidangSerializer(), required=False
+    )
+
+    class Meta:
+        model = SigBidang
+        name = "data"
+        fields = [
+            "id",
+            "nbt",
+            "gambar_atas",
+            "gambar_depan",
+            "sig_rt",
+            "daftar_pemilik",
+            "daftar_penguasa",
+        ]

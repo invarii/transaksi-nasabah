@@ -18,136 +18,8 @@ from api_sad_sig.util import (
     create_or_reactivate_user,
 )
 from users.permissions import IsAdminUserOrReadOnly
-from .serializers import (
-    PegawaiSerializer,
-    SadProvinsiSerializer,
-    SadKabKotaSerializer,
-    SadKecamatanSerializer,
-    SadDesaSerializer,
-    BatasDesaSerializer,
-    SadDusunSerializer,
-    SadRwSerializer,
-    SadRtSerializer,
-    SadKeluargaSerializer,
-    SadPendudukSerializer,
-    SadSarprasSerializer,
-    SadInventarisSerializer,
-    SadSuratSerializer,
-    SadDetailSuratSerializer,
-    SigBidangSerializerMini,
-    SigBidangSerializerFull,
-    SigPemilikSerializer,
-    SigDesaSerializer,
-    SigRtSerializer,
-    SigRwSerializer,
-    SigDusunSerializer,
-    SigDukuhSerializer,
-    SigDukuh2Serializer,
-    SigRt2Serializer,
-    SigRw2Serializer,
-    KategoriLaporSerializer,
-    LaporSerializer,
-    KategoriArtikelSerializer,
-    ArtikelSerializer,
-    SliderSerializer,
-    KategoriPotensiSerializer,
-    PotensiSerializer,
-    KategoriInformasiSerializer,
-    InformasiSerializer,
-    KategoriBelanjaSerializer,
-    KategoriPendapatanSerializer,
-    KategoriTahunSerializer,
-    PendapatanSerializer,
-    BelanjaSerializer,
-    SuratMasukSerializer,
-    SuratKeluarSerializer,
-    StatusLaporSerializer,
-    PekerjaanSerializer,
-    PendidikanSerializer,
-    AgamaSerializer,
-    KelainanFisikSerializer,
-    CacatSerializer,
-    StatusPerkawinanSerializer,
-    KewarganegaraanSerializer,
-    GoldarSerializer,
-    StatusDlmKeluargaSerializer,
-    StatusKesejahteraanSerializer,
-    StatusWargaSerializer,
-    StatusDatangMasukSerializer,
-    AsalSerializer,
-    KeadaanAwalSerializer,
-    JabatanSerializer,
-    StatusPnsSerializer,
-    GolonganSerializer,
-    JenisKelahiranSerializer,
-    JenisTempatSerializer,
-    TenagaKesehatanSerializer,
-)
-
-from .models import (
-    Pegawai,
-    SadProvinsi,
-    SadKabKota,
-    SadKecamatan,
-    SadDesa,
-    BatasDesa,
-    SadDusun,
-    SadRw,
-    SadRt,
-    SadKeluarga,
-    SadPenduduk,
-    SadSarpras,
-    SadInventaris,
-    SadSurat,
-    SadDetailSurat,
-    SigBidang,
-    SigPemilik,
-    SigDesa,
-    SigRt,
-    SigRw,
-    SigDusun,
-    SigDukuh,
-    SigDukuh2,
-    SigRt2,
-    SigRw2,
-    KategoriLapor,
-    Lapor,
-    Artikel,
-    KategoriArtikel,
-    Informasi,
-    KategoriInformasi,
-    Potensi,
-    KategoriPotensi,
-    Slider,
-    KategoriBelanja,
-    KategoriTahun,
-    KategoriPendapatan,
-    Belanja,
-    Pendapatan,
-    SuratMasuk,
-    SuratKeluar,
-    StatusLapor,
-    Pekerjaan,
-    Pendidikan,
-    Agama,
-    KelainanFisik,
-    Cacat,
-    StatusPerkawinan,
-    Kewarganegaraan,
-    Goldar,
-    StatusDlmKeluarga,
-    StatusKesejahteraan,
-    StatusWarga,
-    StatusDatangMasuk,
-    Asal,
-    KeadaanAwal,
-    Jabatan,
-    StatusPns,
-    Golongan,
-    JenisKelahiran,
-    JenisTempat,
-    TenagaKesehatan,
-)
+from .serializers import *
+from .models import *
 
 
 def format_data_penduduk(data):
@@ -1036,3 +908,142 @@ class TenagaKesehatanViewSet(DynamicModelViewSet):
     queryset = TenagaKesehatan.objects.all().order_by("id")
     serializer_class = TenagaKesehatanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class SadKeluarga3ViewSet(DynamicModelViewSet):
+    queryset = SadKeluarga3.objects.all().order_by("id")
+    serializer_class = SadKeluarga3Serializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['no_kk']
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if hasattr(user, "profile"):
+            return SadKeluarga3.objects.filter(id=user.profile.keluarga.id)
+        return SadKeluarga3.objects.all().order_by("id")
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        status = {
+            "status": "success",
+            "data_diinput": 0,
+            "data_gagal": 0,
+            "data_redundan": 0,
+            "dusun_tidak_ditemukan": 0,
+        }
+
+        file = request.FILES["file"]
+        data = pandas.read_excel(file)
+        data = data.replace({np.nan: None})
+        if data[["no_kk", "dusun"]].isna().values.any():
+            message = "Silahkan lengkapi data no_kk dan dusun"
+            return Response({"message": message}, status=400)
+
+        for item in data.to_dict("records"):
+
+            dusun = SadDusun.find_dusun(item["dusun"])
+            item["dusun"] = dusun
+            item.pop("dusun")
+            if not item["dusun"]:
+                status["dusun_tidak_ditemukan"] += 1
+                continue
+
+            param_filter = {"no_kk": item["no_kk"]}
+            try:
+                create_or_reactivate(SadKeluarga3, param_filter, item)
+            except IntegrityError:
+                status["data_redundan"] += 1
+                continue
+            except Exception as e:
+                print(item)
+                print(e)
+                status["data_gagal"] += 1
+                continue
+            status["data_diinput"] += 1
+        if not status["data_diinput"]:
+            status["status"] = "failed"
+        return Response(status)
+
+    @action(detail=False, methods=["get"])
+    def ekspor(self, request):
+        with BytesIO() as b:
+            writer = pandas.ExcelWriter(b)
+            item = SadKeluarga3.objects.all()
+            serializer = SadKeluarga3Serializer(item, many=True)
+            df = pandas.DataFrame(serializer.data)
+            df.reset_index(drop=True, inplace=True)
+            df.to_excel(writer, sheet_name="Sheet1", index=0)
+            writer.save()
+            return HttpResponse(
+                b.getvalue(),
+                content_type=(
+                    "application/vnd.openxmlformats-"
+                    "officedocument.spreadsheetml.sheet"
+                ),
+            )
+
+class SigBidang3ViewSet(CustomView):
+    queryset = SigBidang3.objects.all().order_by("id")
+    serializer_class = SigBidang3SerializerFull
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=['get'])
+    def delete_all(self, request):
+        SigBidang3.objects.all().delete()
+        return Response()
+
+    def get_serializer_class(self):
+        if self.action in ["list", "create"]:
+            return SigBidang3SerializerMini
+        return SigBidang3SerializerFull
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        user = request.user
+        payload = {"id": user.id, "username": user.username}
+
+        if hasattr(user, "profile"):
+            kepemilikan = user.profile.kepemilikanwarga_set.all()
+            payload["kepemilikan"] = [
+                {
+                    "bidang": i.bidang.id,
+                    "nbt": i.bidang.nbt,
+                    "gambar_depan": i.bidang.gambar_depan,
+                    "gambar_atas": i.bidang.gambar_atas,
+                    "namabidang": i.namabidang,
+                }
+                for i in kepemilikan
+            ]
+
+            penguasaan = user.profile.keluarga.menguasai
+            if penguasaan:
+                data = {
+                    "bidang": penguasaan.id,
+                    "nbt": penguasaan.nbt,
+                }
+                payload["kepenguasaan"] = data
+        return Response(payload)
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            dusun = SigDusun.objects.get(dusun=item["properties"]["DUSUN"])
+            item = {
+                "sig_dusun": dusun,
+                "nbt": item["properties"]["NBT"],
+                "geometry": item["geometry"],
+            }
+            SigBidang3.objects.create(**item)
+
+        return Response()
+
+
+class SigPemilik3ViewSet(CustomView):
+    queryset = SigPemilik3.objects.all().order_by("id")
+    serializer_class = SigPemilik3Serializer
+    permission_classes = [IsAdminUserOrReadOnly]

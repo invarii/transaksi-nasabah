@@ -1,67 +1,6 @@
 from rest_framework import routers
 
-from .views import (
-    PegawaiViewSet,
-    SadProvinsiViewSet,
-    SadKabKotaViewSet,
-    SadKecamatanViewSet,
-    SadDesaViewSet,
-    BatasDesaViewSet,
-    SadDusunViewSet,
-    SadRwViewSet,
-    SadRtViewSet,
-    SadKeluargaViewSet,
-    SadPendudukViewSet,
-    SadSarprasViewSet,
-    SadInventarisViewSet,
-    SigPemilikViewSet,
-    SigBidangViewSet,
-    SigDesaViewSet,
-    SigDusunViewSet,
-    SigDukuhViewSet,
-    SigRtViewSet,
-    SigRwViewSet,
-    SigDukuh2ViewSet,
-    SigRt2ViewSet,
-    SigRw2ViewSet,
-    KategoriArtikelViewSet,
-    KategoriInformasiViewSet,
-    KategoriLaporViewSet,
-    KategoriPotensiViewSet,
-    ArtikelViewSet,
-    LaporViewSet,
-    InformasiViewSet,
-    PotensiViewSet,
-    SliderViewSet,
-    KategoriBelanjaViewSet,
-    KategoriPendapatanViewSet,
-    KategoriTahunViewSet,
-    BelanjaViewSet,
-    PendapatanViewSet,
-    SuratMasukViewSet,
-    SuratKeluarViewSet,
-    StatusLaporViewSet,
-    PekerjaanViewSet,
-    PendidikanViewSet,
-    AgamaViewSet,
-    KelainanFisikViewSet,
-    CacatViewSet,
-    StatusPerkawinanViewSet,
-    KewarganegaraanViewSet,
-    GoldarViewSet,
-    StatusDlmKeluargaViewSet,
-    StatusKesejahteraanViewSet,
-    StatusWargaViewSet,
-    StatusDatangMasukViewSet,
-    AsalViewSet,
-    KeadaanAwalViewSet,
-    JabatanViewSet,
-    StatusPnsViewSet,
-    GolonganViewSet,
-    JenisKelahiranViewSet,
-    JenisTempatViewSet,
-    TenagaKesehatanViewSet,
-)
+from .views import *
 
 router = routers.DefaultRouter()
 router.register(r"pegawai", PegawaiViewSet)
@@ -125,3 +64,5 @@ router.register(r"golongan", GolonganViewSet)
 router.register(r"jeniskelahiran", JenisKelahiranViewSet)
 router.register(r"jenistempat", JenisTempatViewSet)
 router.register(r"tenagakesehatan", TenagaKesehatanViewSet)
+router.register(r"keluarga3", SadKeluarga3ViewSet)
+router.register(r"sigbidang3", SigBidang3ViewSet)
