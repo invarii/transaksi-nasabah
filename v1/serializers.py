@@ -651,3 +651,13 @@ class TenagaKesehatanSerializer(DynamicModelSerializer):
         model = TenagaKesehatan
         name = "data"
         exclude = []
+
+class AbsensiSerializer(CustomSerializer):
+    pegawai = DynamicRelationField(
+        "PegawaiSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Absensi
+        name = "data"
+        exclude = []
