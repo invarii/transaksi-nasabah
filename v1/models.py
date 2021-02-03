@@ -24,7 +24,7 @@ class Pegawai(CustomModel):
         db_table = "pegawai"
 
 
-class Absensi(CustomModel):
+class Absensi(models.Model):
     pegawai = models.ForeignKey(
         "Pegawai", models.DO_NOTHING, blank=True, null=True
     )
@@ -33,7 +33,7 @@ class Absensi(CustomModel):
     alasan_izin = models.CharField(max_length=100, blank=True, null=True)
     jumlah = models.IntegerField(blank=True, null=True)
 
-    class Meta(CustomModel.Meta):
+    class Meta:
 
         db_table = "absensi"
 
