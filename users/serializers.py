@@ -44,7 +44,7 @@ class UserSerializer(DynamicModelSerializer):
         validated_data.pop('group_name')
 
         user = super().update(instance, validated_data)
-        user.set_password(validated_data["password"])
+        # user.set_password(validated_data["password"])
 
         user.groups.remove(user.groups.first())
         user.groups.add(group)
