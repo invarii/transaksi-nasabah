@@ -355,6 +355,9 @@ class SigBidangViewSet(CustomView):
     serializer_class = SigBidangSerializerFull
     permission_classes = [IsAdminUserOrReadOnly]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['nbt', 'pemilikwarga__nama', 'pemiliknonwarga__nama']
+
     @action(detail=False, methods=['get'])
     def delete_all(self, request):
         SigBidang.objects.all().delete()
@@ -908,3 +911,12 @@ class TenagaKesehatanViewSet(DynamicModelViewSet):
     queryset = TenagaKesehatan.objects.all().order_by("id")
     serializer_class = TenagaKesehatanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class AbsensiViewSet(CustomView):
+    queryset = Absensi.objects.all().order_by("-id")
+    serializer_class = AbsensiSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['pegawai']
