@@ -912,7 +912,6 @@ class TenagaKesehatanViewSet(DynamicModelViewSet):
     serializer_class = TenagaKesehatanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
 class AbsensiViewSet(CustomView):
     queryset = Absensi.objects.all().order_by("-id")
     serializer_class = AbsensiSerializer
