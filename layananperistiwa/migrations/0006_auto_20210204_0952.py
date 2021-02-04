@@ -15,17 +15,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="sadpindahmasuk",
-            name="rt_id",
+            model_name='sadpindahmasuk',
+            name='rt_id',
         ),
         migrations.AlterField(
-            model_name="sadpindahmasuk",
-            name="alamat",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.DO_NOTHING,
-                to="v1.Alamat",
-            ),
+            model_name='sadpindahmasuk',
+            name='alamat',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='v1.Alamat'),
         ),
     ]
