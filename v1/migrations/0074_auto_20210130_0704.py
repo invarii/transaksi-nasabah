@@ -17,9 +17,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='sadkeluarga',
             name='rw',
-        ),
-        migrations.AlterModelTable(
-            name='absensi',
-            table='absensi',
-        ),
+        )
     ]

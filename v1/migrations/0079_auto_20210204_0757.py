@@ -14,30 +14,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='absensi',
-            name='created_at',
-        ),
-        migrations.RemoveField(
-            model_name='absensi',
-            name='created_by',
-        ),
-        migrations.RemoveField(
-            model_name='absensi',
-            name='deleted_at',
-        ),
-        migrations.RemoveField(
-            model_name='absensi',
-            name='deleted_by',
-        ),
-        migrations.RemoveField(
-            model_name='absensi',
-            name='updated_at',
-        ),
-        migrations.RemoveField(
-            model_name='absensi',
-            name='updated_by',
-        ),
-        migrations.RemoveField(
             model_name='sadkeluarga',
             name='rt',
         ),
