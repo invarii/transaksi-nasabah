@@ -314,9 +314,8 @@ class SadPindahMasuk(CustomModel):
         StatusKKPindah, models.DO_NOTHING, blank=True, null=True
     )
     tanggal_kedatangan = models.DateField(blank=True, null=True)
-    alamat = models.CharField(max_length=100, blank=True, null=True)
-    rt_id = models.ForeignKey(
-        "v1.SadRt", models.DO_NOTHING, blank=True, null=True
+    alamat = models.ForeignKey(
+        "v1.Alamat", models.DO_NOTHING, blank=True, null=True
     )
     nik_datang = models.CharField(max_length=128, blank=True, null=True)
 

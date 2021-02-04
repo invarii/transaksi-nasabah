@@ -1,6 +1,7 @@
+from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
-from rest_framework import serializers
 
 from api_sad_sig.util import (
     CustomSerializer,
@@ -117,17 +118,51 @@ class SadKeluargaSerializer(CustomSerializer):
     anggota = DynamicRelationField(
         "SadPendudukSerializer", many=True, deferred=True, embed=True
     )
-    dusun = MiniSadDusunSerializer(
-        source="rt.rw.dusun", read_only=True, embed=True
-    )
-    rw = MiniSadRwSerializer(source="rt.rw", read_only=True, embed=True)
-    rt = DynamicRelationField("MiniSadRtSerializer", deferred=True, embed=True)
     kepala_keluarga = serializers.DictField(read_only=True)
+
+    dusun_id = serializers.IntegerField(write_only=True)
+    rt_id = serializers.IntegerField(write_only=True)
+    alamat_lengkap = serializers.CharField(
+        source="alamat.alamat_lengkap", read_only=True
+    )
+
+    def create(self, data):
+        alamat = Alamat()
+        if data.get("dusun_id"):
+            alamat.set_from_dusun(data.get("dusun_id"))
+        elif data.get("rt_id"):
+            alamat.set_from_rt(data.get("rt_id"))
+        else:
+            raise ValidationError("Need dusun_id or rt_id", 400)
+
+        keluarga_data = data.copy()
+        keluarga_data.pop("dusun_id")
+        keluarga_data.pop("rt_id")
+        keluarga = SadKeluarga(**keluarga_data)
+
+        alamat.save()
+        keluarga.alamat = alamat
+        keluarga.save()
+        return keluarga
+
+    def update(self, instance, data):
+        if data.get("dusun_id"):
+            instance.alamat.set_from_dusun(data.get("dusun_id"))
+        elif data.get("rt_id"):
+            instance.alamat.set_from_rt(data.get("rt_id"))
+
+        instance.alamat.save()
+        keluarga_data = data.copy()
+        keluarga_data.pop("dusun_id")
+        keluarga_data.pop("rt_id")
+        instance.update(**keluarga_data)
+        instance.save()
+        return instance
 
     class Meta:
         model = SadKeluarga
         name = "data"
-        exclude = util_columns
+        exclude = util_columns + ["alamat"]
         extra_kwargs = {
             "created_by": {"default": serializers.CurrentUserDefault()}
         }
@@ -156,6 +191,8 @@ class SadPendudukSerializer(CustomSerializer):
 
 
 class SadSarprasSerializer(CustomSerializer):
+    alamat = Alamat()
+
     class Meta:
         model = SadSarpras
         name = "data"
@@ -651,6 +688,7 @@ class TenagaKesehatanSerializer(DynamicModelSerializer):
         model = TenagaKesehatan
         name = "data"
         exclude = []
+
 
 class AbsensiSerializer(DynamicModelSerializer):
     pegawai = DynamicRelationField(
