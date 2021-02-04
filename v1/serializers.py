@@ -719,3 +719,10 @@ class AbsensiSerializer(DynamicModelSerializer):
     def get_total_absensi(self, obj):
         totalabsensi = Absensi.objects.all().aggregate(total_absensi=Count('pegawai__nama'))
         return totalabsensi["total_absensi"]
+
+class AlasanIzinSerializer(DynamicModelSerializer):
+    class Meta:
+        model = AlasanIzin
+        name = "data"
+        exclude = []
+        return totalabsensi["total_absensi"]
