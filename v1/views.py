@@ -939,3 +939,8 @@ class AbsensiViewSet(DynamicModelViewSet):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['pegawai']
+
+class AlasanIzinViewSet(DynamicModelViewSet):
+    queryset = AlasanIzin.objects.all().order_by("id")
+    serializer_class = AlasanIzinSerializer
+    permission_classes = [permissions.IsAuthenticated]
