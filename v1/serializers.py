@@ -725,3 +725,4 @@ class AlasanIzinSerializer(DynamicModelSerializer):
         model = AlasanIzin
         name = "data"
         exclude = []
+        return totalabsensi["total_absensi"]
