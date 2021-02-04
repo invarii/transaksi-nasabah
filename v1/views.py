@@ -765,6 +765,16 @@ class PendapatanViewSet(DynamicModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['nama']
 
+    def get_queryset(self):
+        tahun = self.request.query_params.get("tahun")
+        if tahun:
+            return (
+                Pendapatan.objects.all()
+                .filter(tahun_id=tahun)
+                .order_by("nama")
+            )
+        return Pendapatan.objects.all()
+
 
 class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")
