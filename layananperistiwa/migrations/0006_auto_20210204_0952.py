@@ -7,17 +7,22 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('layananperistiwa', '0005_sadlahirmati_nama'),
+        ("v1", "0079_auto_20210204_0757"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='sadpindahmasuk',
-            name='rt_id',
+            model_name="sadpindahmasuk",
+            name="rt_id",
         ),
         migrations.AlterField(
-            model_name='sadpindahmasuk',
-            name='alamat',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='v1.Alamat'),
+            model_name="sadpindahmasuk",
+            name="alamat",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="v1.Alamat",
+            ),
         ),
     ]
