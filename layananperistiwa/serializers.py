@@ -13,7 +13,7 @@ from api_sad_sig.util import (
     create_or_reactivate,
     create_or_reactivate_user,
 )
-from v1.models import SadKeluarga, SadPenduduk, SadRt
+from v1.models import SadKeluarga, SadPenduduk, SadRt, Alamat
 from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
@@ -387,13 +387,15 @@ class MiniUserSerializer(DynamicModelSerializer):
 
 
 class SadPindahMasukSerializer(CustomSerializer):
-    rt_id = DynamicRelationField("SadRtSerializer", deferred=False, embed=True)
     status_kk_pindah = DynamicRelationField(
-        "StatusKKPindahSerializer", deferred=False, embed=True
+        "StatusKKPindahSerializer", deferred=False, embed=True, write_only=True
     )
     anggota = serializers.ListField(
         child=MiniUserSerializer(), write_only=True
     )
+    nama_alamat = serializers.CharField(write_only=True)
+    rt_id = serializers.IntegerField(write_only=True, required=False)
+    dusun_id = serializers.IntegerField(write_only=True, required=False)
 
     def create(self, validated_data):
         anggota = validated_data.pop("anggota")
@@ -403,24 +405,49 @@ class SadPindahMasukSerializer(CustomSerializer):
             print("This x")
             raise APIException("Nomor KK Sudah terdaftar", 400)
 
-        sad_masuk = SadPindahMasuk.objects.create(**validated_data)
+        data_alamat = {
+            "rt": validated_data.pop("rt_id", None),
+            "dusun": validated_data.pop("dusun_id", None),
+        }
+        nama_alamat = validated_data.pop("nama_alamat")
+        if not data_alamat.get("rt") and not data_alamat.get("dusun"):
+            raise APIException("Need dusun_id or rt_id", 400)
 
         keluarga_data = validated_data.copy()
         print("This 1")
-        print(keluarga_data)
         keluarga_data["status_kk"] = keluarga_data.pop(
             "status_kk_pindah"
         ).label
-        keluarga_data["rt"] = keluarga_data.pop("rt_id")
+
         keluarga_data.pop("tanggal_kedatangan")
         keluarga_filter = {"no_kk": keluarga_data["no_kk"]}
         try:
             keluarga = create_or_reactivate(
                 SadKeluarga, keluarga_filter, keluarga_data
             )
+            print(keluarga_data)
         except Exception:
             return Response({"msg": "Gagal menyimpan data keluarga"}, 400)
         keluarga.save()
+
+        rt_id = data_alamat.get("rt")
+        dusun_id = data_alamat.get("dusun_id")
+        if keluarga.alamat:
+            if rt_id:
+                keluarga.alamat.set_from_rt(rt_id)
+            else:
+                keluarga.alamat.set_from_dusun(dusun_id)
+        else:
+            keluarga.alamat = Alamat()
+            if rt_id:
+                keluarga.alamat.set_from_rt(rt_id)
+            else:
+                keluarga.alamat.set_from_dusun(dusun_id)
+        keluarga.alamat.alamat = nama_alamat
+        keluarga.alamat.save()
+        print(validated_data)
+        sad_masuk = SadPindahMasuk(**validated_data)
+        sad_masuk.alamat = keluarga.alamat
 
         for item in anggota:
             penduduk_filter = {"nik": item["nik"]}

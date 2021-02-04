@@ -2,6 +2,7 @@ from datetime import date
 
 from django.db import models
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
@@ -148,10 +149,44 @@ class SadRw(CustomModel):
         db_table = "sad_rw"
 
 
+class Alamat(CustomModel):
+    desa = models.ForeignKey(
+        SadDesa, models.DO_NOTHING, related_name="data_alamat"
+    )
+    dusun = models.ForeignKey(SadDusun, models.DO_NOTHING)
+    rw = models.ForeignKey(SadRw, models.DO_NOTHING, blank=True, null=True)
+    rt = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
+    alamat = models.CharField(max_length=128, blank=True, null=True)
+
+    def alamat_lengkap(self):
+        if self.rt:
+            return f"""RT {self.rt.rt} RT {self.rw.rw},
+        Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"""
+        else:
+            return f"Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"
+
+    def set_from_rt(self, rt_id):
+        rt = get_object_or_404(SadRt, pk=rt_id)
+        self.rt = rt
+        self.rw = rt.rw
+        self.dusun = rt.rw.dusun
+        self.desa = rt.rw.dusun.desa
+
+    def set_from_dusun(self, dusun_id):
+        dusun = get_object_or_404(SadDusun, pk=dusun_id)
+        self.dusun = dusun
+        self.desa = dusun.desa
+
+    class Meta(CustomModel.Meta):
+        db_table = "alamat"
+
+
 class SadKeluarga(CustomModel):
     no_kk = models.CharField(max_length=16, unique=True)
     jalan_blok = models.CharField(max_length=100, blank=True, null=True)
-    rt = models.ForeignKey("SadRt", models.DO_NOTHING, blank=True, null=True)
+    alamat = models.OneToOneField(
+        "Alamat", models.DO_NOTHING, blank=True, null=True
+    )
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
     status_kesejahteraan = models.CharField(
         max_length=30, blank=True, null=True

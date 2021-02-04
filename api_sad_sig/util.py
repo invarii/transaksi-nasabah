@@ -140,7 +140,14 @@ def create_or_reactivate(model, filter_param, data):
         model.objects.filter(pk=instance.pk).update(**data)
         instance.refresh_from_db()
     else:
-        instance = model.objects.create(**data)
+        print("TEST")
+        print(model)
+        try:
+            instance = model(**data)
+        except Exception as e:
+            print(e)
+        print("TEST")
+        print(instance)
     instance.save()
     return instance
 
