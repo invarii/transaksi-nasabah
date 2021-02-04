@@ -10,9 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='absensi',
-            name='jumlah',
-            field=models.IntegerField(blank=True, null=True),
-        ),
+        
     ]
