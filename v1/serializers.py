@@ -127,6 +127,8 @@ class SadKeluargaSerializer(CustomSerializer):
         source="alamat.alamat_lengkap", read_only=True
     )
 
+    total_keluarga = serializers.SerializerMethodField()
+
     def create(self, data):
         alamat = Alamat()
         if data.get("dusun_id"):
@@ -159,7 +161,7 @@ class SadKeluargaSerializer(CustomSerializer):
         instance.update(**keluarga_data)
         instance.save()
         return instance
-
+    
     class Meta:
         model = SadKeluarga
         name = "data"
@@ -167,12 +169,19 @@ class SadKeluargaSerializer(CustomSerializer):
         extra_kwargs = {
             "created_by": {"default": serializers.CurrentUserDefault()}
         }
+    
+    # Dashboard TOTAL DATA KELUARGA
+    def get_total_keluarga(self, obj):
+        totalkeluarga = SadKeluarga.objects.all().aggregate(total_keluarga=Count('no_kk'))
+        return totalkeluarga["total_keluarga"]
 
 
 class SadPendudukSerializer(CustomSerializer):
     keluarga = DynamicRelationField(
         "SadKeluargaSerializer", deferred=True, embed=True
     )
+
+    total_penduduk = serializers.SerializerMethodField()
 
     class Meta:
         model = SadPenduduk
@@ -190,6 +199,10 @@ class SadPendudukSerializer(CustomSerializer):
         penduduk.user.save()
         return penduduk
 
+    # Dashboard TOTAL DATA PENDUDUK
+    def get_total_penduduk(self, obj):
+        totalpenduduk = SadPenduduk.objects.all().aggregate(total_penduduk=Count('nama'))
+        return totalpenduduk["total_penduduk"]
 
 class SadSarprasSerializer(CustomSerializer):
     alamat = Alamat()
