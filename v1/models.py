@@ -31,13 +31,20 @@ class Absensi(models.Model):
     )
     jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
     jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
-    alasan_izin = models.CharField(max_length=100, blank=True, null=True)
-    jumlah = models.IntegerField(blank=True, null=True)
+    alasan_izin = models.ForeignKey(
+        "AlasanIzin", models.DO_NOTHING, blank=True, null=True
+    )
 
     class Meta:
 
         db_table = "absensi"
 
+class AlasanIzin(models.Model):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+
+        db_table = "alasan_izin"
 
 class SadProvinsi(CustomModel):
     kode_provinsi = models.CharField(max_length=5, blank=True, null=True)
