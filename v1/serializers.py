@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
+from django.db.models import Sum,Avg,Max,Min,Count
 
 from api_sad_sig.util import (
     CustomSerializer,
@@ -695,7 +696,13 @@ class AbsensiSerializer(DynamicModelSerializer):
         "PegawaiSerializer", deferred=True, embed=True
     )
 
+    total_absensi = serializers.SerializerMethodField()
+
     class Meta:
         model = Absensi
         name = "data"
         exclude = []
+    
+    def get_total_absensi(self, obj):
+        totalabsensi = Absensi.objects.all().aggregate(total_absensi=Count('pegawai__nama'))
+        return totalabsensi["total_absensi"]
