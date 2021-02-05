@@ -53,7 +53,6 @@ class PegawaiViewSet(CustomView):
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-
 class BatasDesaViewSet(CustomView):
     queryset = BatasDesa.objects.all().order_by("id")
     serializer_class = BatasDesaSerializer

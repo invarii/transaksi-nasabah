@@ -31,7 +31,6 @@ class PegawaiSerializer(CustomSerializer):
         name = "data"
         fields = ['id', 'nip', 'chip_ektp', 'nama', 'absensi']
 
-
 class SadProvinsiSerializer(CustomSerializer):
     class Meta:
         model = SadProvinsi
