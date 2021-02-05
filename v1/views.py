@@ -937,8 +937,8 @@ class AbsensiViewSet(DynamicModelViewSet):
     serializer_class = AbsensiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['jam_masuk', 'pegawai__id', 'pegawai__chip_ektp']
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['jam_masuk', 'pegawai__id', 'pegawai__chip_ektp']
 
 class AlasanIzinViewSet(DynamicModelViewSet):
     queryset = AlasanIzin.objects.all().order_by("id")
