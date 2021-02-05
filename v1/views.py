@@ -51,7 +51,7 @@ class PegawaiViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama', 'jabatan']
+    search_fields = ['nama', 'jabatan', 'chip_ektp']
 
 
 class BatasDesaViewSet(CustomView):
