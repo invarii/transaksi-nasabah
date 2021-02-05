@@ -18,7 +18,7 @@ class PegawaiSerializer(CustomSerializer):
     class Meta:
         model = Pegawai
         name = "data"
-        fields = ['id', 'nip', 'nama', 'total_absensi']
+        fields = ['id', 'nip', 'chip_ektp', 'nama', 'total_absensi']
     
     # absensi = DynamicRelationField('AbsensiSerializer', many=True, read_only=True)
     def get_total_absensi(self, obj):
