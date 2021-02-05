@@ -18,7 +18,7 @@ class PegawaiSerializer(CustomSerializer):
     class Meta:
         model = Pegawai
         name = "data"
-        fields = ['id', 'nip', 'nama', 'total_absensi']
+        fields = ['id', 'nip', 'chip_ektp', 'nama', 'total_absensi']
     
     # absensi = DynamicRelationField('AbsensiSerializer', many=True, read_only=True)
     def get_total_absensi(self, obj):
@@ -714,16 +714,10 @@ class AbsensiSerializer(DynamicModelSerializer):
         "PegawaiSerializer", deferred=True, embed=True
     )
 
-    total_absensi = serializers.SerializerMethodField()
-
     class Meta:
         model = Absensi
         name = "data"
         exclude = []
-    
-    def get_total_absensi(self, obj):
-        totalabsensi = Absensi.objects.all().aggregate(total_absensi=Count('pegawai__nama'))
-        return totalabsensi["total_absensi"]
 
 class AlasanIzinSerializer(DynamicModelSerializer):
     class Meta:
