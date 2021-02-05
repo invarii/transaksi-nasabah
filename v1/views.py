@@ -6,6 +6,9 @@ from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters
+from rest_framework.exceptions import NotFound, APIException
+import pytz
+from datetime import datetime, date
 
 import pandas
 import json
@@ -49,9 +52,6 @@ class PegawaiViewSet(CustomView):
     queryset = Pegawai.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['nama', 'jabatan', 'chip_ektp']
 
 
 class BatasDesaViewSet(CustomView):
@@ -944,3 +944,36 @@ class AlasanIzinViewSet(DynamicModelViewSet):
     queryset = AlasanIzin.objects.all().order_by("id")
     serializer_class = AlasanIzinSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+def string_to_date(text):
+    return datetime.strptime(text, "%Y-%m-%d").astimezone(
+        pytz.timezone(settings.TIME_ZONE)
+    )
+
+class LaporanAbsensiViewSet(DynamicModelViewSet):
+    queryset = Absensi.objects.order_by("id").all()
+    serializer_class = AbsensiSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get_serializer_class(self):
+        print(self.action)
+        if self.action not in ["list", "create"]:
+            raise NotFound("Operasi ini tidak tersedia")
+        return self.serializer_class
+
+    def get_queryset(self):
+        start = self.request.query_params.get("start")
+        end = self.request.query_params.get("end")
+        pegawai_id = self.request.query_params.get("pegawai_id")
+        if not start or not end:
+            raise APIException(
+                "Need start date and end date for filtering", 400
+            )
+        start_date = string_to_date(start)
+        end_date = string_to_date(end)
+
+        queryset = Absensi.objects.filter(
+            pegawai_id = pegawai_id, jam_masuk__gte=start_date, jam_masuk__lte=end_date
+        )
+
+        return queryset.order_by("id").all()

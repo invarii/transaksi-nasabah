@@ -27,10 +27,14 @@ class Pegawai(CustomModel):
 
 class Absensi(models.Model):
     pegawai = models.ForeignKey(
-        "Pegawai", models.DO_NOTHING, blank=True, null=True
+        "Pegawai", to_field="id",
+        on_delete=models.DO_NOTHING,
+        related_name="absensi", blank=True, null=True
     )
-    jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
-    jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
+    # jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
+    # jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
+    jam_masuk = models.DateTimeField(blank=True, null=True)
+    jam_keluar = models.DateTimeField(blank=True, null=True)
     alasan_izin = models.ForeignKey(
         "AlasanIzin", models.DO_NOTHING, blank=True, null=True
     )
