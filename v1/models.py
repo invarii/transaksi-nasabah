@@ -195,6 +195,30 @@ class Alamat(CustomModel):
         self.dusun = dusun
         self.desa = dusun.desa
 
+    def set_from_excel(self, dusun=None, rw=None, rt=None):
+        if rt:
+            rt = SadRt.objects.filter(
+                rw__dusun__desa__id=settings.DESA_ID,
+                rw__dusun__nama=dusun,
+                rw__rw=rw,
+                rt=rt,
+            ).first()
+            if not rt:
+                return False
+            self.rt = rt
+            self.rw = rt.rw
+            self.dusun = rt.rw.dusun
+            self.desa = rt.rw.dusun.desa
+        else:
+            dusun = SadDusun.objects.filter(
+                desa_id=settings.DESA_ID, nama=dusun
+            ).first()
+            if not dusun:
+                return False
+            self.dusun = dusun
+            self.desa = dusun.desa
+        return True
+
     class Meta(CustomModel.Meta):
         db_table = "alamat"
 

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.exceptions import NotFound, APIException
 import pytz
-from datetime import datetime, date
+from datetime import datetime
 
 import pandas
 import json
@@ -45,7 +45,7 @@ class SadProvinsiViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['id', 'nama_provinsi']
+    search_fields = ["id", "nama_provinsi"]
 
 
 class PegawaiViewSet(CustomView):
@@ -53,13 +53,14 @@ class PegawaiViewSet(CustomView):
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+
 class BatasDesaViewSet(CustomView):
     queryset = BatasDesa.objects.all().order_by("id")
     serializer_class = BatasDesaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['utara', 'selatan', 'timur', 'barat']
+    search_fields = ["utara", "selatan", "timur", "barat"]
 
 
 class SadKabKotaViewSet(CustomView):
@@ -68,7 +69,7 @@ class SadKabKotaViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['id', 'nama_kab_kota']
+    search_fields = ["id", "nama_kab_kota"]
 
     def get_queryset(self):
         provinsi = self.request.query_params.get("provinsi")
@@ -87,7 +88,7 @@ class SadKecamatanViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['id', 'nama_kecamatan']
+    search_fields = ["id", "nama_kecamatan"]
 
     def get_queryset(self):
         kabkota = self.request.query_params.get("kabkota")
@@ -102,7 +103,7 @@ class SadDesaViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['id', 'nama_desa']
+    search_fields = ["id", "nama_desa"]
 
     def get_queryset(self):
         kecamatan = self.request.query_params.get("kecamatan")
@@ -123,7 +124,7 @@ class SadDusunViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_queryset(self):
         desa = self.request.query_params.get("desa")
@@ -138,7 +139,7 @@ class SadRwViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['rw']
+    search_fields = ["rw"]
 
     def get_queryset(self):
         dusun = self.request.query_params.get("dusun")
@@ -153,7 +154,7 @@ class SadRtViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['rt']
+    search_fields = ["rt"]
 
     def get_queryset(self):
         rw = self.request.query_params.get("rw")
@@ -168,7 +169,7 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['no_kk']
+    search_fields = ["no_kk"]
 
     def get_queryset(self):
         user = self.request.user
@@ -184,29 +185,41 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             "data_diinput": 0,
             "data_gagal": 0,
             "data_redundan": 0,
-            "rt_tidak_ditemukan": 0,
+            "alamat_tidak_ditemukan": 0,
         }
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
         data = data.replace({np.nan: None})
-        if data[["no_kk", "rt"]].isna().values.any():
-            message = "Silahkan lengkapi data no_kk dan rt"
+
+        checked_column = ["no_kk", "dusun"]
+        if "rt" in data.columns:
+            checked_column.extend(["rw", "rt"])
+
+        if data[checked_column].isna().values.any():
+            message = "Silahkan lengkapi data no_kk dan alamat"
             return Response({"message": message}, status=400)
 
         for item in data.to_dict("records"):
-
-            rt = SadRt.find_rt(item["rt"], item["rw"], item["dusun"])
-            item["rt"] = rt
-            item.pop("dusun")
-            item.pop("rw")
-            if not item["rt"]:
-                status["rt_tidak_ditemukan"] += 1
+            data_alamat = {
+                "rt": item.pop("rt", None),
+                "rw": item.pop("rw", None),
+                "dusun": item.pop("dusun", None),
+            }
+            alamat = Alamat()
+            get_alamat = alamat.set_from_excel(**data_alamat)
+            if not get_alamat:
+                status["alamat_tidak_ditemukan"] += 1
                 continue
 
             param_filter = {"no_kk": item["no_kk"]}
             try:
-                create_or_reactivate(SadKeluarga, param_filter, item)
+                keluarga = create_or_reactivate(
+                    SadKeluarga, param_filter, item
+                )
+                alamat.save()
+                keluarga.alamat = alamat
+                keluarga.save()
             except IntegrityError:
                 status["data_redundan"] += 1
                 continue
@@ -245,8 +258,8 @@ class SadPendudukViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama', 'nik', 'chip_ektp']
-    
+    search_fields = ["nama", "nik", "chip_ektp"]
+
     def get_queryset(self):
         keluarga = self.request.query_params.get("keluarga")
         if keluarga:
@@ -331,7 +344,7 @@ class SadSarprasViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama_sarpras', 'asal']
+    search_fields = ["nama_sarpras", "asal"]
 
 
 class SadInventarisViewSet(CustomView):
@@ -340,7 +353,7 @@ class SadInventarisViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama_inventaris', 'asal']
+    search_fields = ["nama_inventaris", "asal"]
 
 
 class SadSuratViewSet(CustomView):
@@ -355,9 +368,9 @@ class SigBidangViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nbt', 'pemilikwarga__nama', 'pemiliknonwarga__nama']
+    search_fields = ["nbt", "pemilikwarga__nama", "pemiliknonwarga__nama"]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigBidang.objects.all().delete()
         return Response()
@@ -422,7 +435,7 @@ class SigDesaViewSet(CustomView):
     serializer_class = SigDesaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigDesa.objects.all().delete()
         return Response()
@@ -449,7 +462,7 @@ class SigDusunViewSet(CustomView):
     serializer_class = SigDusunSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigDusun.objects.all().delete()
         return Response()
@@ -479,7 +492,7 @@ class SigDukuhViewSet(CustomView):
     serializer_class = SigDukuhSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigDukuh.objects.all().delete()
         return Response()
@@ -509,7 +522,7 @@ class SigDukuh2ViewSet(CustomView):
     serializer_class = SigDukuh2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigDukuh2.objects.all().delete()
         return Response()
@@ -539,7 +552,7 @@ class SigRwViewSet(CustomView):
     serializer_class = SigRwSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigRw.objects.all().delete()
         return Response()
@@ -567,7 +580,7 @@ class SigRw2ViewSet(CustomView):
     serializer_class = SigRw2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigRw2.objects.all().delete()
         return Response()
@@ -595,7 +608,7 @@ class SigRtViewSet(CustomView):
     serializer_class = SigRtSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigRt.objects.all().delete()
         return Response()
@@ -621,7 +634,7 @@ class SigRt2ViewSet(CustomView):
     serializer_class = SigRt2Serializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=["get"])
     def delete_all(self, request):
         SigRt2.objects.all().delete()
         return Response()
@@ -648,7 +661,7 @@ class KategoriArtikelViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class ArtikelViewSet(DynamicModelViewSet):
@@ -657,7 +670,7 @@ class ArtikelViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['judul']
+    search_fields = ["judul"]
 
 
 class SliderViewSet(DynamicModelViewSet):
@@ -672,7 +685,7 @@ class KategoriLaporViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class StatusLaporViewSet(DynamicModelViewSet):
@@ -685,9 +698,9 @@ class LaporViewSet(CustomView):
     queryset = Lapor.objects.all().order_by("-id")
     serializer_class = LaporSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+
     filter_backends = [filters.SearchFilter]
-    search_fields = ['judul']
+    search_fields = ["judul"]
 
 
 class KategoriInformasiViewSet(DynamicModelViewSet):
@@ -696,7 +709,7 @@ class KategoriInformasiViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class InformasiViewSet(DynamicModelViewSet):
@@ -705,7 +718,7 @@ class InformasiViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['judul']
+    search_fields = ["judul"]
 
 
 class KategoriPotensiViewSet(DynamicModelViewSet):
@@ -714,7 +727,7 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class PotensiViewSet(DynamicModelViewSet):
@@ -723,7 +736,7 @@ class PotensiViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['judul']
+    search_fields = ["judul"]
 
     def get_queryset(self):
         kategori = self.request.query_params.get("kategori")
@@ -738,7 +751,7 @@ class KategoriPendapatanViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class KategoriBelanjaViewSet(DynamicModelViewSet):
@@ -747,7 +760,7 @@ class KategoriBelanjaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
 
 class KategoriTahunViewSet(DynamicModelViewSet):
@@ -762,7 +775,7 @@ class PendapatanViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_queryset(self):
         tahun = self.request.query_params.get("tahun")
@@ -781,15 +794,13 @@ class BelanjaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['nama']
+    search_fields = ["nama"]
 
     def get_queryset(self):
         tahun = self.request.query_params.get("tahun")
         if tahun:
             return (
-                Belanja.objects.all()
-                .filter(tahun_id=tahun)
-                .order_by("nama")
+                Belanja.objects.all().filter(tahun_id=tahun).order_by("nama")
             )
         return Belanja.objects.all()
 
@@ -800,7 +811,7 @@ class SuratMasukViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['perihal', 'keterangan']
+    search_fields = ["perihal", "keterangan"]
 
 
 class SuratKeluarViewSet(DynamicModelViewSet):
@@ -809,7 +820,7 @@ class SuratKeluarViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['perihal', 'keterangan']
+    search_fields = ["perihal", "keterangan"]
 
 
 class PekerjaanViewSet(DynamicModelViewSet):
@@ -931,6 +942,7 @@ class TenagaKesehatanViewSet(DynamicModelViewSet):
     serializer_class = TenagaKesehatanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 class AbsensiViewSet(DynamicModelViewSet):
     queryset = Absensi.objects.all().order_by("-id")
     serializer_class = AbsensiSerializer
@@ -939,15 +951,18 @@ class AbsensiViewSet(DynamicModelViewSet):
     # filter_backends = [filters.SearchFilter]
     # search_fields = ['jam_masuk', 'pegawai__id', 'pegawai__chip_ektp']
 
+
 class AlasanIzinViewSet(DynamicModelViewSet):
     queryset = AlasanIzin.objects.all().order_by("id")
     serializer_class = AlasanIzinSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
 def string_to_date(text):
     return datetime.strptime(text, "%Y-%m-%d").astimezone(
         pytz.timezone(settings.TIME_ZONE)
     )
+
 
 class LaporanAbsensiViewSet(DynamicModelViewSet):
     queryset = Absensi.objects.order_by("id").all()
@@ -972,7 +987,9 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
         end_date = string_to_date(end)
 
         queryset = Absensi.objects.filter(
-            pegawai_id = pegawai_id, jam_masuk__gte=start_date, jam_masuk__lte=end_date
+            pegawai_id=pegawai_id,
+            jam_masuk__gte=start_date,
+            jam_masuk__lte=end_date,
         )
 
         return queryset.order_by("id").all()
