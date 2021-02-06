@@ -753,9 +753,10 @@ class AlasanIzinSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
-
+        
 class LaporanAbsensiSerializer(DynamicModelSerializer):
     class Meta:
         model = Absensi
         name = "data"
         exclude = []
+
