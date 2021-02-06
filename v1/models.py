@@ -27,12 +27,17 @@ class Pegawai(CustomModel):
 
 class Absensi(models.Model):
     pegawai = models.ForeignKey(
-        "Pegawai", to_field="id",
+        "Pegawai",
+        to_field="id",
         on_delete=models.DO_NOTHING,
-        related_name="absensi", blank=True, null=True
+        related_name="absensi",
+        blank=True,
+        null=True,
     )
-    # jam_masuk = models.DateTimeField(blank=True, auto_now_add=True, null=True)
-    # jam_keluar = models.DateTimeField(blank=True, auto_now=True, null=True)
+    # jam_masuk = models.DateTimeField(blank=True,
+    # auto_now_add=True, null=True)
+    # jam_keluar = models.DateTimeField(blank=True,
+    # auto_now=True, null=True)
     jam_masuk = models.DateTimeField(blank=True, null=True)
     jam_keluar = models.DateTimeField(blank=True, null=True)
     alasan_izin = models.ForeignKey(
@@ -43,12 +48,14 @@ class Absensi(models.Model):
 
         db_table = "absensi"
 
+
 class AlasanIzin(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
 
         db_table = "alasan_izin"
+
 
 class SadProvinsi(CustomModel):
     kode_provinsi = models.CharField(max_length=5, blank=True, null=True)
@@ -167,7 +174,7 @@ class Alamat(CustomModel):
     dusun = models.ForeignKey(SadDusun, models.DO_NOTHING)
     rw = models.ForeignKey(SadRw, models.DO_NOTHING, blank=True, null=True)
     rt = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
-    alamat = models.CharField(max_length=128, blank=True, null=True)
+    jalan_blok = models.CharField(max_length=128, blank=True, null=True)
 
     def alamat_lengkap(self):
         if self.rt:

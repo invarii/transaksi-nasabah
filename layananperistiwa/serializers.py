@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from django.utils import timezone
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 from dynamic_rest.serializers import DynamicModelSerializer
@@ -13,7 +12,7 @@ from api_sad_sig.util import (
     create_or_reactivate,
     create_or_reactivate_user,
 )
-from v1.models import SadKeluarga, SadPenduduk, SadRt, Alamat
+from v1.models import SadKeluarga, SadPenduduk, Alamat
 from v1.serializers import (
     PegawaiSerializer,
     SadDesaSerializer,
@@ -500,13 +499,28 @@ class PecahKKKeluarga(serializers.ModelSerializer):
 class SadPecahKKSerializer(CustomSerializer):
     no_kk = serializers.CharField(write_only=True)
     anggota_kk = MiniPendudukSerializer(many=True, write_only=True)
-    rt = serializers.IntegerField(write_only=True)
+    rt = serializers.IntegerField(write_only=True, required=False)
+    dusun = serializers.IntegerField(write_only=True, required=False)
     penduduk = PecahKKPenduduk(many=True, read_only=True)
     keluarga = PecahKKKeluarga(read_only=True)
 
     def create(self, validated_data):
-        rt = get_object_or_404(SadRt, id=validated_data["rt"])
+        rt = validated_data.get("rt")
+        dusun = validated_data.get("dusun")
+        if not rt and not dusun:
+            raise APIException("Need rt or dusun")
+
+        alamat = Alamat()
+        if rt:
+            alamat.set_from_rt(rt)
+        else:
+            alamat.set_from_dusun(dusun)
+
         new_kk = SadKeluarga(no_kk=validated_data["no_kk"], rt=rt)
+        new_kk.save()
+
+        alamat.save()
+        new_kk.alamat = alamat
         new_kk.save()
 
         pecahkk_record = SadPecahKK(keluarga=new_kk)

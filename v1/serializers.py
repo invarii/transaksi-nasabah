@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from dynamic_rest.serializers import DynamicModelSerializer
 from dynamic_rest.fields import DynamicRelationField
-from django.db.models import Sum,Avg,Max,Min,Count
+from django.db.models import Count
 
 from api_sad_sig.util import (
     CustomSerializer,
@@ -19,17 +19,19 @@ class PegawaiSerializer(CustomSerializer):
     )
 
     def to_representation(self, instance):
-        data = super(PegawaiSerializer,self).to_representation(instance)
-        totalabsensi = instance.absensi.aggregate(total_absensi=Count('pegawai__id'))
+        data = super(PegawaiSerializer, self).to_representation(instance)
+        totalabsensi = instance.absensi.aggregate(
+            total_absensi=Count("pegawai__id")
+        )
 
-        data["totalabsensi"]=totalabsensi["total_absensi"]
+        data["totalabsensi"] = totalabsensi["total_absensi"]
         return data
 
-    
     class Meta:
         model = Pegawai
         name = "data"
-        fields = ['id', 'nip', 'chip_ektp', 'nama', 'absensi']
+        fields = ["id", "nip", "chip_ektp", "nama", "absensi"]
+
 
 class SadProvinsiSerializer(CustomSerializer):
     class Meta:
@@ -132,10 +134,13 @@ class SadKeluargaSerializer(CustomSerializer):
     )
     kepala_keluarga = serializers.DictField(read_only=True)
 
-    dusun_id = serializers.IntegerField(write_only=True)
-    rt_id = serializers.IntegerField(write_only=True)
+    dusun_id = serializers.IntegerField(write_only=True, required=False)
+    rt_id = serializers.IntegerField(write_only=True, required=False)
     alamat_lengkap = serializers.CharField(
         source="alamat.alamat_lengkap", read_only=True
+    )
+    jalan_blok = serializers.CharField(
+        source="alamat.jalan_blok", required=False
     )
 
     total_keluarga = serializers.SerializerMethodField()
@@ -148,6 +153,10 @@ class SadKeluargaSerializer(CustomSerializer):
             alamat.set_from_rt(data.get("rt_id"))
         else:
             raise ValidationError("Need dusun_id or rt_id", 400)
+
+        jalan_blok = data.pop("jalan_blok", None)
+        if jalan_blok:
+            alamat.jalan_blok = jalan_blok
 
         keluarga_data = data.copy()
         keluarga_data.pop("dusun_id")
@@ -165,14 +174,21 @@ class SadKeluargaSerializer(CustomSerializer):
         elif data.get("rt_id"):
             instance.alamat.set_from_rt(data.get("rt_id"))
 
+        if data.get("alamat"):
+            jalan_blok = data.pop("alamat").pop("jalan_blok", None)
+            if jalan_blok:
+                instance.alamat.jalan_blok = jalan_blok
+
         instance.alamat.save()
         keluarga_data = data.copy()
-        keluarga_data.pop("dusun_id")
-        keluarga_data.pop("rt_id")
-        instance.update(**keluarga_data)
+        keluarga_data.pop("dusun_id", None)
+        keluarga_data.pop("rt_id", None)
+        keluarga_data.pop("alamat", None)
+        for key, value in keluarga_data.items():
+            setattr(instance, key, value)
         instance.save()
         return instance
-    
+
     class Meta:
         model = SadKeluarga
         name = "data"
@@ -180,10 +196,12 @@ class SadKeluargaSerializer(CustomSerializer):
         extra_kwargs = {
             "created_by": {"default": serializers.CurrentUserDefault()}
         }
-    
+
     # Dashboard TOTAL DATA KELUARGA
     def get_total_keluarga(self, obj):
-        totalkeluarga = SadKeluarga.objects.all().aggregate(total_keluarga=Count('no_kk'))
+        totalkeluarga = SadKeluarga.objects.all().aggregate(
+            total_keluarga=Count("no_kk")
+        )
         return totalkeluarga["total_keluarga"]
 
 
@@ -212,8 +230,11 @@ class SadPendudukSerializer(CustomSerializer):
 
     # Dashboard TOTAL DATA PENDUDUK
     def get_total_penduduk(self, obj):
-        totalpenduduk = SadPenduduk.objects.all().aggregate(total_penduduk=Count('nama'))
+        totalpenduduk = SadPenduduk.objects.all().aggregate(
+            total_penduduk=Count("nama")
+        )
         return totalpenduduk["total_penduduk"]
+
 
 class SadSarprasSerializer(CustomSerializer):
     alamat = Alamat()
@@ -725,11 +746,13 @@ class AbsensiSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
+
 class AlasanIzinSerializer(DynamicModelSerializer):
     class Meta:
         model = AlasanIzin
         name = "data"
         exclude = []
+
 
 class LaporanAbsensiSerializer(DynamicModelSerializer):
     class Meta:
