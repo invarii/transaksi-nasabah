@@ -474,7 +474,7 @@ class KepemilikanWarga(models.Model):
 
 
 class SigBidang(CustomModel):
-    nbt = models.CharField(max_length=20, blank=True, null=True)
+    nbt = models.CharField(max_length=250, blank=True, null=True)
     gambar_atas = models.ImageField(
         upload_to=file_destination, blank=True, null=True
     )
