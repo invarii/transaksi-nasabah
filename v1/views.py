@@ -413,12 +413,23 @@ class SigBidangViewSet(CustomView):
         data = json.load(file)
 
         for item in data["features"]:
-            rt = SigRt.objects.get(rt=item["properties"]["RT"])
             item = {
-                "sig_rt": rt,
                 "nbt": item["properties"]["NBT"],
                 "geometry": item["geometry"],
             }
+            properties = item["properties"]
+            if properties.get("RT"):
+                rt = properties["RT"]
+                rw = properties["RW"]
+                dusun = properties["topo_dusun"]
+                sigrt = SigRt.objects.filter(
+                    rt=rt, sig_rw__rw=rw, sig_rw__sigdusun__nama_dusun=dusun
+                ).first()
+                item["sig_rt"] = sigrt
+            elif properties.get("topo_dusun"):
+                dusun = properties["topo_dusun"]
+                sigdusun = SigDusun.objects.filter(nama_dusun=dusun).first()
+                item["sig_dusun"] = sigdusun
             SigBidang.objects.create(**item)
 
         return Response()
