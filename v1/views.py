@@ -391,6 +391,7 @@ class SigBidangViewSet(CustomView):
                 {
                     "bidang": i.bidang.id,
                     "nbt": i.bidang.nbt,
+                    "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
                 }
                 for i in kepemilikan
