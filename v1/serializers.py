@@ -154,13 +154,14 @@ class SadKeluargaSerializer(CustomSerializer):
         else:
             raise ValidationError("Need dusun_id or rt_id", 400)
 
-        jalan_blok = data.pop("jalan_blok", None)
-        if jalan_blok:
-            alamat.jalan_blok = jalan_blok
+        if data.get("alamat"):
+            jalan_blok = data.pop("alamat").pop("jalan_blok", None)
+            if jalan_blok:
+                alamat.jalan_blok = jalan_blok
 
         keluarga_data = data.copy()
-        keluarga_data.pop("dusun_id")
-        keluarga_data.pop("rt_id")
+        keluarga_data.pop("dusun_id", None)
+        keluarga_data.pop("rt_id", None)
         keluarga = SadKeluarga(**keluarga_data)
 
         alamat.save()
