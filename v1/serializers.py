@@ -228,7 +228,6 @@ class SadPendudukSerializer(CustomSerializer):
 
         return penduduk
 
-
 class SadSarprasSerializer(CustomSerializer):
     alamat = Alamat()
 
