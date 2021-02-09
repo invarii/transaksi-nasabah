@@ -128,6 +128,9 @@ class SadKelahiran(CustomModel):
     nama_pelapor = models.CharField(max_length=100, blank=True, null=True)
     nik_saksi_satu = models.CharField(max_length=16, blank=True, null=True)
     nik_saksi_dua = models.CharField(max_length=16, blank=True, null=True)
+    penduduk = models.ForeignKey(
+        "v1.SadPenduduk", models.DO_NOTHING, blank=True, null=True
+    )
 
     def find_penduduk(self, element):
         reference = getattr(self, element)
