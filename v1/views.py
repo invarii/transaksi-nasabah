@@ -752,8 +752,8 @@ class PotensiViewSet(DynamicModelViewSet):
     def get_queryset(self):
         kategori = self.request.query_params.get("kategori")
         if kategori:
-            return Potensi.objects.filter(kategori=kategori).all()
-        return Potensi.objects.all()
+            return Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+        return Potensi.objects.all().order_by("-id")
 
 
 class KategoriPendapatanViewSet(DynamicModelViewSet):
