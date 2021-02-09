@@ -1179,6 +1179,12 @@ class TenagaKesehatan(models.Model):
     class Meta:
         db_table = "tenaga_kesehatan"
 
+class Dashboard:
+    def __init__(self, dusun, penduduk, keluarga):
+        self.penduduk = penduduk
+        self.dusun = dusun
+        self.keluarga = keluarga
+        
 class Cctv(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
     link = models.TextField(null=True, blank=True)
