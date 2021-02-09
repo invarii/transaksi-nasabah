@@ -742,7 +742,7 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
 
 
 class PotensiViewSet(DynamicModelViewSet):
-    queryset = Potensi.objects.all().order_by("id")
+    queryset = Potensi.objects.all().order_by("-id")
     serializer_class = PotensiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
