@@ -1178,3 +1178,11 @@ class TenagaKesehatan(models.Model):
 
     class Meta:
         db_table = "tenaga_kesehatan"
+
+class Cctv(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+    link = models.TextField(null=True, blank=True)
+    koordinat = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = "cctv"

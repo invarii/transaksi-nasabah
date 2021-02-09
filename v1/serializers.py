@@ -755,3 +755,9 @@ class LaporanAbsensiSerializer(DynamicModelSerializer):
         model = Absensi
         name = "data"
         exclude = []
+
+class CctvSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Cctv
+        name = "data"
+        exclude = []
