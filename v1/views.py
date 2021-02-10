@@ -11,6 +11,7 @@ from django.db.models import Count
 import pytz
 from datetime import datetime
 
+
 import pandas
 import json
 from io import BytesIO
@@ -388,10 +389,12 @@ class SigBidangViewSet(CustomView):
 
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
+            for i in kepemilikan:
+                print(i.bidang.gambar_atas.url)
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": i.bidang.gambar_atas,
+                    "gambar_atas": i.bidang.gambar_atas.url,
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
