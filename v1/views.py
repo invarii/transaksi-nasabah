@@ -1013,12 +1013,6 @@ class DashboardViewSet(viewsets.ViewSet):
         dusun = SadDusun.objects.all().aggregate(count=Count("id"))
         penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
         keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
-        
-        # dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
-        # results = DashboardSerializer(dashboard).data
-
-        # return Response({
-        #     "data": results
 
         keluarga = SadKeluarga.objects.raw('''
             SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as k FROM sad_keluarga t1 
@@ -1026,9 +1020,24 @@ class DashboardViewSet(viewsets.ViewSet):
             inner join sad_dusun on alamat.dusun_id=sad_dusun.id
             group by alamat.dusun_id, sad_dusun.nama''')
         
+        # item =[]
+        # for p in keluarga:
+        #     item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalkeluarga":p.k})
+        
+        # return Response({
+        #     "data": item
+        # })
+
+        penduduk = SadPenduduk.objects.raw('''
+            SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as p FROM sad_penduduk
+            inner join sad_keluarga on sad_penduduk.keluarga_id=sad_keluarga.no_kk
+            inner join alamat ON sad_keluarga.alamat_id=alamat.id 
+            inner join sad_dusun on alamat.dusun_id=sad_dusun.id
+            group by alamat.dusun_id, sad_dusun.nama''')
+        
         item =[]
-        for p in keluarga:
-            item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalkeluarga":p.k})
+        for p in penduduk:
+            item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalpenduduk":p.p})
         
         return Response({
             "data": item
