@@ -140,6 +140,9 @@ class SadKeluargaSerializer(CustomSerializer):
     alamat_lengkap = serializers.CharField(
         source="alamat.alamat_lengkap", read_only=True
     )
+    alamat_id = serializers.DictField(
+        source="alamat.alamat_id", read_only=True
+    )
     jalan_blok = serializers.CharField(
         source="alamat.jalan_blok", required=False
     )
@@ -198,7 +201,6 @@ class SadKeluargaSerializer(CustomSerializer):
         }
 
 
-
 class SadPendudukSerializer(CustomSerializer):
     keluarga = DynamicRelationField(
         "SadKeluargaSerializer", deferred=True, embed=True
@@ -219,14 +221,15 @@ class SadPendudukSerializer(CustomSerializer):
         penduduk.save()
         penduduk.user.save()
 
-        request_data = self.context['request'].data
-        if request_data.get('kelahiran_id') is not None:
-            Kelahiran = apps.get_model('layananperistiwa.SadKelahiran')
-            kelahiran = Kelahiran.objects.get(id=request_data['kelahiran_id'])
+        request_data = self.context["request"].data
+        if request_data.get("kelahiran_id") is not None:
+            Kelahiran = apps.get_model("layananperistiwa.SadKelahiran")
+            kelahiran = Kelahiran.objects.get(id=request_data["kelahiran_id"])
             kelahiran.penduduk = penduduk
             kelahiran.save()
 
         return penduduk
+
 
 class SadSarprasSerializer(CustomSerializer):
     alamat = Alamat()
@@ -764,10 +767,11 @@ class LaporanAbsensiSerializer(DynamicModelSerializer):
         name = "data"
         exclude = []
 
+
 class DashboardSerializer(serializers.Serializer):
-   dusun = serializers.IntegerField()
-   penduduk = serializers.IntegerField()
-   keluarga = serializers.IntegerField()
+    dusun = serializers.IntegerField()
+    penduduk = serializers.IntegerField()
+    keluarga = serializers.IntegerField()
 
 
 class CctvSerializer(DynamicModelSerializer):

@@ -184,6 +184,13 @@ class Alamat(CustomModel):
             return f"Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"
         return None
 
+    def alamat_id(self):
+        data = {"desa_id": self.desa.id, "dusun_id": self.dusun.id}
+        if self.rt:
+            data["rw_id"] = self.rw.id
+            data["rt_id"] = self.rt.id
+        return data
+
     def set_from_rt(self, rt_id):
         rt = get_object_or_404(SadRt, pk=rt_id)
         self.rt = rt
@@ -1179,12 +1186,14 @@ class TenagaKesehatan(models.Model):
     class Meta:
         db_table = "tenaga_kesehatan"
 
+
 class Dashboard:
     def __init__(self, dusun, penduduk, keluarga):
         self.penduduk = penduduk
         self.dusun = dusun
         self.keluarga = keluarga
-        
+
+
 class Cctv(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
     link = models.TextField(null=True, blank=True)
