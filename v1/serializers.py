@@ -219,7 +219,6 @@ class SadPendudukSerializer(CustomSerializer):
         penduduk.save()
         penduduk.user.save()
 
-
         request_data = self.context['request'].data
         if request_data.get('kelahiran_id') is not None:
             Kelahiran = apps.get_model('layananperistiwa.SadKelahiran')
@@ -228,7 +227,6 @@ class SadPendudukSerializer(CustomSerializer):
             kelahiran.save()
 
         return penduduk
-
 
 class SadSarprasSerializer(CustomSerializer):
     alamat = Alamat()
