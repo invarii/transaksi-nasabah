@@ -204,10 +204,6 @@ class SadPendudukSerializer(CustomSerializer):
         "SadKeluargaSerializer", deferred=True, embed=True
     )
 
-<<<<<<< HEAD
-    total_penduduk = serializers.SerializerMethodField()
-=======
->>>>>>> 40b74d7a8b5ab862502aac431cc7c29ea6dd6227
     class Meta:
         model = SadPenduduk
         name = "data"
@@ -222,24 +218,12 @@ class SadPendudukSerializer(CustomSerializer):
         penduduk.user = penduduk_user
         penduduk.save()
         penduduk.user.save()
-<<<<<<< HEAD
 
 
-        kelahiran_id = self.context['request'].data['kelahiran_id']
-        if(kelahiran_id):
+        request_data = self.context['request'].data
+        if request_data.get('kelahiran_id') is not None:
             Kelahiran = apps.get_model('layananperistiwa.SadKelahiran')
-            kelahiran = Kelahiran.objects.get(id=kelahiran_id)
-            kelahiran.penduduk = penduduk
-            kelahiran.save()
-
-        return penduduk
-=======
->>>>>>> 40b74d7a8b5ab862502aac431cc7c29ea6dd6227
-
-        kelahiran_id = self.context['request'].query_params.get('kelahiran_id')
-        if(kelahiran_id):
-            Kelahiran = apps.get_model('layananperistiwa.SadKelahiran')
-            kelahiran = Kelahiran.objects.get(id=kelahiran_id)
+            kelahiran = Kelahiran.objects.get(id=request_data['kelahiran_id'])
             kelahiran.penduduk = penduduk
             kelahiran.save()
 
