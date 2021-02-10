@@ -392,7 +392,7 @@ class SigBidangViewSet(CustomView):
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": i.bidang.gambar_atas if hasattr(i.bidang.gambar_atas,'url') else "",
+                    "gambar_atas": i.bidang.gambar_atas if hasattr(i.bidang,'gambar_atas') else "",
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
