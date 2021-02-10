@@ -774,6 +774,7 @@ class DashboardSerializer(serializers.Serializer):
     keluarga = serializers.IntegerField()
 
 
+
 class CctvSerializer(DynamicModelSerializer):
     class Meta:
         model = Cctv

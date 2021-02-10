@@ -1193,7 +1193,6 @@ class Dashboard:
         self.dusun = dusun
         self.keluarga = keluarga
 
-
 class Cctv(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
     link = models.TextField(null=True, blank=True)
