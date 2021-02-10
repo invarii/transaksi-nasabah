@@ -386,13 +386,13 @@ class SigBidangViewSet(CustomView):
     def me(self, request):
         user = request.user
         payload = {"id": user.id, "username": user.username}
-
+        
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": i.bidang.gambar_atas if hasattr(i.bidang,'gambar_atas') else "",
+                    "gambar_atas": request.build_absolute_uri(i.bidang.gambar_atas.url) if i.bidang.gambar_atas else None,
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
