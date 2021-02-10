@@ -1014,6 +1014,14 @@ class DashboardViewSet(viewsets.ViewSet):
     def get(self, request):
         dusun = SadDusun.objects.all().aggregate(count=Count("id"))
         penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
+        keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
+        
+        dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
+        results = DashboardSerializer(dashboard).data
+
+        return Response({
+            "data": results
+
         keluarga = SadKeluarga.objects.raw('''
             SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as k FROM sad_keluarga t1 
             INNER JOIN alamat ON t1.alamat_id=alamat.id 
@@ -1023,8 +1031,6 @@ class DashboardViewSet(viewsets.ViewSet):
         item =[]
         for p in keluarga:
             item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalkeluarga":p.k})
-        # dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
-        # results = DashboardSerializer(dashboard).data
         
         return Response({
             "data": item
