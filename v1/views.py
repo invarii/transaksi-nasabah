@@ -386,7 +386,7 @@ class SigBidangViewSet(CustomView):
     def me(self, request):
         user = request.user
         payload = {"id": user.id, "username": user.username}
-        
+
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
             payload["kepemilikan"] = [
