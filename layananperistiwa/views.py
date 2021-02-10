@@ -57,7 +57,7 @@ from .serializers import (
 
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
-    queryset = SuratKelahiran.objects.all()
+    queryset = SuratKelahiran.objects.all().order_by("-id")
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
@@ -76,7 +76,7 @@ class SuratKelahiranViewSet(DynamicModelViewSet):
 
 
 class SuratSkckViewSet(DynamicModelViewSet):
-    queryset = SuratSkck.objects.all()
+    queryset = SuratSkck.objects.all().order_by("-id")
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
@@ -95,7 +95,7 @@ class SuratSkckViewSet(DynamicModelViewSet):
 
 
 class SuratDomisiliViewSet(DynamicModelViewSet):
-    queryset = SuratDomisili.objects.all()
+    queryset = SuratDomisili.objects.all().order_by("-id")
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
