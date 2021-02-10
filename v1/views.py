@@ -386,7 +386,7 @@ class SigBidangViewSet(CustomView):
     def me(self, request):
         user = request.user
         payload = {"id": user.id, "username": user.username}
-        
+
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
             for i in kepemilikan:
@@ -394,7 +394,7 @@ class SigBidangViewSet(CustomView):
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": request.build_absolute_uri(i.bidang.gambar_atas.url) if i.bidang.gambar_atas else None,
+                    "gambar_atas": i.bidang.gambar_atas.url,
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
@@ -1016,11 +1016,11 @@ class DashboardViewSet(viewsets.ViewSet):
         penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
         keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
         
-        dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
-        results = DashboardSerializer(dashboard).data
+        # dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
+        # results = DashboardSerializer(dashboard).data
 
-        return Response({
-            "data": results
+        # return Response({
+        #     "data": results
 
         keluarga = SadKeluarga.objects.raw('''
             SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as k FROM sad_keluarga t1 
