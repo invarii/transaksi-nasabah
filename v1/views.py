@@ -389,12 +389,10 @@ class SigBidangViewSet(CustomView):
 
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
-            for i in kepemilikan:
-                print(i.bidang.gambar_atas.url)
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": i.bidang.gambar_atas.url,
+                    "gambar_atas": i.bidang.gambar_atas if hasattr(i.bidang.gambar_atas,'url') else "",
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
