@@ -219,10 +219,10 @@ class SadPendudukSerializer(CustomSerializer):
         penduduk.save()
         penduduk.user.save()
 
-        kelahiran_id = self.context['request'].query_params.get('kelahiran_id')
-        if(kelahiran_id):
+        request_data = self.context['request'].data
+        if request_data.get('kelahiran_id') is not None:
             Kelahiran = apps.get_model('layananperistiwa.SadKelahiran')
-            kelahiran = Kelahiran.objects.get(id=kelahiran_id)
+            kelahiran = Kelahiran.objects.get(id=request_data['kelahiran_id'])
             kelahiran.penduduk = penduduk
             kelahiran.save()
 
@@ -763,6 +763,12 @@ class LaporanAbsensiSerializer(DynamicModelSerializer):
         model = Absensi
         name = "data"
         exclude = []
+
+class DashboardSerializer(serializers.Serializer):
+   dusun = serializers.IntegerField()
+   penduduk = serializers.IntegerField()
+   keluarga = serializers.IntegerField()
+
 
 class CctvSerializer(DynamicModelSerializer):
     class Meta:

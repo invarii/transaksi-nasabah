@@ -5,8 +5,9 @@ from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import filters
+from rest_framework import filters, viewsets
 from rest_framework.exceptions import NotFound, APIException
+from django.db.models import Count
 import pytz
 from datetime import datetime
 
@@ -365,7 +366,7 @@ class SadSuratViewSet(CustomView):
 class SigBidangViewSet(CustomView):
     queryset = SigBidang.objects.all().order_by("id")
     serializer_class = SigBidangSerializerFull
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
     search_fields = ["nbt", "pemilikwarga__nama", "pemiliknonwarga__nama"]
@@ -390,6 +391,7 @@ class SigBidangViewSet(CustomView):
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
+                    "gambar_atas": i.bidang.gambar_atas,
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
@@ -471,7 +473,7 @@ class SigDesaViewSet(CustomView):
 class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
     serializer_class = SigDusunSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
@@ -1002,6 +1004,28 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
 
         return queryset.order_by("id").all()
 
+class DashboardViewSet(viewsets.ViewSet):
+    serializer_class = DashboardSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get(self, request):
+        dusun = SadDusun.objects.all().aggregate(count=Count("id"))
+        penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
+        keluarga = SadKeluarga.objects.raw('''
+            SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as k FROM sad_keluarga t1 
+            INNER JOIN alamat ON t1.alamat_id=alamat.id 
+            inner join sad_dusun on alamat.dusun_id=sad_dusun.id
+            group by alamat.dusun_id, sad_dusun.nama''')
+        
+        item =[]
+        for p in keluarga:
+            item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalkeluarga":p.k})
+        # dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
+        # results = DashboardSerializer(dashboard).data
+        
+        return Response({
+            "data": item
+        })
 
 class CctvViewSet(DynamicModelViewSet):
     queryset = Cctv.objects.all().order_by("-id")
