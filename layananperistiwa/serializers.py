@@ -93,30 +93,7 @@ class AdminSuratKelahiranSerializer(DynamicModelSerializer):
         model = SuratKelahiran
         name = "data"
         include = ["pegawai"]
-        exclude = [
-            "created_by",
-            "created_at",
-            "updated_at",
-            "deleted_by",
-            "deleted_at",
-        ]
-        read_only_fields = [
-            "ayah",
-            "ibu",
-            "saksi1",
-            "saksi2",
-            "nama",
-            "jk",
-            "tempat_dilahirkan",
-            "tempat_kelahiran",
-            "tgl",
-            "jenis_kelahiran",
-            "kelahiran_ke",
-            "penolong_kelahiran",
-            "berat",
-            "panjang",
-        ]
-
+        exclude = []
 
 class AdminSuratSkckSerializer(DynamicModelSerializer):
     nama = serializers.CharField(source="penduduk.nama", read_only=True)
@@ -146,16 +123,7 @@ class AdminSuratSkckSerializer(DynamicModelSerializer):
     class Meta:
         model = SuratSkck
         name = "data"
-        exclude = [
-            "penduduk",
-            "created_by",
-            "created_at",
-            "updated_at",
-            "updated_by",
-            "deleted_by",
-            "deleted_at",
-        ]
-        read_only_fields = ["keperluan", "keterangan"]
+        exclude = []
 
 
 class AdminSuratDomisiliSerializer(DynamicModelSerializer):
@@ -174,16 +142,7 @@ class AdminSuratDomisiliSerializer(DynamicModelSerializer):
     class Meta:
         model = SuratDomisili
         name = "data"
-        exclude = [
-            "penduduk",
-            "created_by",
-            "created_at",
-            "updated_at",
-            "updated_by",
-            "deleted_by",
-            "deleted_at",
-        ]
-        read_only_fields = ["keperluan", "penduduk"]
+        exclude =[]
 
 
 class SuratMeta:
