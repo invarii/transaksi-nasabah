@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from django.conf import settings
 from django.db.utils import IntegrityError
-from django.db.models import F, Count
+from django.db.models import F, Count, Avg
 from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
