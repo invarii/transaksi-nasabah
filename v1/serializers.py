@@ -31,7 +31,7 @@ class PegawaiSerializer(CustomSerializer):
     class Meta:
         model = Pegawai
         name = "data"
-        fields = ["id", "nip", "chip_ektp", "nama", "absensi"]
+        fields = ["id", "nip", "chip_ektp", "nama", "jabatan", "status", "golongan", "gambar", "absensi"]
 
 
 class SadProvinsiSerializer(CustomSerializer):

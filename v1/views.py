@@ -11,6 +11,7 @@ from rest_framework.exceptions import NotFound, APIException
 import pytz
 from datetime import datetime
 
+
 import pandas
 import json
 from io import BytesIO
@@ -391,7 +392,11 @@ class SigBidangViewSet(CustomView):
             payload["kepemilikan"] = [
                 {
                     "bidang": i.bidang.id,
-                    "gambar_atas": i.bidang.gambar_atas,
+                    "gambar_atas": request.build_absolute_uri(
+                        i.bidang.gambar_atas.url
+                    )
+                    if i.bidang.gambar_atas
+                    else None,
                     "nbt": i.bidang.nbt,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
@@ -1053,25 +1058,42 @@ class DashboardViewSet(viewsets.ViewSet):
 
     def get(self, request):
         # dusun = SadDusun.objects.all().aggregate(count=Count("id"))
-        # penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
-        keluarga = SadKeluarga.objects.raw(
+        penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
+        # keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
+
+        # keluarga = SadKeluarga.objects.raw(
+        #    """
+        #    SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
+        #            count (*) as k
+        #    FROM sad_keluarga t1
+        #    INNER JOIN alamat ON t1.alamat_id=alamat.id
+        #    inner join sad_dusun on alamat.dusun_id=sad_dusun.id
+        #    group by alamat.dusun_id, sad_dusun.nama"""
+        # )
+
+        # item =[]
+        # for p in keluarga:
+        #     item.append({'dusun_id':p.id,
+        #                'nama_dusun':p.nama, "totalkeluarga":p.k})
+
+        # return Response({
+        #     "data": item
+        # })
+
+        penduduk = SadPenduduk.objects.raw(
             """
-            SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
-                    count (*) as k
-            FROM sad_keluarga t1
-            INNER JOIN alamat ON t1.alamat_id=alamat.id
+            SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as p FROM sad_penduduk
+            inner join sad_keluarga on sad_penduduk.keluarga_id=sad_keluarga.no_kk
+            inner join alamat ON sad_keluarga.alamat_id=alamat.id 
             inner join sad_dusun on alamat.dusun_id=sad_dusun.id
             group by alamat.dusun_id, sad_dusun.nama"""
         )
 
         item = []
-        for p in keluarga:
+        for p in penduduk:
             item.append(
-                {"dusun_id": p.id, "nama_dusun": p.nama, "totalkeluarga": p.k}
+                {"dusun_id": p.id, "nama_dusun": p.nama, "totalpenduduk": p.p}
             )
-        # dashboard = Dashboard(dusun=dusun['count'],
-        #           penduduk=penduduk['count'], keluarga=keluarga["count"])
-        # results = DashboardSerializer(dashboard).data
 
         return Response({"data": item})
 
