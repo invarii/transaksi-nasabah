@@ -1013,7 +1013,7 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
 
 
 class DemografiViewSet(viewsets.ViewSet):
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         type_param = request.query_params.get("type")
