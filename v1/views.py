@@ -1,13 +1,13 @@
 from rest_framework import permissions
 from django.conf import settings
 from django.db.utils import IntegrityError
+from django.db.models import F, Count
 from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters, viewsets
 from rest_framework.exceptions import NotFound, APIException
-from django.db.models import Count
 import pytz
 from datetime import datetime
 
@@ -754,7 +754,9 @@ class PotensiViewSet(DynamicModelViewSet):
     def get_queryset(self):
         kategori = self.request.query_params.get("kategori")
         if kategori:
-            return Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+            return (
+                Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+            )
         return Potensi.objects.all().order_by("-id")
 
 
@@ -1004,28 +1006,75 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
 
         return queryset.order_by("id").all()
 
+
+class DemografiViewSet(viewsets.ViewSet):
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def get(self, request):
+        type_param = request.query_params.get("type")
+        data = []
+        query_s = {
+            "pekerjaan": SadPenduduk.objects.all()
+            .annotate(name=F("pekerjaan"))
+            .values("name")
+            .annotate(y=Count("pekerjaan"))
+            .all(),
+            "pendidikan": SadPenduduk.objects.all()
+            .annotate(name=F("pendidikan"))
+            .values("name")
+            .annotate(y=Count("pendidikan")),
+            "potensi_diri": SadPenduduk.objects.all()
+            .annotate(name=F("potensi_diri"))
+            .values("name")
+            .annotate(y=Count("potensi_diri")),
+            "kepadatan": SadPenduduk.objects.annotate(
+                name=F("keluarga__alamat__dusun__nama")
+            )
+            .values("name")
+            .annotate(y=Count("keluarga__alamat__dusun")),
+            "mbr": SadKeluarga.objects.all()
+            .annotate(name=F("status_kesejahteraan"))
+            .values("name")
+            .annotate(y=Count("status_kesejahteraan")),
+            "penghasilan": SadPenduduk.objects.annotate(
+                name=F("keluarga__alamat__dusun__nama")
+            )
+            .values("name")
+            .annotate(y=Avg("keluarga__penghasilan")),
+        }
+        if type_param:
+            data = list(query_s[type_param].all())
+        return Response({"data": data})
+
+
 class DashboardViewSet(viewsets.ViewSet):
     serializer_class = DashboardSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get(self, request):
-        dusun = SadDusun.objects.all().aggregate(count=Count("id"))
-        penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
-        keluarga = SadKeluarga.objects.raw('''
-            SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as k FROM sad_keluarga t1 
-            INNER JOIN alamat ON t1.alamat_id=alamat.id 
+        # dusun = SadDusun.objects.all().aggregate(count=Count("id"))
+        # penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
+        keluarga = SadKeluarga.objects.raw(
+            """
+            SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
+                    count (*) as k
+            FROM sad_keluarga t1
+            INNER JOIN alamat ON t1.alamat_id=alamat.id
             inner join sad_dusun on alamat.dusun_id=sad_dusun.id
-            group by alamat.dusun_id, sad_dusun.nama''')
-        
-        item =[]
+            group by alamat.dusun_id, sad_dusun.nama"""
+        )
+
+        item = []
         for p in keluarga:
-            item.append({'dusun_id':p.id, 'nama_dusun':p.nama, "totalkeluarga":p.k})
-        # dashboard = Dashboard(dusun=dusun['count'], penduduk=penduduk['count'], keluarga=keluarga["count"]) 
+            item.append(
+                {"dusun_id": p.id, "nama_dusun": p.nama, "totalkeluarga": p.k}
+            )
+        # dashboard = Dashboard(dusun=dusun['count'],
+        #           penduduk=penduduk['count'], keluarga=keluarga["count"])
         # results = DashboardSerializer(dashboard).data
-        
-        return Response({
-            "data": item
-        })
+
+        return Response({"data": item})
+
 
 class CctvViewSet(DynamicModelViewSet):
     queryset = Cctv.objects.all().order_by("-id")
