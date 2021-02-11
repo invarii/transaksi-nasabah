@@ -1013,7 +1013,7 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
 
 
 class DemografiViewSet(viewsets.ViewSet):
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         type_param = request.query_params.get("type")
@@ -1057,28 +1057,19 @@ class DashboardViewSet(viewsets.ViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get(self, request):
-        # dusun = SadDusun.objects.all().aggregate(count=Count("id"))
+        dusun = SadDusun.objects.all().aggregate(count=Count("id"))
         penduduk = SadPenduduk.objects.all().aggregate(count=Count("id"))
-        # keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
+        keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
 
-        # keluarga = SadKeluarga.objects.raw(
-        #    """
-        #    SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
-        #            count (*) as k
-        #    FROM sad_keluarga t1
-        #    INNER JOIN alamat ON t1.alamat_id=alamat.id
-        #    inner join sad_dusun on alamat.dusun_id=sad_dusun.id
-        #    group by alamat.dusun_id, sad_dusun.nama"""
-        # )
-
-        # item =[]
-        # for p in keluarga:
-        #     item.append({'dusun_id':p.id,
-        #                'nama_dusun':p.nama, "totalkeluarga":p.k})
-
-        # return Response({
-        #     "data": item
-        # })
+        keluarga = SadKeluarga.objects.raw(
+            """
+           SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
+                   count (*) as k
+           FROM sad_keluarga t1
+           INNER JOIN alamat ON t1.alamat_id=alamat.id
+           inner join sad_dusun on alamat.dusun_id=sad_dusun.id
+           group by alamat.dusun_id, sad_dusun.nama"""
+        )
 
         penduduk = SadPenduduk.objects.raw(
             """
@@ -1089,13 +1080,9 @@ class DashboardViewSet(viewsets.ViewSet):
             group by alamat.dusun_id, sad_dusun.nama"""
         )
 
-        item = []
-        for p in penduduk:
-            item.append(
-                {"dusun_id": p.id, "nama_dusun": p.nama, "totalpenduduk": p.p}
-            )
-
-        return Response({"data": item})
+        results = [{'name': x.nama, "id": x.id, "penduduk": x.p, "keluarga": list(filter(
+            lambda item, x=x: item.id == x.id, keluarga))[0].k} for i, x in enumerate(penduduk)]
+        return Response({"data": results})
 
 
 class CctvViewSet(DynamicModelViewSet):
