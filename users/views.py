@@ -19,6 +19,7 @@ class UserViewSet(DynamicModelViewSet):
             'username': user.username,
             'email': user.email,
             'role': user.groups.first().name,
+            'password': user.password
         }
 
         if hasattr(user, 'profile'):

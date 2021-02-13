@@ -18,7 +18,7 @@ class UserSerializer(DynamicModelSerializer):
         name = "data"
         fields = ["id", "username", "email", "role", 'group_name', 'password']
         read_only_fields = ['role']
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         try:
