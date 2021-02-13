@@ -36,11 +36,7 @@ class SuratSkck(CustomModel):
 class SuratKelahiran(CustomModel):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
     pegawai = models.ForeignKey(
-        "v1.Pegawai",
-        models.DO_NOTHING,
-        related_name="acc_surat_kelahiran",
-        blank=True,
-        null=True,
+        "v1.Pegawai", models.DO_NOTHING, blank=True, null=True
     )
     ayah = models.ForeignKey(
         "v1.SadPenduduk",
@@ -57,14 +53,14 @@ class SuratKelahiran(CustomModel):
         related_name="ibu_surat_lahir",
     )
     saksi1 = models.ForeignKey(
-        "v1.Pegawai",
+        "v1.SadPenduduk",
         models.DO_NOTHING,
         blank=True,
         null=True,
         related_name="saksi1_surat_lahir",
     )
     saksi2 = models.ForeignKey(
-        "v1.Pegawai",
+        "v1.SadPenduduk",
         models.DO_NOTHING,
         blank=True,
         null=True,
