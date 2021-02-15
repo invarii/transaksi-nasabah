@@ -171,7 +171,7 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["no_kk"]
+    search_fields = ["no_kk", "anggota__nama"]
 
     def get_queryset(self):
         user = self.request.user
@@ -422,7 +422,7 @@ class SigBidangViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["nbt", "pemilikwarga__nama", "pemiliknonwarga__nama"]
+    search_fields = ["nbt", "pemilikwarga__nama", "pemilikwarga__nik", "pemiliknonwarga__nama", "dikuasai__no_kk", "penguasa_nonwarga"]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
