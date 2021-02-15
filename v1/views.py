@@ -683,7 +683,7 @@ class KategoriArtikelViewSet(DynamicModelViewSet):
 
 
 class ArtikelViewSet(DynamicModelViewSet):
-    queryset = Artikel.objects.all().order_by("id")
+    queryset = Artikel.objects.all().order_by("-id")
     serializer_class = ArtikelSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
