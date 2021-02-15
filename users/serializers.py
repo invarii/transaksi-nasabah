@@ -16,7 +16,7 @@ class UserSerializer(DynamicModelSerializer):
     class Meta:
         model = User
         name = "data"
-        fields = ["id", "username", "email", "role", 'group_name', 'password']
+        fields = ["id", "username", "email", "role", 'group_name', 'password', 'profile']
         read_only_fields = ['role']
         # extra_kwargs = {'password': {'write_only': True}}
 
