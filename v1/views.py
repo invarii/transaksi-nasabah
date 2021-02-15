@@ -235,13 +235,28 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             status["status"] = "failed"
         return Response(status)
 
+    def transform(self,data):
+        return {
+            "id": data['id'],
+            "nik_kepala_keluarga": data['kepala_keluarga']['nik'] if 'nik' in data['kepala_keluarga'] else "",
+            "nama_kepala_keluarga": data['kepala_keluarga']['nama'] if 'nama' in data['kepala_keluarga'] else "",
+            "alamat_lengkap": data['alamat_lengkap'],
+            "jalan_blok": data['jalan_blok'],
+            "no_kk": data['no_kk'], 
+            "kode_pos": data['kode_pos'], 
+            "status_kesejahteraan": data['status_kesejahteraan'], 
+            "penghasilan": data['penghasilan'], 
+            "status_kk": data['status_kk'],
+            "menguasai": data['menguasai']
+        }
+
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
         with BytesIO() as b:
             writer = pandas.ExcelWriter(b)
             item = SadKeluarga.objects.all()
             serializer = SadKeluargaSerializer(item, many=True)
-            df = pandas.DataFrame(serializer.data)
+            df = pandas.DataFrame(list(map(self.transform,serializer.data)))
             df.reset_index(drop=True, inplace=True)
             df.to_excel(writer, sheet_name="Sheet1", index=0)
             writer.save()
@@ -321,13 +336,50 @@ class SadPendudukViewSet(CustomView):
             status["status"] = "failed"
         return Response(status)
 
+    def transform(self,data):
+        return {
+                'id': data['id'],
+                "nik": data['nik'],
+                "chip_ektp": data['chip_ektp'],
+                "nama": data['nama'],
+                "tgl_lahir": data['tgl_lahir'],
+                "tempat_lahir": data['tempat_lahir'],
+                "jk": data['jk'],
+                "alamat": data['alamat'],
+                "agama": data['agama'],
+                "pendidikan": data['pendidikan'],
+                "pekerjaan": data['pekerjaan'],
+                "status_kawin": data['status_kawin'],
+                "status_penduduk": data['status_penduduk'],
+                "kewarganegaraan": data['kewarganegaraan'],
+                "anak_ke": data['anak_ke'],
+                "golongan_darah": data['golongan_darah'],
+                "status_dalam_keluarga": data['status_dalam_keluarga'],
+                "no_paspor": data['no_paspor'],
+                "suku": data['suku'],
+                "potensi_diri": data['potensi_diri'],
+                "no_hp": data['no_hp'],
+                "nik_ayah": data['nik_ayah'],
+                "nik_ibu": data['nik_ibu'],
+                "nama_ayah": data['nama_ayah'],
+                "nama_ibu": data['nama_ibu'],
+                "tgl_exp_paspor": data['tgl_exp_paspor'],
+                "akta_lahir": data['akta_lahir'],
+                "akta_kawin": data['akta_kawin'],
+                "tgl_kawin": data['tgl_kawin'],
+                "akta_cerai": data['akta_cerai'],
+                "tgl_cerai": data['tgl_cerai'],
+                "kelainan_fisik": data['kelainan_fisik'],
+                "cacat": data['cacat']
+        }
+
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
         with BytesIO() as b:
             writer = pandas.ExcelWriter(b)
             item = SadPenduduk.objects.all()
             serializer = SadPendudukSerializer(item, many=True)
-            df = pandas.DataFrame(serializer.data)
+            df = pandas.DataFrame(list(map(self.transform,serializer.data)))
             df.reset_index(drop=True, inplace=True)
             df.to_excel(writer, sheet_name="Sheet1", index=0)
             writer.save()
