@@ -348,6 +348,8 @@ class SigBidangSerializerMini(CustomSerializer):
         fields = [
             "id",
             "nbt",
+            "longitude",
+            "latitude",
             "gambar_atas",
             "gambar_depan",
             "daftar_pemilik",

@@ -398,6 +398,8 @@ class SigBidangViewSet(CustomView):
                     if i.bidang.gambar_atas
                     else None,
                     "nbt": i.bidang.nbt,
+                    "latitude": i.bidang.latitude,
+                    "longitude": i.bidang.longitude,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
                 }
