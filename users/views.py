@@ -34,6 +34,7 @@ class UserViewSet(DynamicModelViewSet):
                 'agama': user.profile.agama,
                 'alamat': user.profile.alamat,
                 'pekerjaan': user.profile.pekerjaan,
+                'no_hp': user.profile.no_hp,
             }
             payload['profile'] = profile
         return Response(payload)
