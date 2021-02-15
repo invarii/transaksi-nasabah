@@ -171,7 +171,7 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["no_kk"]
+    search_fields = ["no_kk", "anggota__nama"]
 
     def get_queryset(self):
         user = self.request.user
