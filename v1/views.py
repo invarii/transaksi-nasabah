@@ -422,6 +422,8 @@ class SigBidangViewSet(CustomView):
             print(item["properties"])
             data = {
                 "nbt": item["properties"]["NBT"][:20],
+                "longitude": item["properties"]["long"],
+                "latitude": item["properties"]["lat"],
                 "geometry": item["geometry"],
             }
             properties = item["properties"]
@@ -534,37 +536,6 @@ class SigDukuhViewSet(CustomView):
             SigDukuh.objects.create(**item)
         return Response()
 
-
-class SigDukuh2ViewSet(CustomView):
-    queryset = SigDukuh2.objects.all().order_by("id")
-    serializer_class = SigDukuh2Serializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-    @action(detail=False, methods=["get"])
-    def delete_all(self, request):
-        SigDukuh2.objects.all().delete()
-        return Response()
-
-    @action(detail=False, methods=["post"])
-    def upload(self, request):
-        file = request.FILES["file"]
-        data = json.load(file)
-
-        for item in data["features"]:
-            desa = SigDesa.objects.get(
-                nama_desa=item["properties"]["topo_desa"]
-            )
-            item = {
-                "sig_desa": desa,
-                "nama_dukuh": item["properties"]["topo_dukuh"],
-                "luas": item["properties"]["Luas"],
-                "keliling": item["properties"]["Keliling"],
-                "geometry": item["geometry"],
-            }
-            SigDukuh2.objects.create(**item)
-        return Response()
-
-
 class SigRwViewSet(CustomView):
     queryset = SigRw.objects.all().order_by("id")
     serializer_class = SigRwSerializer
@@ -593,34 +564,6 @@ class SigRwViewSet(CustomView):
         return Response()
 
 
-class SigRw2ViewSet(CustomView):
-    queryset = SigRw2.objects.all().order_by("id")
-    serializer_class = SigRw2Serializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-    @action(detail=False, methods=["get"])
-    def delete_all(self, request):
-        SigRw2.objects.all().delete()
-        return Response()
-
-    @action(detail=False, methods=["post"])
-    def upload(self, request):
-        file = request.FILES["file"]
-        data = json.load(file)
-
-        for item in data["features"]:
-            dukuh2 = SigDukuh2.objects.get(
-                nama_dukuh=item["properties"]["topo_dukuh"]
-            )
-            item = {
-                "sig_dukuh2": dukuh2,
-                "rw": item["properties"]["RW"],
-                "geometry": item["geometry"],
-            }
-            SigRw2.objects.create(**item)
-        return Response()
-
-
 class SigRtViewSet(CustomView):
     queryset = SigRt.objects.all().order_by("id")
     serializer_class = SigRtSerializer
@@ -644,32 +587,6 @@ class SigRtViewSet(CustomView):
                 "geometry": item["geometry"],
             }
             SigRt.objects.create(**item)
-        return Response()
-
-
-class SigRt2ViewSet(CustomView):
-    queryset = SigRt2.objects.all().order_by("id")
-    serializer_class = SigRt2Serializer
-    permission_classes = [IsAdminUserOrReadOnly]
-
-    @action(detail=False, methods=["get"])
-    def delete_all(self, request):
-        SigRt2.objects.all().delete()
-        return Response()
-
-    @action(detail=False, methods=["post"])
-    def upload(self, request):
-        file = request.FILES["file"]
-        data = json.load(file)
-
-        for item in data["features"]:
-            rw2 = SigRw2.objects.get(rw=item["properties"]["RW"])
-            item = {
-                "sig_rw2": rw2,
-                "rt": item["properties"]["RT"],
-                "geometry": item["geometry"],
-            }
-            SigRt2.objects.create(**item)
         return Response()
 
 

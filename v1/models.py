@@ -482,6 +482,8 @@ class KepemilikanWarga(models.Model):
 
 class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
+    longitude = JSONField(blank=True, null=True)
+    latitude = JSONField(blank=True, null=True)
     gambar_atas = models.ImageField(
         upload_to=file_destination, blank=True, null=True
     )
@@ -627,17 +629,6 @@ class SigBidang(CustomModel):
         db_table = "sig_bidang"
 
 
-class SigBidang2(CustomModel):
-    nbt = models.IntegerField(blank=True, null=True)
-    sig_rt2 = models.ForeignKey(
-        "SigRt2", models.DO_NOTHING, blank=True, null=True
-    )
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sig_bidang2"
-
-
 class SigDesa(CustomModel):
     nama_desa = models.CharField(max_length=250, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
@@ -718,30 +709,6 @@ class SigRt(CustomModel):
         db_table = "sig_rt"
 
 
-class SigRw2(CustomModel):
-    sig_dukuh2 = models.ForeignKey(
-        SigDukuh2, models.DO_NOTHING, blank=True, null=True
-    )
-    rw = models.CharField(max_length=10, blank=True, null=True)
-    geometry = JSONField(blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sig_rw2"
-
-
-class SigRt2(CustomModel):
-    sig_rw2 = models.ForeignKey(
-        "SigRw2", models.DO_NOTHING, blank=True, null=True
-    )
-    rt = models.CharField(max_length=10, blank=True, null=True)
-    geometry = JSONField(blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sig_rt2"
-
-
 class SigSadDesa(CustomModel):
     sad_desa = models.ForeignKey(
         SadDesa, models.DO_NOTHING, blank=True, null=True
@@ -768,22 +735,6 @@ class SigSadBidang(CustomModel):
     class Meta(CustomModel.Meta):
 
         db_table = "sig_sad_bidang"
-
-
-class SigSadBidang2(CustomModel):
-    sad_penduduk = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
-    )
-    sig_bidang2 = models.ForeignKey(
-        SigBidang2, models.DO_NOTHING, blank=True, null=True
-    )
-    pemilik = models.CharField(max_length=100, blank=True, null=True)
-    penguasa = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta(CustomModel.Meta):
-
-        db_table = "sig_sad_bidang2"
-
 
 class Slider(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)

@@ -290,17 +290,6 @@ class SigDukuhSerializer(CustomSerializer):
         exclude = []
 
 
-class SigDukuh2Serializer(CustomSerializer):
-    sig_desa = DynamicRelationField(
-        "SigDesaSerializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = SigDukuh2
-        name = "data"
-        exclude = []
-
-
 class SigRwSerializer(CustomSerializer):
     sig_dukuh = DynamicRelationField(
         "SigDukuhSerializer", deferred=True, embed=True
@@ -317,28 +306,6 @@ class SigRtSerializer(CustomSerializer):
 
     class Meta:
         model = SigRt
-        name = "data"
-        exclude = []
-
-
-class SigRw2Serializer(CustomSerializer):
-    sig_dukuh2 = DynamicRelationField(
-        "SigDukuh2Serializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = SigRw2
-        name = "data"
-        exclude = []
-
-
-class SigRt2Serializer(CustomSerializer):
-    sig_rw2 = DynamicRelationField(
-        "SigRw2Serializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = SigRt2
         name = "data"
         exclude = []
 
@@ -433,20 +400,6 @@ class SigSadBidangSerializer(CustomSerializer):
 
     class Meta:
         model = SigSadBidang
-        name = "data"
-        exclude = []
-
-
-class SigSadBidang2Serializer(CustomSerializer):
-    sad_penduduk = DynamicRelationField(
-        "SadPendudukSerializer", deferred=True, embed=True
-    )
-    sig_bidang2 = DynamicRelationField(
-        "SigBidang2Serializer", deferred=True, embed=True
-    )
-
-    class Meta:
-        model = SigSadBidang2
         name = "data"
         exclude = []
 
