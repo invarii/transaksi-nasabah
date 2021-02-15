@@ -201,7 +201,7 @@ class LaporanKelahiranViewSet(CustomView):
 
 
 class SadKelahiranViewSet(CustomView):
-    queryset = SadKelahiran.objects.all().order_by("id")
+    queryset = SadKelahiran.objects.all().order_by("-id")
     serializer_class = SadKelahiranSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 

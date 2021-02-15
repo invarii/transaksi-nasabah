@@ -839,7 +839,7 @@ class Potensi(models.Model):
         KategoriPotensi, models.DO_NOTHING, blank=True, null=True
     )
     nama_usaha = models.CharField(max_length=100, blank=True, null=True)
-    alamat = models.CharField(max_length=100, blank=True, null=True)
+    no_telp = models.CharField(max_length=100, blank=True, null=True)
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
     koordinat = models.TextField(blank=True, null=True)
