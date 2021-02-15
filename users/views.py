@@ -30,11 +30,11 @@ class UserViewSet(DynamicModelViewSet):
                 'tanggal_lahir': user.profile.tgl_lahir,
                 'kelamin': user.profile.jk,
                 'pendidikan': user.profile.pendidikan,
-                'potensi': user.profile.potensi_diri,
+                'potensi': user.profile.potensi_diri if user.profile.potensi_diri else "",
                 'agama': user.profile.agama,
-                'alamat': user.profile.alamat,
+                'alamat': user.profile.alamat if user.profile.alamat else "",
                 'pekerjaan': user.profile.pekerjaan,
-                'no_hp': user.profile.no_hp,
+                'no_hp': user.profile.no_hp if user.profile.no_hp else "",
             }
             payload['profile'] = profile
         return Response(payload)

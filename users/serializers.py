@@ -16,7 +16,7 @@ class UserSerializer(DynamicModelSerializer):
     class Meta:
         model = User
         name = "data"
-        fields = ["id", "username", "email", "role", 'group_name', 'password']
+        fields = ["id", "username", "email", "role", 'group_name', 'password', 'profile']
         read_only_fields = ['role']
         # extra_kwargs = {'password': {'write_only': True}}
 
@@ -51,3 +51,10 @@ class UserSerializer(DynamicModelSerializer):
         user.save()
 
         return user
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if not data.profile.no_hp:
+            data.no_hp = ""
+
+        return data

@@ -306,7 +306,7 @@ class SadPenduduk(CustomModel):
     no_paspor = models.CharField(max_length=20, blank=True, null=True)
     suku = models.CharField(max_length=20, blank=True, null=True)
     potensi_diri = models.CharField(max_length=50, blank=True, null=True)
-    no_hp = models.CharField(max_length=13, blank=True, null=True)
+    no_hp = models.CharField(max_length=13, blank=True)
     nik_ayah = models.CharField(max_length=18, blank=True, null=True)
     nik_ibu = models.CharField(max_length=18, blank=True, null=True)
     nama_ayah = models.CharField(max_length=100, blank=True, null=True)
