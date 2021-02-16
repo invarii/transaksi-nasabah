@@ -317,7 +317,7 @@ class PemilikBidangSerializer(serializers.Serializer):
 class PenguasaBidangSerializer(serializers.Serializer):
     no_kk = serializers.CharField()
     is_warga = serializers.BooleanField(default=False)
-    kepala_keluarga = serializers.CharField(source="kepala_keluarga", read_only=True)
+    kepala_keluarga = serializers.CharField(required=False)
 
 
 class SigBidangSerializerMini(CustomSerializer):
