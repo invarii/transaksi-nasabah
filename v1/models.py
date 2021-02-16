@@ -456,8 +456,12 @@ class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     longitude = JSONField(blank=True, null=True)
     latitude = JSONField(blank=True, null=True)
-    gambar_atas = models.ImageField(upload_to=file_destination, blank=True, null=True)
-    gambar_depan = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_atas = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    gambar_depan = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
@@ -683,7 +687,7 @@ class SigSadBidang(CustomModel):
 
         db_table = "sig_sad_bidang"
 
-
+        
 class Slider(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)
     deskripsi = models.TextField(blank=True, null=True)
