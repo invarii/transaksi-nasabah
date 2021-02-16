@@ -16,9 +16,7 @@ class Pegawai(CustomModel):
     jabatan = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -79,9 +77,7 @@ class SadKabKota(CustomModel):
 
 
 class SadKecamatan(CustomModel):
-    kab_kota = models.ForeignKey(
-        SadKabKota, models.DO_NOTHING, blank=True, null=True
-    )
+    kab_kota = models.ForeignKey(SadKabKota, models.DO_NOTHING, blank=True, null=True)
     kode_kecamatan = models.CharField(max_length=5, blank=True, null=True)
     nama_kecamatan = models.CharField(max_length=250, blank=True, null=True)
 
@@ -111,9 +107,7 @@ class SadDesa(CustomModel):
 
 
 class BatasDesa(CustomModel):
-    desa = models.ForeignKey(
-        "SadDesa", models.DO_NOTHING, blank=True, null=True
-    )
+    desa = models.ForeignKey("SadDesa", models.DO_NOTHING, blank=True, null=True)
     utara = models.CharField(max_length=50, blank=True, null=True)
     selatan = models.CharField(max_length=50, blank=True, null=True)
     timur = models.CharField(max_length=50, blank=True, null=True)
@@ -125,9 +119,7 @@ class BatasDesa(CustomModel):
 
 
 class SadDusun(CustomModel):
-    desa = models.ForeignKey(
-        "SadDesa", models.DO_NOTHING, blank=True, null=True
-    )
+    desa = models.ForeignKey("SadDesa", models.DO_NOTHING, blank=True, null=True)
     nama = models.CharField(max_length=70, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
@@ -156,9 +148,7 @@ class SadRt(CustomModel):
 
 
 class SadRw(CustomModel):
-    dusun = models.ForeignKey(
-        SadDusun, models.DO_NOTHING, blank=True, null=True
-    )
+    dusun = models.ForeignKey(SadDusun, models.DO_NOTHING, blank=True, null=True)
     rw = models.CharField(max_length=10, blank=True, null=True)
     namarw = models.CharField(max_length=100, blank=True, null=True)
 
@@ -168,9 +158,7 @@ class SadRw(CustomModel):
 
 
 class Alamat(CustomModel):
-    desa = models.ForeignKey(
-        SadDesa, models.DO_NOTHING, related_name="data_alamat"
-    )
+    desa = models.ForeignKey(SadDesa, models.DO_NOTHING, related_name="data_alamat")
     dusun = models.ForeignKey(SadDusun, models.DO_NOTHING)
     rw = models.ForeignKey(SadRw, models.DO_NOTHING, blank=True, null=True)
     rt = models.ForeignKey(SadRt, models.DO_NOTHING, blank=True, null=True)
@@ -234,13 +222,9 @@ class Alamat(CustomModel):
 class SadKeluarga(CustomModel):
     no_kk = models.CharField(max_length=16, unique=True)
     jalan_blok = models.CharField(max_length=100, blank=True, null=True)
-    alamat = models.OneToOneField(
-        "Alamat", models.DO_NOTHING, blank=True, null=True
-    )
+    alamat = models.OneToOneField("Alamat", models.DO_NOTHING, blank=True, null=True)
     kode_pos = models.CharField(max_length=5, blank=True, null=True)
-    status_kesejahteraan = models.CharField(
-        max_length=30, blank=True, null=True
-    )
+    status_kesejahteraan = models.CharField(max_length=30, blank=True, null=True)
     penghasilan = models.IntegerField(blank=True, null=True)
     status_kk = models.CharField(max_length=20, blank=True, null=True)
     menguasai = models.ForeignKey(
@@ -300,9 +284,7 @@ class SadPenduduk(CustomModel):
     kewarganegaraan = models.CharField(max_length=20, blank=True, null=True)
     anak_ke = models.CharField(max_length=5, blank=True, null=True)
     golongan_darah = models.CharField(max_length=5, blank=True, null=True)
-    status_dalam_keluarga = models.CharField(
-        max_length=20, blank=True, null=True
-    )
+    status_dalam_keluarga = models.CharField(max_length=20, blank=True, null=True)
     no_paspor = models.CharField(max_length=20, blank=True, null=True)
     suku = models.CharField(max_length=20, blank=True, null=True)
     potensi_diri = models.CharField(max_length=50, blank=True, null=True)
@@ -395,12 +377,8 @@ class SadSurat(CustomModel):
 
 class SadDetailSurat(CustomModel):
     no_surat = models.CharField(max_length=50, blank=True, null=True)
-    surat = models.ForeignKey(
-        "SadSurat", models.DO_NOTHING, blank=True, null=True
-    )
-    pegawai = models.ForeignKey(
-        Pegawai, models.DO_NOTHING, blank=True, null=True
-    )
+    surat = models.ForeignKey("SadSurat", models.DO_NOTHING, blank=True, null=True)
+    pegawai = models.ForeignKey(Pegawai, models.DO_NOTHING, blank=True, null=True)
     lampiran = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.CharField(max_length=50, blank=True, null=True)
     tempat_tujuan = models.CharField(max_length=50, blank=True, null=True)
@@ -419,13 +397,9 @@ class SadDetailSurat(CustomModel):
     jenis_hiburan = models.CharField(max_length=50, blank=True, null=True)
     nama_grup = models.CharField(max_length=50, blank=True, null=True)
     pimpinan_acara = models.CharField(max_length=50, blank=True, null=True)
-    jumlah_keluarga_yg_pindah = models.CharField(
-        max_length=50, blank=True, null=True
-    )
+    jumlah_keluarga_yg_pindah = models.CharField(max_length=50, blank=True, null=True)
     hubungan = models.CharField(max_length=50, blank=True, null=True)
-    data_penduduk_luar_desa = models.CharField(
-        max_length=50, blank=True, null=True
-    )
+    data_penduduk_luar_desa = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -443,9 +417,7 @@ class SettingDesa(CustomModel):
 
 
 class SigPemilik(CustomModel):
-    pemilik = models.ForeignKey(
-        SadPenduduk, models.DO_NOTHING, blank=True, null=True
-    )
+    pemilik = models.ForeignKey(SadPenduduk, models.DO_NOTHING, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
@@ -484,21 +456,15 @@ class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     longitude = JSONField(blank=True, null=True)
     latitude = JSONField(blank=True, null=True)
-    gambar_atas = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
-    gambar_depan = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar_atas = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_depan = models.ImageField(upload_to=file_destination, blank=True, null=True)
     sig_rt = models.ForeignKey(
         "SigRt", on_delete=models.DO_NOTHING, blank=True, null=True
     )
     sig_dusun = models.ForeignKey(
         "SigDusun", on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    pemilikwarga = models.ManyToManyField(
-        "SadPenduduk", through="KepemilikanWarga"
-    )
+    pemilikwarga = models.ManyToManyField("SadPenduduk", through="KepemilikanWarga")
     pemiliknonwarga = models.ManyToManyField(
         "PemilikNonWarga", through="KepemilikanNonWarga"
     )
@@ -557,10 +523,7 @@ class SigBidang(CustomModel):
                     bidang=self,
                     defaults={"namabidang": item["namabidang"]},
                 )
-                (
-                    kepemilikan,
-                    created,
-                ) = KepemilikanWarga.objects.update_or_create(
+                (kepemilikan, created,) = KepemilikanWarga.objects.update_or_create(
                     penduduk=pemilik,
                     bidang=self,
                     defaults={"namabidang": item["namabidang"]},
@@ -579,10 +542,7 @@ class SigBidang(CustomModel):
                 bidang=self,
                 defaults={"namabidang": item["namabidang"]},
             )
-            (
-                kepemilikan,
-                created,
-            ) = KepemilikanNonWarga.objects.update_or_create(
+            (kepemilikan, created,) = KepemilikanNonWarga.objects.update_or_create(
                 non_penduduk=pemilik,
                 bidang=self,
                 defaults={"namabidang": item["namabidang"]},
@@ -599,7 +559,12 @@ class SigBidang(CustomModel):
     @property
     def daftar_penguasa(self):
         penguasa_warga = [
-            {"no_kk": i.no_kk, "is_warga": True} for i in self.dikuasai.all()
+            {
+                "no_kk": i.no_kk,
+                "is_warga": True,
+                "kepala_keluarga": i.kepala_keluarga.get("nama"),
+            }
+            for i in self.dikuasai.all()
         ]
         if not self.penguasa_nonwarga:
             return penguasa_warga
@@ -641,9 +606,7 @@ class SigDesa(CustomModel):
 
 
 class SigDusun(CustomModel):
-    sig_desa = models.ForeignKey(
-        SigDesa, models.DO_NOTHING, blank=True, null=True
-    )
+    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
     nama_dusun = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
@@ -655,9 +618,7 @@ class SigDusun(CustomModel):
 
 
 class SigDukuh(CustomModel):
-    sig_dusun = models.ForeignKey(
-        SigDusun, models.DO_NOTHING, blank=True, null=True
-    )
+    sig_dusun = models.ForeignKey(SigDusun, models.DO_NOTHING, blank=True, null=True)
     nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
@@ -669,9 +630,7 @@ class SigDukuh(CustomModel):
 
 
 class SigDukuh2(CustomModel):
-    sig_desa = models.ForeignKey(
-        SigDesa, models.DO_NOTHING, blank=True, null=True
-    )
+    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
     nama_dukuh = models.CharField(max_length=70, blank=True, null=True)
     luas = models.CharField(max_length=10, blank=True, null=True)
     keliling = models.CharField(max_length=10, blank=True, null=True)
@@ -683,12 +642,8 @@ class SigDukuh2(CustomModel):
 
 
 class SigRw(CustomModel):
-    sig_dukuh = models.ForeignKey(
-        SigDukuh, models.DO_NOTHING, blank=True, null=True
-    )
-    sig_dusun = models.ForeignKey(
-        SigDusun, models.DO_NOTHING, blank=True, null=True
-    )
+    sig_dukuh = models.ForeignKey(SigDukuh, models.DO_NOTHING, blank=True, null=True)
+    sig_dusun = models.ForeignKey(SigDusun, models.DO_NOTHING, blank=True, null=True)
     rw = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
@@ -698,9 +653,7 @@ class SigRw(CustomModel):
 
 
 class SigRt(CustomModel):
-    sig_rw = models.ForeignKey(
-        "SigRw", models.DO_NOTHING, blank=True, null=True
-    )
+    sig_rw = models.ForeignKey("SigRw", models.DO_NOTHING, blank=True, null=True)
     rt = models.CharField(max_length=10, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
@@ -710,12 +663,8 @@ class SigRt(CustomModel):
 
 
 class SigSadDesa(CustomModel):
-    sad_desa = models.ForeignKey(
-        SadDesa, models.DO_NOTHING, blank=True, null=True
-    )
-    sig_desa = models.ForeignKey(
-        SigDesa, models.DO_NOTHING, blank=True, null=True
-    )
+    sad_desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)
+    sig_desa = models.ForeignKey(SigDesa, models.DO_NOTHING, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -726,9 +675,7 @@ class SigSadBidang(CustomModel):
     sad_penduduk = models.ForeignKey(
         SadPenduduk, models.DO_NOTHING, blank=True, null=True
     )
-    sig_bidang = models.ForeignKey(
-        SigBidang, models.DO_NOTHING, blank=True, null=True
-    )
+    sig_bidang = models.ForeignKey(SigBidang, models.DO_NOTHING, blank=True, null=True)
     pemilik = models.CharField(max_length=100, blank=True, null=True)
     penguasa = models.CharField(max_length=100, blank=True, null=True)
 
@@ -736,12 +683,11 @@ class SigSadBidang(CustomModel):
 
         db_table = "sig_sad_bidang"
 
+
 class Slider(CustomModel):
     judul = models.CharField(max_length=100, blank=True, null=True)
     deskripsi = models.TextField(blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -766,9 +712,7 @@ class Artikel(models.Model):
     tgl = models.DateField(blank=True, null=True)
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta:
 
@@ -794,9 +738,7 @@ class Potensi(models.Model):
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
     koordinat = models.TextField(blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta:
 
@@ -823,9 +765,7 @@ class Informasi(models.Model):
     tanggal = models.DateField(blank=True, null=True)
     mulai = models.CharField(max_length=10, blank=True, null=True)
     selesai = models.CharField(max_length=10, blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta:
 
@@ -834,9 +774,7 @@ class Informasi(models.Model):
 
 class KategoriLapor(models.Model):
     nama = models.CharField(max_length=100, blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     def __str__(self):
         return self.nama
@@ -864,12 +802,8 @@ class Lapor(CustomModel):
     )
     judul = models.CharField(max_length=100, blank=True, null=True)
     isi = models.TextField(blank=True, null=True)
-    gambar = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
-    status = models.ForeignKey(
-        StatusLapor, models.DO_NOTHING, blank=True, null=True
-    )
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    status = models.ForeignKey(StatusLapor, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
 
@@ -898,9 +832,7 @@ class Pendapatan(models.Model):
     kategori = models.ForeignKey(
         KategoriPendapatan, models.DO_NOTHING, blank=True, null=True
     )
-    tahun = models.ForeignKey(
-        KategoriTahun, models.DO_NOTHING, blank=True, null=True
-    )
+    tahun = models.ForeignKey(KategoriTahun, models.DO_NOTHING, blank=True, null=True)
     kode = models.CharField(max_length=20, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
     anggaran = models.CharField(max_length=100, blank=True, null=True)
@@ -926,21 +858,15 @@ class Belanja(models.Model):
     kategori = models.ForeignKey(
         KategoriBelanja, models.DO_NOTHING, blank=True, null=True
     )
-    tahun = models.ForeignKey(
-        KategoriTahun, models.DO_NOTHING, blank=True, null=True
-    )
+    tahun = models.ForeignKey(KategoriTahun, models.DO_NOTHING, blank=True, null=True)
     kode = models.CharField(max_length=20, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
     anggaran = models.CharField(max_length=100, blank=True, null=True)
     sumber_dana = models.CharField(max_length=100, blank=True, null=True)
     deskripsi = models.TextField(blank=True, null=True)
     tgl = models.DateField(blank=True, null=True)
-    foto_sebelum = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
-    foto_sesudah = models.ImageField(
-        upload_to=file_destination, blank=True, null=True
-    )
+    foto_sebelum = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    foto_sesudah = models.ImageField(upload_to=file_destination, blank=True, null=True)
     progres = models.CharField(max_length=100, blank=True, null=True)
     koordinat = models.TextField(blank=True, null=True)
 
