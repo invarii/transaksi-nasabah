@@ -13,13 +13,6 @@
 				margin-top: 0px;
 				margin-bottom: 0px;
 			}
-			/* table{
-				border-collapse: separate;
-				border-spacing: 0 0.5em;
-			}
-			.data-row td:first-child {
-				padding-left: 35px;	
-			} */
 			table {
             border-collapse: collapse;
             width: 100%;
@@ -56,25 +49,21 @@
 					<h4>Total Data : {{surat|length}}</h4>
 					<table border="1">
 						<tr>
-							<td>NO</td>
 							<td>NIK</td>
 							<td>NAMA</td>
 							<td>JENIS KELAMIN</td>
 							<td>TANGGAL LAHIR</td>
 							<td>PENDIDIKAN</td>
 							<td>PEKERJAAN</td>
-							<td>STATUS PERKAWINAN</td>
 						</tr>
 						{% for item in surat %}
 						<tr>
-							<td>1</td>
 							<td>{{item.nik}}</td>
 							<td>{{item.nama}}</td>
 							<td>{{item.jk}}</td>
 							<td>{{item.tgl_lahir}}</td>
 							<td>{{item.pendidikan}}</td>
 							<td>{{item.pekerjaan}}</td>
-							<td>{{item.status_kawin}}</td>
 						</tr>
 						{% endfor %}
 					</table>
