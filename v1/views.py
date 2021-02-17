@@ -995,6 +995,16 @@ class DemografiViewSet(viewsets.ViewSet):
             .values("name")
             .annotate(y=Count("pekerjaan"))
             .all(),
+            "jk": SadPenduduk.objects.all()
+            .annotate(name=F("jk"))
+            .values("name")
+            .annotate(y=Count("jk"))
+            .all(),
+            "agama": SadPenduduk.objects.all()
+            .annotate(name=F("agama"))
+            .values("name")
+            .annotate(y=Count("agama"))
+            .all(),
             "pendidikan": SadPenduduk.objects.all()
             .annotate(name=F("pendidikan"))
             .values("name")

@@ -126,9 +126,15 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
 
     def get_serializer_class(self):
         print(self.action)
-        if self.action not in ["list", "create"]:
+        if self.action not in ["list", "create", "print"]:
             raise NotFound("Operasi ini tidak tersedia")
         return self.serializer_class
+    
+    @action(detail=False, methods=["get"])
+    def print(self, request):
+        data = self.get_queryset()
+        pdf = render_mail("monografi", data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
     def get_queryset(self):
         start = self.request.query_params.get("start")

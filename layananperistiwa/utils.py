@@ -15,6 +15,8 @@ def render_mail(mail_type, data):
     output = template.render(
         surat=data, logo=logo_path, tanggal=timezone.now().strftime("%d %B %Y")
     )
+    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
-    pdf = pdfkit.from_string(output, False)
+    pdf = pdfkit.from_string(output, False, configuration=config)
     return pdf
