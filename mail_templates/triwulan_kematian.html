@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta name="pdfkit-orientation" content="Landscape"/>
+		<style>
+			#container {
+				width: 85%;
+				margin: auto;
+			}
+			header{
+				margin-top: 30px;
+			}
+			h2, h3, p{
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			table {
+            border-collapse: collapse;
+            width: 100%;
+        	}
+ 
+        	table, th, td {
+            	border: 1px solid black;
+       		}
+        	th, td {
+            	padding: 10px;
+        	}
+        	th {
+            	background-color: rgb(19, 110, 170);
+            	color: white;
+        	}
+        	tr:hover {background-color: #f5f5f5;}
+			#logo{
+				float:left;
+			}
+			#logo img{
+				width:150px;
+				height: 120px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div>
+				<br>
+					<center>
+						<h3><u>LAPORAN KEMATIAN</u></h3>
+						<br>
+					</center>
+					<h4>Total Data : {{surat|length}}</h4>
+					<table border="1">
+						<tr>
+							<td>NIK</td>
+							<td>NAMA</td>
+							<td>TANGGAL KEMATIAN</td>
+							<td>TEMPAT KEMATIAN</td>
+							<td>SEBAB KEMATIAN</td>
+							<td>YANG MENERANGKAN</td>
+							<td>NAMA PELAPOR</td>
+						</tr>
+						{% for item in surat %}
+						<tr>
+							<td>{{item.nik}}</td>
+							<td>{{item.nama}}</td>
+							<td>{{item.tanggal_kematian}}</td>
+							<td>{{item.tempat_kematian}}</td>
+							<td>{{item.sebab_kematian}}</td>
+							<td>{{item.yang_menerangkan}}</td>
+							<td>{{item.nama_pelapor}}</td>
+						</tr>
+						{% endfor %}
+					</table>
+				<br>
+			</div>
+		</div>
+	</body>
+</html>

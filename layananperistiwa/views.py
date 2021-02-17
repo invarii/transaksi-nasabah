@@ -191,7 +191,7 @@ class LaporanKelahiranViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        quarter = self.request.query_params.get("triwulan")
+        quarter = self.request.query_params.get("triwulan", "print")
         year, month = quarter.split("-")
         if not year or not month:
             raise APIException('Wrong format for "triwulan"', 400)
@@ -204,6 +204,12 @@ class LaporanKelahiranViewSet(CustomView):
         return SadKelahiran.objects.filter(created_at__year=int(year)).filter(
             created_at__month__in=tuple(i for i in range(start, end))
         )
+
+    @action(detail=False, methods=["get"])
+    def print(self, request):
+        data = self.get_queryset()
+        pdf = render_mail("triwulan_kelahiran", data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
 
 class SadKelahiranViewSet(CustomView):
@@ -221,12 +227,12 @@ class LaporanKematianViewSet(DynamicModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_serializer_class(self):
-        if self.action not in ["list", "create"]:
+        if self.action not in ["list", "create", "print"]:
             raise NotFound("Operasi ini tidak tersedia")
         return self.serializer_class
 
     def get_queryset(self):
-        quarter = self.request.query_params.get("triwulan")
+        quarter = self.request.query_params.get("triwulan", "print")
         if not quarter:
             raise APIException("Need triwulan parameter")
 
@@ -244,6 +250,12 @@ class LaporanKematianViewSet(DynamicModelViewSet):
             .filter(created_at__month__in=tuple(i for i in range(start, end)))
             .order_by("id")
         )
+
+    @action(detail=False, methods=["get"])
+    def print(self, request):
+        data = self.get_queryset()
+        pdf = render_mail("triwulan_kematian", data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
 
 class SadKematianViewSet(CustomView):
