@@ -53,14 +53,14 @@ class SuratKelahiran(CustomModel):
         related_name="ibu_surat_lahir",
     )
     saksi1 = models.ForeignKey(
-        "v1.SadPenduduk",
+        "v1.Pegawai",
         models.DO_NOTHING,
         blank=True,
         null=True,
         related_name="saksi1_surat_lahir",
     )
     saksi2 = models.ForeignKey(
-        "v1.SadPenduduk",
+        "v1.Pegawai",
         models.DO_NOTHING,
         blank=True,
         null=True,
