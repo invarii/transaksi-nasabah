@@ -95,6 +95,7 @@ class AdminSuratKelahiranSerializer(DynamicModelSerializer):
         include = ["pegawai"]
         exclude = []
 
+
 class AdminSuratSkckSerializer(DynamicModelSerializer):
     nama = serializers.CharField(source="penduduk.nama", read_only=True)
     tempat_lahir = serializers.CharField(
@@ -142,7 +143,7 @@ class AdminSuratDomisiliSerializer(DynamicModelSerializer):
     class Meta:
         model = SuratDomisili
         name = "data"
-        exclude =[]
+        exclude = []
 
 
 class SuratMeta:
@@ -475,7 +476,7 @@ class SadPecahKKSerializer(CustomSerializer):
         else:
             alamat.set_from_dusun(dusun)
 
-        new_kk = SadKeluarga(no_kk=validated_data["no_kk"], rt=rt)
+        new_kk = SadKeluarga(no_kk=validated_data["no_kk"])
         new_kk.save()
 
         alamat.save()
