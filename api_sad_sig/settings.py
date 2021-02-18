@@ -60,6 +60,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
     "https://demo-desapintar.netlify.app",
+    "http://pontolo.istudios.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
