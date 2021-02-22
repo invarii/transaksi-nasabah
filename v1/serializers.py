@@ -298,6 +298,27 @@ class SigRtSerializer(CustomSerializer):
         exclude = []
 
 
+class SigKawasanHutanSerializer(CustomSerializer):
+    class Meta:
+        model = SigKawasanHutan
+        name = "data"
+        exclude = []
+
+
+class SigPenggunaanTanahSerializer(CustomSerializer):
+    class Meta:
+        model = SigPenggunaanTanah
+        name = "data"
+        exclude = []
+
+
+class SigStatusTanahSerializer(CustomSerializer):
+    class Meta:
+        model = SigStatusTanah
+        name = "data"
+        exclude = []
+
+
 class SigPemilikSerializer(CustomSerializer):
     pemilik = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
 
