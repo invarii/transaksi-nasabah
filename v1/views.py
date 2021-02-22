@@ -531,6 +531,82 @@ class SigDesaViewSet(CustomView):
         return Response()
 
 
+class SigKawasanHutanViewSet(CustomView):
+    queryset = SigKawasanHutan.objects.all().order_by("id")
+    serializer_class = SigKawasanHutanSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigKawasanHutan.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                "fungsi": item["properties"]["FUNGSI"],
+                "luas": item["properties"]["LUAS"][:5],
+                "geometry": item["geometry"],
+            }
+            SigKawasanHutan.objects.create(**item)
+
+        return Response()
+
+
+class SigPenggunaanTanahViewSet(CustomView):
+    queryset = SigPenggunaanTanah.objects.all().order_by("id")
+    serializer_class = SigPenggunaanTanahSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigPenggunaanTanah.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                "dusun": item["properties"]["NAMA_DUSUN"],
+                "penggunaan": item["properties"]["Penggunaan"],
+                "luas": item["properties"]["Luas"][:5],
+                "geometry": item["geometry"],
+            }
+            SigPenggunaanTanah.objects.create(**item)
+
+        return Response()
+
+class SigStatusTanahViewSet(CustomView):
+    queryset = SigStatusTanah.objects.all().order_by("id")
+    serializer_class = SigStatusTanahSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigStatusTanah.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                "tipe": item["properties"]["TIPEHAK"],
+                "geometry": item["geometry"],
+            }
+            SigStatusTanah.objects.create(**item)
+
+        return Response()
+
 class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
     serializer_class = SigDusunSerializer
