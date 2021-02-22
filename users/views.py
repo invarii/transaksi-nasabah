@@ -24,6 +24,7 @@ class UserViewSet(DynamicModelViewSet):
 
         if hasattr(user, 'profile'):
             profile = {
+                'id': user.profile.id,
                 'nama': user.profile.nama,
                 'nik': user.profile.nik,
                 'tempat_lahir': user.profile.tempat_lahir,
