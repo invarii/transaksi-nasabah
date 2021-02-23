@@ -556,6 +556,10 @@ class SigKawasanHutanViewSet(CustomView):
 
         return Response()
 
+class SigPenggunaanWarnaViewSet(CustomView):
+    queryset = SigPenggunaanWarna.objects.all().order_by("id")
+    serializer_class = SigPenggunaanWarnaSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class SigPenggunaanTanahViewSet(CustomView):
     queryset = SigPenggunaanTanah.objects.all().order_by("id")
@@ -573,9 +577,10 @@ class SigPenggunaanTanahViewSet(CustomView):
         data = json.load(file)
 
         for item in data["features"]:
+            penggunaan = SigPenggunaanWarna.objects.get(penggunaan=item["properties"]["Penggunaan"])
             item = {
+                "penggunaan": penggunaan,
                 "dusun": item["properties"]["NAMA_DUSUN"],
-                "penggunaan": item["properties"]["Penggunaan"],
                 "luas": item["properties"]["Luas"][:5],
                 "geometry": item["geometry"],
             }

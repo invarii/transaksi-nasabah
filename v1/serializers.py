@@ -305,7 +305,14 @@ class SigKawasanHutanSerializer(CustomSerializer):
         exclude = []
 
 
+class SigPenggunaanWarnaSerializer(CustomSerializer):
+    class Meta:
+        model = SigPenggunaanWarna
+        name = "data"
+        exclude = []
+
 class SigPenggunaanTanahSerializer(CustomSerializer):
+    penggunaan = DynamicRelationField("SigPenggunaanWarnaSerializer", deferred=True, embed=True)
     class Meta:
         model = SigPenggunaanTanah
         name = "data"
