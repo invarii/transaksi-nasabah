@@ -318,6 +318,7 @@ class SigStatusTanahSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+
 class SigArahanSerializer(CustomSerializer):
     class Meta:
         model = SigArahan
