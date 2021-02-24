@@ -607,6 +607,32 @@ class SigStatusTanahViewSet(CustomView):
 
         return Response()
 
+class SigArahanViewSet(CustomView):
+    queryset = SigArahan.objects.all().order_by("id")
+    serializer_class = SigArahanSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigArahan.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                "luas": item["properties"]["LUAS"][:4],
+                "arahan": item["properties"]["ARAHAN_RUA"],
+                "pola_ruang": item["properties"]["POLA_RUANG"],
+                "fungsi": item["properties"]["FUNGSI"],
+                "geometry": item["geometry"],
+            }
+            SigArahan.objects.create(**item)
+
+        return Response()
 class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
     serializer_class = SigDusunSerializer
@@ -1146,3 +1172,23 @@ class CctvViewSet(DynamicModelViewSet):
     queryset = Cctv.objects.all().order_by("-id")
     serializer_class = CctvSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        Cctv.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                "nama": item["properties"]["nama"],
+                "link": item["properties"]["link"],
+                "koordinat": item["geometry"],
+            }
+            Cctv.objects.create(**item)
+
+        return Response()
