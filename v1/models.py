@@ -456,6 +456,11 @@ class SigBidang(CustomModel):
     nbt = models.CharField(max_length=20, blank=True, null=True)
     longitude = JSONField(blank=True, null=True)
     latitude = JSONField(blank=True, null=True)
+    luas = models.CharField(max_length=20, blank=True, null=True)
+    status_hak = models.CharField(max_length=50, blank=True, null=True)
+    penggunaan_tanah = models.CharField(max_length=100, blank=True, null=True)
+    pemanfaatan_tanah = models.CharField(max_length=100, blank=True, null=True)
+    rtrw = models.CharField(max_length=100, blank=True, null=True)
     gambar_atas = models.ImageField(
         upload_to=file_destination, blank=True, null=True
     )
@@ -692,6 +697,19 @@ class SigStatusTanah(CustomModel):
     class Meta(CustomModel.Meta):
 
         db_table = "sig_status_tanah"
+
+
+class SigArahan(CustomModel):
+    luas = models.CharField(max_length=100, blank=True, null=True)
+    arahan = models.CharField(max_length=100, blank=True, null=True)
+    pola_ruang = models.CharField(max_length=100, blank=True, null=True)
+    fungsi = models.CharField(max_length=100, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_arahan"
+
 
 class SigSadDesa(CustomModel):
     sad_desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)
@@ -1089,7 +1107,6 @@ class JenisTempat(models.Model):
     class Meta:
         db_table = "jenis_tempat"
 
-
 class TenagaKesehatan(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
 
@@ -1107,7 +1124,7 @@ class Dashboard:
 class Cctv(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
     link = models.TextField(null=True, blank=True)
-    koordinat = models.TextField(blank=True, null=True)
+    koordinat = JSONField(blank=True, null=True)
 
     class Meta:
         db_table = "cctv"

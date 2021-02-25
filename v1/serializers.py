@@ -319,6 +319,12 @@ class SigStatusTanahSerializer(CustomSerializer):
         exclude = []
 
 
+class SigArahanSerializer(CustomSerializer):
+    class Meta:
+        model = SigArahan
+        name = "data"
+        exclude = []
+
 class SigPemilikSerializer(CustomSerializer):
     pemilik = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
 
@@ -354,6 +360,11 @@ class SigBidangSerializerMini(CustomSerializer):
             "nbt",
             "longitude",
             "latitude",
+            "luas",
+            "status_hak",
+            "penggunaan_tanah",
+            "pemanfaatan_tanah",
+            "rtrw",
             "gambar_atas",
             "gambar_depan",
             "daftar_pemilik",
@@ -382,6 +393,13 @@ class SigBidangSerializerFull(CustomSerializer):
         fields = [
             "id",
             "nbt",
+            "longitude",
+            "latitude",
+            "luas",
+            "status_hak",
+            "penggunaan_tanah",
+            "pemanfaatan_tanah",
+            "rtrw",
             "gambar_atas",
             "gambar_depan",
             "sig_rt",
