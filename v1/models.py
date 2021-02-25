@@ -698,6 +698,7 @@ class SigStatusTanah(CustomModel):
 
         db_table = "sig_status_tanah"
 
+
 class SigArahan(CustomModel):
     luas = models.CharField(max_length=100, blank=True, null=True)
     arahan = models.CharField(max_length=100, blank=True, null=True)
@@ -708,6 +709,7 @@ class SigArahan(CustomModel):
     class Meta(CustomModel.Meta):
 
         db_table = "sig_arahan"
+
 
 class SigSadDesa(CustomModel):
     sad_desa = models.ForeignKey(SadDesa, models.DO_NOTHING, blank=True, null=True)

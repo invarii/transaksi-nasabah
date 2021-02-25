@@ -1,7 +1,10 @@
 import pytz
+from csv import DictWriter
+from io import BytesIO, StringIO
 from datetime import datetime, date
 from rest_framework import permissions
 from rest_framework import filters
+from openpyxl import Workbook
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -129,12 +132,79 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
         if self.action not in ["list", "create", "print"]:
             raise NotFound("Operasi ini tidak tersedia")
         return self.serializer_class
-    
+
     @action(detail=False, methods=["get"])
     def print(self, request):
         data = self.get_queryset()
         pdf = render_mail("monografi", data)
         return HttpResponse(pdf, content_type="application/pdf")
+
+    @action(detail=False, methods=["get"])
+    def csv(self, request):
+        extras = {
+            "Nomor NIK": "nik",
+            "Nama": "nama",
+            "Jenis Kelamin": "jk",
+            "Tanggal Lahir": "tgl_lahir",
+            "Pendidikan": "pendidikan",
+            "Pekerjaan": "pekerjaan",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        output = StringIO()
+        writer = DictWriter(output, list(extras.keys()))
+        writer.writeheader()
+        writer.writerows(data)
+
+        response = HttpResponse(output.getvalue(), content_type="text/csv")
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="Monografi.csv"'
+        return response
+
+    @action(detail=False, methods=["get"])
+    def excel(self, request):
+        extras = {
+            "Nomor NIK": "nik",
+            "Nama": "nama",
+            "Jenis Kelamin": "jk",
+            "Tanggal Lahir": "tgl_lahir",
+            "Pendidikan": "pendidikan",
+            "Pekerjaan": "pekerjaan",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="Monografi.xls"'
+        return response
 
     def get_queryset(self):
         start = self.request.query_params.get("start")
@@ -183,7 +253,7 @@ class LaporanMonografiViewSet(DynamicModelViewSet):
                 tgl_lahir__gt=min_date, tgl_lahir__lte=max_date
             )
 
-        return queryset.order_by("id").all()
+        return queryset.order_by("id")
 
 
 class LaporanKelahiranViewSet(CustomView):
@@ -191,7 +261,7 @@ class LaporanKelahiranViewSet(CustomView):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        quarter = self.request.query_params.get("triwulan", "print")
+        quarter = self.request.query_params.get("triwulan", None)
         year, month = quarter.split("-")
         if not year or not month:
             raise APIException('Wrong format for "triwulan"', 400)
@@ -210,6 +280,77 @@ class LaporanKelahiranViewSet(CustomView):
         data = self.get_queryset()
         pdf = render_mail("triwulan_kelahiran", data)
         return HttpResponse(pdf, content_type="application/pdf")
+
+    @action(detail=False, methods=["get"])
+    def csv(self, request):
+        extras = {
+            "Nama": "nama",
+            "Jenis Kelamin": "jenis_kelamin",
+            "Tanggal Kelahiran": "tanggal_kelahiran",
+            "Tempat Kelahiran": "tempat_kelahiran",
+            "NIK Ayah": "nik_ayah",
+            "Nama Ayah": "nama_ayah",
+            "NIK Ibu": "nik_ibu",
+            "Nama Ibu": "nama_ibu",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        output = StringIO()
+        writer = DictWriter(output, list(extras.keys()))
+        writer.writeheader()
+        writer.writerows(data)
+
+        response = HttpResponse(output.getvalue(), content_type="text/csv")
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="Triwulan Kelahiran.csv"'
+        return response
+
+    @action(detail=False, methods=["get"])
+    def excel(self, request):
+        extras = {
+            "Nama": "nama",
+            "Jenis Kelamin": "jenis_kelamin",
+            "Tanggal Kelahiran": "tanggal_kelahiran",
+            "Tempat Kelahiran": "tempat_kelahiran",
+            "NIK Ayah": "nik_ayah",
+            "Nama Ayah": "nama_ayah",
+            "NIK Ibu": "nik_ibu",
+            "Nama Ibu": "nama_ibu",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="TriwulanKelahiran.xls"'
+        return response
 
 
 class SadKelahiranViewSet(CustomView):
@@ -256,6 +397,75 @@ class LaporanKematianViewSet(DynamicModelViewSet):
         data = self.get_queryset()
         pdf = render_mail("triwulan_kematian", data)
         return HttpResponse(pdf, content_type="application/pdf")
+
+    @action(detail=False, methods=["get"])
+    def csv(self, request):
+        extras = {
+            "NIK": "sad_penduduk.nik",
+            "Nama": "sad_penduduk.nama",
+            "Tanggal Kematian": "tanggal_kematian",
+            "Tempat Kematian": "tempat_kematian",
+            "Sebab Kematian": "sebab_kematian",
+            "Yang Menerangkan": "yang_menerangkan",
+            "Nama Pelapor": "nama_pelapor",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras, tables=("sad_penduduk",))
+            .values(*extras.keys())
+            .all()
+        )
+
+        output = StringIO()
+        writer = DictWriter(output, list(extras.keys()))
+        writer.writeheader()
+        writer.writerows(data)
+
+        response = HttpResponse(output.getvalue(), content_type="text/csv")
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="Triwulan Kematian.csv"'
+        return response
+
+    @action(detail=False, methods=["get"])
+    def excel(self, request):
+        extras = {
+            "NIK": "sad_penduduk.nik",
+            "Nama": "sad_penduduk.nama",
+            "Tanggal Kematian": "tanggal_kematian",
+            "Tempat Kematian": "tempat_kematian",
+            "Sebab Kematian": "sebab_kematian",
+            "Yang Menerangkan": "yang_menerangkan",
+            "Nama Pelapor": "nama_pelapor",
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras, tables=("sad_penduduk",))
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="TriwulanKematian.xls"'
+        return response
 
 
 class SadKematianViewSet(CustomView):
