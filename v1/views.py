@@ -452,6 +452,11 @@ class SigBidangViewSet(CustomView):
                     "nbt": i.bidang.nbt,
                     "latitude": i.bidang.latitude,
                     "longitude": i.bidang.longitude,
+                    "luas": i.bidang.luas,
+                    "status_hak": i.bidang.status_hak,
+                    "penggunaan_tanah": i.bidang.penggunaan_tanah,
+                    "pemanfaatan_tanah": i.bidang.pemanfaatan_tanah,
+                    "rtrw": i.bidang.rtrw,
                     "geometry": i.bidang.geometry,
                     "namabidang": i.namabidang,
                 }
