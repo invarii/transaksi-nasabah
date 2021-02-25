@@ -59,8 +59,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "http://localhost:8000",
-    "https://demo-desapintar.netlify.app",
-    "https://pontolo.istudios.id",
+    "https://desajurangjero.istudios.id",
+    "http://desajurangjero.istudios.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
@@ -155,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia/Makassar"
+TIME_ZONE = "Asia/Jakarta"
 
 USE_I18N = True
 
