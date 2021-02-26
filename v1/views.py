@@ -517,18 +517,18 @@ class SigBidangViewSet(CustomView):
                     "latitude": item["properties"]["lat"],
                     "geometry": item["geometry"],
                     }
-            properties = item["properties"]
-            rt = properties["RT"]
-            rw = properties["RW"]
-            dusun = properties["topo_dusun"]
-            dukuh = properties['topo_dukuh']
-            sigrt = SigRt.objects.filter(
-                    rt=rt,
-                    rt__sig_rw__rw=rw,
-                    rt__sig_rw__sig_dukuh__nama = dukuh,
-                    rt__sig_rw__sig_dukuh__sig_dusun__nama = dusun
-                    ).first()
-            data["sig_rt"] = sigrt
+            # properties = item["properties"]
+            # rt = properties["RT"]
+            # rw = properties["RW"]
+            # dusun = properties["topo_dusun"]
+            # dukuh = properties['topo_dukuh']
+            # sigrt = SigRt.objects.filter(
+            #         rt=rt,
+            #         rt__sig_rw__rw=rw,
+            #         rt__sig_rw__sig_dukuh__nama = dukuh,
+            #         rt__sig_rw__sig_dukuh__sig_dusun__nama = dusun
+            #         ).first()
+            # data["sig_rt"] = sigrt
             SigBidang.objects.create(**data)
 
         return Response()
