@@ -518,18 +518,17 @@ class SigBidangViewSet(CustomView):
                     "geometry": item["geometry"],
                     }
             properties = item["properties"]
-            if properties.get("RT"):
-                rt = properties["RT"]
-                rw = properties["RW"]
-                dusun = properties["topo_dusun"]
-                sigrt = SigRt.objects.filter(
-                        rt=rt, sig_rw__rw=rw, sig_rw__sigdusun__nama_dusun=dusun
-                        ).first()
-                data["sig_rt"] = sigrt
-            elif properties.get("topo_dusun"):
-                dusun = properties["topo_dusun"]
-                sigdusun = SigDusun.objects.filter(nama_dusun=dusun).first()
-                data["sig_dusun"] = sigdusun
+            rt = properties["RT"]
+            rw = properties["RW"]
+            dusun = properties["topo_dusun"]
+            dukuh = properties['topo_dukuh']
+            sigrt = SigRt.objects.filter(
+                    rt=rt,
+                    rt__sig_rw__rw=rw,
+                    rt__sig_rw__sig_dukuh__nama = dukuh,
+                    rt__sig_rw__sig_dukuh__sig_dusun__nama = dusun
+                    ).first()
+            data["sig_rt"] = sigrt
             SigBidang.objects.create(**data)
 
         return Response()
