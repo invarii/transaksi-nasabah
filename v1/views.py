@@ -1,3 +1,8 @@
+import pandas
+import json
+from io import BytesIO
+import numpy as np
+
 from rest_framework import permissions
 from django.conf import settings
 from django.db.utils import IntegrityError
@@ -12,16 +17,12 @@ import pytz
 from datetime import datetime
 
 
-import pandas
-import json
-from io import BytesIO
-import numpy as np
 
 from api_sad_sig.util import (
-    CustomView,
-    create_or_reactivate,
-    create_or_reactivate_user,
-)
+        CustomView,
+        create_or_reactivate,
+        create_or_reactivate_user,
+        )
 from users.permissions import IsAdminUserOrReadOnly
 from .serializers import *
 from .models import *
@@ -29,11 +30,11 @@ from .models import *
 
 def format_data_penduduk(data):
     cols = [
-        "tgl_lahir",
-        "tgl_exp_paspor",
-        "tgl_kawin",
-        "tgl_cerai",
-    ]
+            "tgl_lahir",
+            "tgl_exp_paspor",
+            "tgl_kawin",
+            "tgl_cerai",
+            ]
     for col in cols:
         if type(data[col]) == pandas.Timestamp:
             data[col] = str(data[col]).split(" ")[0]
@@ -77,11 +78,11 @@ class SadKabKotaViewSet(CustomView):
         provinsi = self.request.query_params.get("provinsi")
         if provinsi:
             return (
-                SadKabKota.objects.all()
-                .filter(provinsi_id=provinsi)
-                .order_by("nama_kab_kota")
-            )
-        return SadKabKota.objects.all()
+                    SadKabKota.objects.all()
+                    .filter(provinsi_id=provinsi)
+                    .order_by("nama_kab_kota")
+                    )
+            return SadKabKota.objects.all()
 
 
 class SadKecamatanViewSet(CustomView):
@@ -135,6 +136,21 @@ class SadDusunViewSet(CustomView):
         return SadDusun.objects.all()
 
 
+class SadDukuhViewSet(CustomView):
+    queryset = SadDukuh.objects.all().order_by("id")
+    serializer_class = SadDukuhSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["nama"]
+
+    def get_queryset(self):
+        desa = self.request.query_params.get("desa")
+        if desa:
+            return SadDukuh.objects.filter(desa_id=desa).all()
+        return SadDukuh.objects.all()
+
+
 class SadRwViewSet(CustomView):
     queryset = SadRw.objects.all().order_by("id")
     serializer_class = SadRwSerializer
@@ -183,20 +199,19 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     @action(detail=False, methods=["post"])
     def upload(self, request):
         status = {
-            "status": "success",
-            "data_diinput": 0,
-            "data_gagal": 0,
-            "data_redundan": 0,
-            "alamat_tidak_ditemukan": 0,
-        }
+                "status": "success",
+                "data_diinput": 0,
+                "data_gagal": 0,
+                "data_redundan": 0,
+                "alamat_tidak_ditemukan": 0,
+                }
 
         file = request.FILES["file"]
-        data = pandas.read_excel(file)
+        converters = {'rw':str, 'rt':str}
+        data = pandas.read_excel(file, converters=converters)
         data = data.replace({np.nan: None})
 
-        checked_column = ["no_kk", "dusun"]
-        if "rt" in data.columns:
-            checked_column.extend(["rw", "rt"])
+        checked_column = ["no_kk", "dusun", 'dukuh', 'rw', 'rt']
 
         if data[checked_column].isna().values.any():
             message = "Silahkan lengkapi data no_kk dan alamat"
@@ -204,10 +219,11 @@ class SadKeluargaViewSet(DynamicModelViewSet):
 
         for item in data.to_dict("records"):
             data_alamat = {
-                "rt": item.pop("rt", None),
-                "rw": item.pop("rw", None),
-                "dusun": item.pop("dusun", None),
-            }
+                    "rt": item.pop("rt", None),
+                    "rw": item.pop("rw", None),
+                    "dukuh": item.pop("dukuh", None),
+                    "dusun": item.pop("dusun", None),
+                    }
             alamat = Alamat()
             get_alamat = alamat.set_from_excel(**data_alamat)
             if not get_alamat:
@@ -217,8 +233,8 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             param_filter = {"no_kk": item["no_kk"]}
             try:
                 keluarga = create_or_reactivate(
-                    SadKeluarga, param_filter, item
-                )
+                        SadKeluarga, param_filter, item
+                        )
                 alamat.save()
                 keluarga.alamat = alamat
                 keluarga.save()
@@ -235,20 +251,25 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             status["status"] = "failed"
         return Response(status)
 
-    def transform(self,data):
+    def transform(self, data):
         return {
-            "id": data['id'],
-            "nik_kepala_keluarga": data['kepala_keluarga']['nik'] if 'nik' in data['kepala_keluarga'] else "",
-            "nama_kepala_keluarga": data['kepala_keluarga']['nama'] if 'nama' in data['kepala_keluarga'] else "",
-            "alamat_lengkap": data['alamat_lengkap'],
-            "jalan_blok": data['jalan_blok'],
-            "no_kk": data['no_kk'], 
-            "kode_pos": data['kode_pos'], 
-            "status_kesejahteraan": data['status_kesejahteraan'], 
-            "penghasilan": data['penghasilan'], 
-            "status_kk": data['status_kk'],
-            "menguasai": data['menguasai']
-        }
+                "id": data["id"],
+                "nik_kepala_keluarga": data["kepala_keluarga"]["nik"]
+                if "nik" in data["kepala_keluarga"]
+                else "",
+                "nama_kepala_keluarga": data["kepala_keluarga"]["nama"]
+                if "nama" in data["kepala_keluarga"]
+                else "",
+                "alamat_lengkap": data["alamat_lengkap"],
+                "jalan_blok": data["jalan_blok"],
+                "no_kk": data["no_kk"],
+                "kode_pos": data["kode_pos"],
+                "status_kesejahteraan": data["status_kesejahteraan"],
+                "penghasilan": data["penghasilan"],
+                "status_kk": data["status_kk"],
+                "menguasai": data["menguasai"],
+                }
+
 
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
@@ -256,17 +277,17 @@ class SadKeluargaViewSet(DynamicModelViewSet):
             writer = pandas.ExcelWriter(b)
             item = SadKeluarga.objects.all()
             serializer = SadKeluargaSerializer(item, many=True)
-            df = pandas.DataFrame(list(map(self.transform,serializer.data)))
+            df = pandas.DataFrame(list(map(self.transform, serializer.data)))
             df.reset_index(drop=True, inplace=True)
             df.to_excel(writer, sheet_name="Sheet1", index=0)
             writer.save()
             return HttpResponse(
-                b.getvalue(),
-                content_type=(
-                    "application/vnd.openxmlformats-"
-                    "officedocument.spreadsheetml.sheet"
-                ),
-            )
+                    b.getvalue(),
+                    content_type=(
+                        "application/vnd.openxmlformats-"
+                        "officedocument.spreadsheetml.sheet"
+                        ),
+                    )
 
 
 class SadPendudukViewSet(CustomView):
@@ -286,34 +307,35 @@ class SadPendudukViewSet(CustomView):
     @action(detail=False, methods=["post"])
     def upload(self, request):
         status = {
-            "status": "success",
-            "data_diinput": 0,
-            "data_gagal": 0,
-            "data_redundan": 0,
-            "keluarga_tidak_ditemukan": 0,
-        }
+                "status": "success",
+                "data_diinput": 0,
+                "data_gagal": 0,
+                "data_redundan": 0,
+                "keluarga_tidak_ditemukan": 0,
+                }
 
         file = request.FILES["file"]
         data = pandas.read_excel(file)
-        if data[["nik", "keluarga", "nama"]].isna().values.any():
+        if data[["nik", "keluarga", "nama", 'tgl_lahir']].isna().values.any():
             message = "Silahkan lengkapi data nik, keluarga dan nama"
             return Response({"message": message}, status=400)
         data = data.replace({np.nan: None})
 
         for item in data.to_dict("record"):
             item["keluarga"] = SadKeluarga.objects.filter(
-                no_kk=item["keluarga"]
-            ).first()
+                    no_kk=item["keluarga"]
+                    ).first()
             if not item["keluarga"]:
                 status["keluarga_tidak_ditemukan"] += 1
                 continue
 
             format_data_penduduk(item)
+            print(item.keys())
             param_filter = {"nik": item["nik"]}
             try:
                 penduduk = create_or_reactivate(
-                    SadPenduduk, param_filter, item
-                )
+                        SadPenduduk, param_filter, item
+                        )
                 status["data_diinput"] += 1
 
             except IntegrityError:
@@ -325,9 +347,12 @@ class SadPendudukViewSet(CustomView):
                 status["data_gagal"] += 1
                 continue
 
+            if not item.get('tgl_lahir'):
+                print(item)
+                raise Exception('tgl_lahir notfound')
             user = create_or_reactivate_user(
-                item["nik"], item["tgl_lahir"].replace("-", "")
-            )
+                    item["nik"], item["tgl_lahir"].replace("-", "")
+                    )
             penduduk.user = user
             penduduk.user.save()
             penduduk.save()
@@ -336,42 +361,42 @@ class SadPendudukViewSet(CustomView):
             status["status"] = "failed"
         return Response(status)
 
-    def transform(self,data):
+    def transform(self, data):
         return {
-                'id': data['id'],
-                "nik": data['nik'],
-                "chip_ektp": data['chip_ektp'],
-                "nama": data['nama'],
-                "tgl_lahir": data['tgl_lahir'],
-                "tempat_lahir": data['tempat_lahir'],
-                "jk": data['jk'],
-                "alamat": data['alamat'],
-                "agama": data['agama'],
-                "pendidikan": data['pendidikan'],
-                "pekerjaan": data['pekerjaan'],
-                "status_kawin": data['status_kawin'],
-                "status_penduduk": data['status_penduduk'],
-                "kewarganegaraan": data['kewarganegaraan'],
-                "anak_ke": data['anak_ke'],
-                "golongan_darah": data['golongan_darah'],
-                "status_dalam_keluarga": data['status_dalam_keluarga'],
-                "no_paspor": data['no_paspor'],
-                "suku": data['suku'],
-                "potensi_diri": data['potensi_diri'],
-                "no_hp": data['no_hp'],
-                "nik_ayah": data['nik_ayah'],
-                "nik_ibu": data['nik_ibu'],
-                "nama_ayah": data['nama_ayah'],
-                "nama_ibu": data['nama_ibu'],
-                "tgl_exp_paspor": data['tgl_exp_paspor'],
-                "akta_lahir": data['akta_lahir'],
-                "akta_kawin": data['akta_kawin'],
-                "tgl_kawin": data['tgl_kawin'],
-                "akta_cerai": data['akta_cerai'],
-                "tgl_cerai": data['tgl_cerai'],
-                "kelainan_fisik": data['kelainan_fisik'],
-                "cacat": data['cacat']
-        }
+                "id": data["id"],
+                "nik": data["nik"],
+                "chip_ektp": data["chip_ektp"],
+                "nama": data["nama"],
+                "tgl_lahir": data["tgl_lahir"],
+                "tempat_lahir": data["tempat_lahir"],
+                "jk": data["jk"],
+                "alamat": data["alamat"],
+                "agama": data["agama"],
+                "pendidikan": data["pendidikan"],
+                "pekerjaan": data["pekerjaan"],
+                "status_kawin": data["status_kawin"],
+                "status_penduduk": data["status_penduduk"],
+                "kewarganegaraan": data["kewarganegaraan"],
+                "anak_ke": data["anak_ke"],
+                "golongan_darah": data["golongan_darah"],
+                "status_dalam_keluarga": data["status_dalam_keluarga"],
+                "no_paspor": data["no_paspor"],
+                "suku": data["suku"],
+                "potensi_diri": data["potensi_diri"],
+                "no_hp": data["no_hp"],
+                "nik_ayah": data["nik_ayah"],
+                "nik_ibu": data["nik_ibu"],
+                "nama_ayah": data["nama_ayah"],
+                "nama_ibu": data["nama_ibu"],
+                "tgl_exp_paspor": data["tgl_exp_paspor"],
+                "akta_lahir": data["akta_lahir"],
+                "akta_kawin": data["akta_kawin"],
+                "tgl_kawin": data["tgl_kawin"],
+                "akta_cerai": data["akta_cerai"],
+                "tgl_cerai": data["tgl_cerai"],
+                "kelainan_fisik": data["kelainan_fisik"],
+                "cacat": data["cacat"],
+                }
 
     @action(detail=False, methods=["get"])
     def ekspor(self, request):
@@ -379,17 +404,17 @@ class SadPendudukViewSet(CustomView):
             writer = pandas.ExcelWriter(b)
             item = SadPenduduk.objects.all()
             serializer = SadPendudukSerializer(item, many=True)
-            df = pandas.DataFrame(list(map(self.transform,serializer.data)))
+            df = pandas.DataFrame(list(map(self.transform, serializer.data)))
             df.reset_index(drop=True, inplace=True)
             df.to_excel(writer, sheet_name="Sheet1", index=0)
             writer.save()
             return HttpResponse(
-                b.getvalue(),
-                content_type=(
-                    "application/vnd.openxmlformats-"
-                    "officedocument.spreadsheetml.sheet"
-                ),
-            )
+                    b.getvalue(),
+                    content_type=(
+                        "application/vnd.openxmlformats-"
+                        "officedocument.spreadsheetml.sheet"
+                        ),
+                    )
 
 
 class SadSarprasViewSet(CustomView):
@@ -422,7 +447,14 @@ class SigBidangViewSet(CustomView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["nbt", "pemilikwarga__nama", "pemilikwarga__nik", "pemiliknonwarga__nama", "dikuasai__no_kk", "penguasa_nonwarga"]
+    search_fields = [
+            "nbt",
+            "pemilikwarga__nama",
+            "pemilikwarga__nik",
+            "pemiliknonwarga__nama",
+            "dikuasai__no_kk",
+            "penguasa_nonwarga",
+            ]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
@@ -442,28 +474,33 @@ class SigBidangViewSet(CustomView):
         if hasattr(user, "profile"):
             kepemilikan = user.profile.kepemilikanwarga_set.all()
             payload["kepemilikan"] = [
-                {
-                    "bidang": i.bidang.id,
-                    "gambar_atas": request.build_absolute_uri(
-                        i.bidang.gambar_atas.url
-                    )
-                    if i.bidang.gambar_atas
-                    else None,
-                    "nbt": i.bidang.nbt,
-                    "latitude": i.bidang.latitude,
-                    "longitude": i.bidang.longitude,
-                    "geometry": i.bidang.geometry,
-                    "namabidang": i.namabidang,
-                }
-                for i in kepemilikan
-            ]
+                    {
+                        "bidang": i.bidang.id,
+                        "gambar_atas": request.build_absolute_uri(
+                            i.bidang.gambar_atas.url
+                            )
+                        if i.bidang.gambar_atas
+                        else None,
+                        "nbt": i.bidang.nbt,
+                        "latitude": i.bidang.latitude,
+                        "longitude": i.bidang.longitude,
+                        "luas": i.bidang.luas,
+                        "status_hak": i.bidang.status_hak,
+                        "penggunaan_tanah": i.bidang.penggunaan_tanah,
+                        "pemanfaatan_tanah": i.bidang.pemanfaatan_tanah,
+                        "rtrw": i.bidang.rtrw,
+                        "geometry": i.bidang.geometry,
+                        "namabidang": i.namabidang,
+                        }
+                    for i in kepemilikan
+                    ]
 
             penguasaan = user.profile.keluarga.menguasai
             if penguasaan:
                 data = {
-                    "bidang": penguasaan.id,
-                    "nbt": penguasaan.nbt,
-                }
+                        "bidang": penguasaan.id,
+                        "nbt": penguasaan.nbt,
+                        }
                 payload["kepenguasaan"] = data
         return Response(payload)
 
@@ -475,24 +512,23 @@ class SigBidangViewSet(CustomView):
         for item in data["features"]:
             print(item["properties"])
             data = {
-                "nbt": item["properties"]["NBT"][:20],
-                "longitude": item["properties"]["long"],
-                "latitude": item["properties"]["lat"],
-                "geometry": item["geometry"],
-            }
+                    "nbt": item["properties"]["NBT"][:20],
+                    "longitude": item["properties"]["long"],
+                    "latitude": item["properties"]["lat"],
+                    "geometry": item["geometry"],
+                    }
             properties = item["properties"]
-            if properties.get("RT"):
-                rt = properties["RT"]
-                rw = properties["RW"]
-                dusun = properties["topo_dusun"]
-                sigrt = SigRt.objects.filter(
-                    rt=rt, sig_rw__rw=rw, sig_rw__sigdusun__nama_dusun=dusun
-                ).first()
-                data["sig_rt"] = sigrt
-            elif properties.get("topo_dusun"):
-                dusun = properties["topo_dusun"]
-                sigdusun = SigDusun.objects.filter(nama_dusun=dusun).first()
-                data["sig_dusun"] = sigdusun
+            rt = properties["RT"]
+            rw = properties["RW"]
+            dusun = properties["topo_dusun"]
+            dukuh = properties['topo_dukuh']
+            sigrt = SigRt.objects.filter(
+                    rt=rt,
+                    rt__sig_rw__rw=rw,
+                    rt__sig_rw__sig_dukuh__nama = dukuh,
+                    rt__sig_rw__sig_dukuh__sig_dusun__nama = dusun
+                    ).first()
+            data["sig_rt"] = sigrt
             SigBidang.objects.create(**data)
 
         return Response()
@@ -521,11 +557,11 @@ class SigDesaViewSet(CustomView):
 
         for item in data["features"]:
             item = {
-                "nama_desa": item["properties"]["topo_desa"],
-                "luas": item["properties"]["Luas"],
-                "keliling": item["properties"]["Keliling"],
-                "geometry": item["geometry"],
-            }
+                    "nama_desa": item["properties"]["topo_desa"],
+                    "luas": item["properties"]["Luas"],
+                    "keliling": item["properties"]["Keliling"],
+                    "geometry": item["geometry"],
+                    }
             SigDesa.objects.create(**item)
 
         return Response()
@@ -548,10 +584,10 @@ class SigKawasanHutanViewSet(CustomView):
 
         for item in data["features"]:
             item = {
-                "fungsi": item["properties"]["FUNGSI"],
-                "luas": item["properties"]["LUAS"][:5],
-                "geometry": item["geometry"],
-            }
+                    "fungsi": item["properties"]["FUNGSI"],
+                    "luas": item["properties"]["LUAS"][:5],
+                    "geometry": item["geometry"],
+                    }
             SigKawasanHutan.objects.create(**item)
 
         return Response()
@@ -574,14 +610,15 @@ class SigPenggunaanTanahViewSet(CustomView):
 
         for item in data["features"]:
             item = {
-                "dusun": item["properties"]["NAMA_DUSUN"],
-                "penggunaan": item["properties"]["Penggunaan"],
-                "luas": item["properties"]["Luas"][:5],
-                "geometry": item["geometry"],
-            }
+                    "dusun": item["properties"]["NAMA_DUSUN"],
+                    "penggunaan": item["properties"]["Penggunaan"],
+                    "luas": item["properties"]["Luas"][:5],
+                    "geometry": item["geometry"],
+                    }
             SigPenggunaanTanah.objects.create(**item)
 
         return Response()
+
 
 class SigStatusTanahViewSet(CustomView):
     queryset = SigStatusTanah.objects.all().order_by("id")
@@ -600,12 +637,41 @@ class SigStatusTanahViewSet(CustomView):
 
         for item in data["features"]:
             item = {
-                "tipe": item["properties"]["TIPEHAK"],
-                "geometry": item["geometry"],
-            }
+                    "tipe": item["properties"]["TIPEHAK"],
+                    "geometry": item["geometry"],
+                    }
             SigStatusTanah.objects.create(**item)
 
         return Response()
+
+
+class SigArahanViewSet(CustomView):
+    queryset = SigArahan.objects.all().order_by("id")
+    serializer_class = SigArahanSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigArahan.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                    "luas": item["properties"]["LUAS"][:4],
+                    "arahan": item["properties"]["ARAHAN_RUA"],
+                    "pola_ruang": item["properties"]["POLA_RUANG"],
+                    "fungsi": item["properties"]["FUNGSI"],
+                    "geometry": item["geometry"],
+                    }
+            SigArahan.objects.create(**item)
+
+        return Response()
+
 
 class SigDusunViewSet(CustomView):
     queryset = SigDusun.objects.all().order_by("id")
@@ -624,15 +690,15 @@ class SigDusunViewSet(CustomView):
 
         for item in data["features"]:
             desa = SigDesa.objects.get(
-                nama_desa=item["properties"]["topo_desa"]
-            )
+                    nama_desa=item["properties"]["topo_desa"]
+                    )
             item = {
-                "sig_desa": desa,
-                "nama_dusun": item["properties"]["topo_dusun"],
-                "luas": item["properties"]["Luas"],
-                "keliling": item["properties"]["Keliling"],
-                "geometry": item["geometry"],
-            }
+                    "sig_desa": desa,
+                    "nama_dusun": item["properties"]["topo_dusun"],
+                    "luas": item["properties"]["Luas"],
+                    "keliling": item["properties"]["Keliling"],
+                    "geometry": item["geometry"],
+                    }
             SigDusun.objects.create(**item)
         return Response()
 
@@ -654,17 +720,18 @@ class SigDukuhViewSet(CustomView):
 
         for item in data["features"]:
             dusun = SigDusun.objects.get(
-                nama_dusun=item["properties"]["topo_dusun"]
-            )
+                    nama_dusun=item["properties"]["topo_dusun"]
+                    )
             item = {
-                "sig_dusun": dusun,
-                "nama_dukuh": item["properties"]["topo_dukuh"],
-                "luas": item["properties"]["Luas"],
-                "keliling": item["properties"]["Keliling"],
-                "geometry": item["geometry"],
-            }
+                    "sig_dusun": dusun,
+                    "nama_dukuh": item["properties"]["topo_dukuh"],
+                    "luas": item["properties"]["Luas"],
+                    "keliling": item["properties"]["Keliling"],
+                    "geometry": item["geometry"],
+                    }
             SigDukuh.objects.create(**item)
         return Response()
+
 
 class SigRwViewSet(CustomView):
     queryset = SigRw.objects.all().order_by("id")
@@ -683,13 +750,13 @@ class SigRwViewSet(CustomView):
 
         for item in data["features"]:
             dukuh = SigDukuh.objects.get(
-                nama_dukuh=item["properties"]["topo_dukuh"]
-            )
+                    nama_dukuh=item["properties"]["topo_dukuh"]
+                    )
             item = {
-                "sig_dukuh": dukuh,
-                "rw": item["properties"]["RW"],
-                "geometry": item["geometry"],
-            }
+                    "sig_dukuh": dukuh,
+                    "rw": item["properties"]["RW"],
+                    "geometry": item["geometry"],
+                    }
             SigRw.objects.create(**item)
         return Response()
 
@@ -712,10 +779,10 @@ class SigRtViewSet(CustomView):
         for item in data["features"]:
             rw = SigRw.objects.get(rw=item["properties"]["RW"])
             item = {
-                "sig_rw": rw,
-                "rt": item["properties"]["RT"],
-                "geometry": item["geometry"],
-            }
+                    "sig_rw": rw,
+                    "rt": item["properties"]["RT"],
+                    "geometry": item["geometry"],
+                    }
             SigRt.objects.create(**item)
         return Response()
 
@@ -807,9 +874,9 @@ class PotensiViewSet(DynamicModelViewSet):
         kategori = self.request.query_params.get("kategori")
         if kategori:
             return (
-                Potensi.objects.filter(kategori=kategori).all().order_by("-id")
-            )
-        return Potensi.objects.all().order_by("-id")
+                    Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+                    )
+            return Potensi.objects.all().order_by("-id")
 
 
 class KategoriPendapatanViewSet(DynamicModelViewSet):
@@ -848,11 +915,11 @@ class PendapatanViewSet(DynamicModelViewSet):
         tahun = self.request.query_params.get("tahun")
         if tahun:
             return (
-                Pendapatan.objects.all()
-                .filter(tahun_id=tahun)
-                .order_by("nama")
-            )
-        return Pendapatan.objects.all()
+                    Pendapatan.objects.all()
+                    .filter(tahun_id=tahun)
+                    .order_by("nama")
+                    )
+            return Pendapatan.objects.all()
 
 
 class BelanjaViewSet(DynamicModelViewSet):
@@ -867,9 +934,9 @@ class BelanjaViewSet(DynamicModelViewSet):
         tahun = self.request.query_params.get("tahun")
         if tahun:
             return (
-                Belanja.objects.all().filter(tahun_id=tahun).order_by("nama")
-            )
-        return Belanja.objects.all()
+                    Belanja.objects.all().filter(tahun_id=tahun).order_by("nama")
+                    )
+            return Belanja.objects.all()
 
 
 class SuratMasukViewSet(DynamicModelViewSet):
@@ -1024,8 +1091,8 @@ class AlasanIzinViewSet(DynamicModelViewSet):
 
 def string_to_date(text):
     return datetime.strptime(text, "%Y-%m-%d").astimezone(
-        pytz.timezone(settings.TIME_ZONE)
-    )
+            pytz.timezone(settings.TIME_ZONE)
+            )
 
 
 class LaporanAbsensiViewSet(DynamicModelViewSet):
@@ -1045,16 +1112,16 @@ class LaporanAbsensiViewSet(DynamicModelViewSet):
         pegawai_id = self.request.query_params.get("pegawai_id")
         if not start or not end:
             raise APIException(
-                "Need start date and end date for filtering", 400
-            )
-        start_date = string_to_date(start)
+                    "Need start date and end date for filtering", 400
+                    )
+            start_date = string_to_date(start)
         end_date = string_to_date(end)
 
         queryset = Absensi.objects.filter(
-            pegawai_id=pegawai_id,
-            jam_masuk__gte=start_date,
-            jam_masuk__lte=end_date,
-        )
+                pegawai_id=pegawai_id,
+                jam_masuk__gte=start_date,
+                jam_masuk__lte=end_date,
+                )
 
         return queryset.order_by("id").all()
 
@@ -1066,44 +1133,44 @@ class DemografiViewSet(viewsets.ViewSet):
         type_param = request.query_params.get("type")
         data = []
         query_s = {
-            "pekerjaan": SadPenduduk.objects.all()
-            .annotate(name=F("pekerjaan"))
-            .values("name")
-            .annotate(y=Count("pekerjaan"))
-            .all(),
-            "jk": SadPenduduk.objects.all()
-            .annotate(name=F("jk"))
-            .values("name")
-            .annotate(y=Count("jk"))
-            .all(),
-            "agama": SadPenduduk.objects.all()
-            .annotate(name=F("agama"))
-            .values("name")
-            .annotate(y=Count("agama"))
-            .all(),
-            "pendidikan": SadPenduduk.objects.all()
-            .annotate(name=F("pendidikan"))
-            .values("name")
-            .annotate(y=Count("pendidikan")),
-            "potensi_diri": SadPenduduk.objects.all()
-            .annotate(name=F("potensi_diri"))
-            .values("name")
-            .annotate(y=Count("potensi_diri")),
-            "kepadatan": SadPenduduk.objects.annotate(
-                name=F("keluarga__alamat__dusun__nama")
-            )
-            .values("name")
-            .annotate(y=Count("keluarga__alamat__dusun")),
-            "mbr": SadKeluarga.objects.all()
-            .annotate(name=F("status_kesejahteraan"))
-            .values("name")
-            .annotate(y=Count("status_kesejahteraan")),
-            "penghasilan": SadPenduduk.objects.annotate(
-                name=F("keluarga__alamat__dusun__nama")
-            )
-            .values("name")
-            .annotate(y=Avg("keluarga__penghasilan")),
-        }
+                "pekerjaan": SadPenduduk.objects.all()
+                .annotate(name=F("pekerjaan"))
+                .values("name")
+                .annotate(y=Count("pekerjaan"))
+                .all(),
+                "jk": SadPenduduk.objects.all()
+                .annotate(name=F("jk"))
+                .values("name")
+                .annotate(y=Count("jk"))
+                .all(),
+                "agama": SadPenduduk.objects.all()
+                .annotate(name=F("agama"))
+                .values("name")
+                .annotate(y=Count("agama"))
+                .all(),
+                "pendidikan": SadPenduduk.objects.all()
+                .annotate(name=F("pendidikan"))
+                .values("name")
+                .annotate(y=Count("pendidikan")),
+                "potensi_diri": SadPenduduk.objects.all()
+                .annotate(name=F("potensi_diri"))
+                .values("name")
+                .annotate(y=Count("potensi_diri")),
+                "kepadatan": SadPenduduk.objects.annotate(
+                    name=F("keluarga__alamat__dusun__nama")
+                    )
+                .values("name")
+                .annotate(y=Count("keluarga__alamat__dusun")),
+                "mbr": SadKeluarga.objects.all()
+                .annotate(name=F("status_kesejahteraan"))
+                .values("name")
+                .annotate(y=Count("status_kesejahteraan")),
+                "penghasilan": SadPenduduk.objects.annotate(
+                    name=F("keluarga__alamat__dusun__nama")
+                    )
+                .values("name")
+                .annotate(y=Avg("keluarga__penghasilan")),
+                }
         if type_param:
             data = list(query_s[type_param].all())
         return Response({"data": data})
@@ -1119,26 +1186,35 @@ class DashboardViewSet(viewsets.ViewSet):
         keluarga = SadKeluarga.objects.all().aggregate(count=Count("id"))
 
         keluarga = SadKeluarga.objects.raw(
-            """
+                """
            SELECT alamat.dusun_id as id, sad_dusun.nama as nama,
                    count (*) as k
            FROM sad_keluarga t1
            INNER JOIN alamat ON t1.alamat_id=alamat.id
            inner join sad_dusun on alamat.dusun_id=sad_dusun.id
            group by alamat.dusun_id, sad_dusun.nama"""
-        )
+           )
 
         penduduk = SadPenduduk.objects.raw(
-            """
+                """
             SELECT alamat.dusun_id as id, sad_dusun.nama as nama, count (*) as p FROM sad_penduduk
             inner join sad_keluarga on sad_penduduk.keluarga_id=sad_keluarga.no_kk
-            inner join alamat ON sad_keluarga.alamat_id=alamat.id 
+            inner join alamat ON sad_keluarga.alamat_id=alamat.id
             inner join sad_dusun on alamat.dusun_id=sad_dusun.id
             group by alamat.dusun_id, sad_dusun.nama"""
-        )
+            )
 
-        results = [{'name': x.nama, "id": x.id, "penduduk": x.p, "keluarga": list(filter(
-            lambda item, x=x: item.id == x.id, keluarga))[0].k} for i, x in enumerate(penduduk)]
+        results = [
+                {
+                    "name": x.nama,
+                    "id": x.id,
+                    "penduduk": x.p,
+                    "keluarga": list(
+                        filter(lambda item, x=x: item.id == x.id, keluarga)
+                        )[0].k,
+                    }
+                for i, x in enumerate(penduduk)
+                ]
         return Response({"data": results})
 
 
@@ -1146,3 +1222,23 @@ class CctvViewSet(DynamicModelViewSet):
     queryset = Cctv.objects.all().order_by("-id")
     serializer_class = CctvSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        Cctv.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                    "nama": item["properties"]["nama"],
+                    "link": item["properties"]["link"],
+                    "koordinat": item["geometry"],
+                    }
+            Cctv.objects.create(**item)
+
+        return Response()

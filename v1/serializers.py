@@ -21,7 +21,9 @@ class PegawaiSerializer(CustomSerializer):
 
     def to_representation(self, instance):
         data = super(PegawaiSerializer, self).to_representation(instance)
-        totalabsensi = instance.absensi.aggregate(total_absensi=Count("pegawai__id"))
+        totalabsensi = instance.absensi.aggregate(
+            total_absensi=Count("pegawai__id")
+        )
 
         data["totalabsensi"] = totalabsensi["total_absensi"]
         return data
@@ -77,7 +79,9 @@ class SadDesaSerializer(CustomSerializer):
 
 
 class BatasDesaSerializer(CustomSerializer):
-    desa = DynamicRelationField("SadDesaSerializer", deferred=False, embed=True)
+    desa = DynamicRelationField(
+        "SadDesaSerializer", deferred=False, embed=True
+    )
 
     class Meta:
         model = BatasDesa
@@ -94,8 +98,19 @@ class SadDusunSerializer(CustomSerializer):
         exclude = util_columns
 
 
+class SadDukuhSerializer(CustomSerializer):
+    dusun = DynamicRelationField(SadDusunSerializer)
+
+    class Meta:
+        model = SadDukuh
+        name = "data"
+        exclude = util_columns
+
+
 class SadRwSerializer(CustomSerializer):
-    dusun = DynamicRelationField("SadDusunSerializer", deferred=True, embed=True)
+    dukuh = DynamicRelationField(
+        "SadDukuhSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadRw
@@ -144,8 +159,12 @@ class SadKeluargaSerializer(CustomSerializer):
     alamat_lengkap = serializers.CharField(
         source="alamat.alamat_lengkap", read_only=True
     )
-    alamat_id = serializers.DictField(source="alamat.alamat_id", read_only=True)
-    jalan_blok = serializers.CharField(source="alamat.jalan_blok", required=False)
+    alamat_id = serializers.DictField(
+        source="alamat.alamat_id", read_only=True
+    )
+    jalan_blok = serializers.CharField(
+        source="alamat.jalan_blok", required=False
+    )
 
     def create(self, data):
         alamat = Alamat()
@@ -196,11 +215,15 @@ class SadKeluargaSerializer(CustomSerializer):
         model = SadKeluarga
         name = "data"
         exclude = util_columns + ["alamat"]
-        extra_kwargs = {"created_by": {"default": serializers.CurrentUserDefault()}}
+        extra_kwargs = {
+            "created_by": {"default": serializers.CurrentUserDefault()}
+        }
 
 
 class SadPendudukSerializer(CustomSerializer):
-    keluarga = DynamicRelationField("SadKeluargaSerializer", deferred=True, embed=True)
+    keluarga = DynamicRelationField(
+        "SadKeluargaSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SadPenduduk
@@ -208,7 +231,9 @@ class SadPendudukSerializer(CustomSerializer):
         exclude = []
 
     def create(self, data):
-        penduduk = create_or_reactivate(SadPenduduk, {"nik": data["nik"]}, data)
+        penduduk = create_or_reactivate(
+            SadPenduduk, {"nik": data["nik"]}, data
+        )
         password = str(data["tgl_lahir"]).replace("-", "")
         penduduk_user = create_or_reactivate_user(data["nik"], password)
         penduduk.user = penduduk_user
@@ -263,7 +288,9 @@ class SigDesaSerializer(CustomSerializer):
 
 
 class SigDusunSerializer(CustomSerializer):
-    sig_desa = DynamicRelationField("SigDesaSerializer", deferred=True, embed=True)
+    sig_desa = DynamicRelationField(
+        "SigDesaSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigDusun
@@ -272,7 +299,9 @@ class SigDusunSerializer(CustomSerializer):
 
 
 class SigDukuhSerializer(CustomSerializer):
-    sig_dusun = DynamicRelationField("SigDusunSerializer", deferred=True, embed=True)
+    sig_dusun = DynamicRelationField(
+        "SigDusunSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigDukuh
@@ -281,7 +310,9 @@ class SigDukuhSerializer(CustomSerializer):
 
 
 class SigRwSerializer(CustomSerializer):
-    sig_dukuh = DynamicRelationField("SigDukuhSerializer", deferred=True, embed=True)
+    sig_dukuh = DynamicRelationField(
+        "SigDukuhSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigRw
@@ -319,8 +350,17 @@ class SigStatusTanahSerializer(CustomSerializer):
         exclude = []
 
 
+class SigArahanSerializer(CustomSerializer):
+    class Meta:
+        model = SigArahan
+        name = "data"
+        exclude = []
+
+
 class SigPemilikSerializer(CustomSerializer):
-    pemilik = DynamicRelationField("SadPendudukSerializer", deferred=True, embed=True)
+    pemilik = DynamicRelationField(
+        "SadPendudukSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigPemilik
@@ -342,8 +382,12 @@ class PenguasaBidangSerializer(serializers.Serializer):
 
 
 class SigBidangSerializerMini(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=False, embed=True)
-    sig_dusun = DynamicRelationField("SigDusunSerializer", deferred=True, embed=True)
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
+    sig_dusun = DynamicRelationField(
+        "SigDusunSerializer", deferred=True, embed=True
+    )
     alamat_lengkap = serializers.CharField(read_only=True)
 
     class Meta:
@@ -354,6 +398,11 @@ class SigBidangSerializerMini(CustomSerializer):
             "nbt",
             "longitude",
             "latitude",
+            "luas",
+            "status_hak",
+            "penggunaan_tanah",
+            "pemanfaatan_tanah",
+            "rtrw",
             "gambar_atas",
             "gambar_depan",
             "daftar_pemilik",
@@ -366,8 +415,12 @@ class SigBidangSerializerMini(CustomSerializer):
 
 
 class SigBidangSerializerFull(CustomSerializer):
-    sig_rt = DynamicRelationField("SigRtSerializer", deferred=False, embed=True)
-    sig_dusun = DynamicRelationField("SigDusunSerializer", deferred=True, embed=True)
+    sig_rt = DynamicRelationField(
+        "SigRtSerializer", deferred=False, embed=True
+    )
+    sig_dusun = DynamicRelationField(
+        "SigDusunSerializer", deferred=True, embed=True
+    )
     daftar_pemilik = serializers.ListField(
         child=PemilikBidangSerializer(), required=False
     )
@@ -382,6 +435,13 @@ class SigBidangSerializerFull(CustomSerializer):
         fields = [
             "id",
             "nbt",
+            "longitude",
+            "latitude",
+            "luas",
+            "status_hak",
+            "penggunaan_tanah",
+            "pemanfaatan_tanah",
+            "rtrw",
             "gambar_atas",
             "gambar_depan",
             "sig_rt",
@@ -396,7 +456,9 @@ class SigSadBidangSerializer(CustomSerializer):
     sad_penduduk = DynamicRelationField(
         "SadPendudukSerializer", deferred=True, embed=True
     )
-    sig_bidang = DynamicRelationField("SigBidangSerializer", deferred=True, embed=True)
+    sig_bidang = DynamicRelationField(
+        "SigBidangSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = SigSadBidang
@@ -450,7 +512,9 @@ class LaporSerializer(CustomSerializer):
     kategori = DynamicRelationField(
         "KategoriLaporSerializer", deferred=True, embed=True
     )
-    status = DynamicRelationField("StatusLaporSerializer", deferred=True, embed=True)
+    status = DynamicRelationField(
+        "StatusLaporSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Lapor
@@ -516,7 +580,9 @@ class PendapatanSerializer(DynamicModelSerializer):
     kategori = DynamicRelationField(
         "KategoriPendapatanSerializer", deferred=True, embed=True
     )
-    tahun = DynamicRelationField("KategoriTahunSerializer", deferred=True, embed=True)
+    tahun = DynamicRelationField(
+        "KategoriTahunSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Pendapatan
@@ -528,7 +594,9 @@ class BelanjaSerializer(DynamicModelSerializer):
     kategori = DynamicRelationField(
         "KategoriBelanjaSerializer", deferred=True, embed=True
     )
-    tahun = DynamicRelationField("KategoriTahunSerializer", deferred=True, embed=True)
+    tahun = DynamicRelationField(
+        "KategoriTahunSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Belanja
@@ -691,7 +759,9 @@ class TenagaKesehatanSerializer(DynamicModelSerializer):
 
 
 class AbsensiSerializer(DynamicModelSerializer):
-    pegawai = DynamicRelationField("PegawaiSerializer", deferred=True, embed=True)
+    pegawai = DynamicRelationField(
+        "PegawaiSerializer", deferred=True, embed=True
+    )
 
     class Meta:
         model = Absensi
