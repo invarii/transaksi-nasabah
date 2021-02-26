@@ -962,11 +962,17 @@ class PekerjaanViewSet(DynamicModelViewSet):
     serializer_class = PekerjaanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["nama"]
+
 
 class PendidikanViewSet(DynamicModelViewSet):
     queryset = Pendidikan.objects.all().order_by("id")
     serializer_class = PendidikanSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["nama"]
 
 
 class AgamaViewSet(DynamicModelViewSet):
