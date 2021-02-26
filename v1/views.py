@@ -145,9 +145,9 @@ class SadDukuhViewSet(CustomView):
     search_fields = ["nama"]
 
     def get_queryset(self):
-        desa = self.request.query_params.get("desa")
-        if desa:
-            return SadDukuh.objects.filter(desa_id=desa).all()
+        dusun = self.request.query_params.get("dusun")
+        if dusun:
+            return SadDukuh.objects.filter(dusun_id=dusun).all()
         return SadDukuh.objects.all()
 
 
@@ -160,9 +160,9 @@ class SadRwViewSet(CustomView):
     search_fields = ["rw"]
 
     def get_queryset(self):
-        dusun = self.request.query_params.get("dusun")
-        if dusun:
-            return SadRw.objects.filter(dusun=dusun).all()
+        dukuh = self.request.query_params.get("dukuh")
+        if dukuh:
+            return SadRw.objects.filter(dukuh_id=dukuh).all()
         return SadRw.objects.all()
 
 
@@ -558,8 +558,8 @@ class SigDesaViewSet(CustomView):
         for item in data["features"]:
             item = {
                     "nama_desa": item["properties"]["topo_desa"],
-                    "luas": item["properties"]["Luas"],
-                    "keliling": item["properties"]["Keliling"],
+                    "luas": item["properties"]["Luas"][:5],
+                    "keliling": item["properties"]["Keliling"][:5],
                     "geometry": item["geometry"],
                     }
             SigDesa.objects.create(**item)
@@ -695,8 +695,8 @@ class SigDusunViewSet(CustomView):
             item = {
                     "sig_desa": desa,
                     "nama_dusun": item["properties"]["topo_dusun"],
-                    "luas": item["properties"]["Luas"],
-                    "keliling": item["properties"]["Keliling"],
+                    "luas": item["properties"]["Luas"][:5],
+                    "keliling": item["properties"]["Keliling"][:5],
                     "geometry": item["geometry"],
                     }
             SigDusun.objects.create(**item)
@@ -725,8 +725,8 @@ class SigDukuhViewSet(CustomView):
             item = {
                     "sig_dusun": dusun,
                     "nama_dukuh": item["properties"]["topo_dukuh"],
-                    "luas": item["properties"]["Luas"],
-                    "keliling": item["properties"]["Keliling"],
+                    "luas": item["properties"]["Luas"][:5],
+                    "keliling": item["properties"]["Keliling"][:5],
                     "geometry": item["geometry"],
                     }
             SigDukuh.objects.create(**item)
