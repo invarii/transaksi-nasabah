@@ -706,7 +706,7 @@ class SigDusunViewSet(CustomView):
 class SigDukuhViewSet(CustomView):
     queryset = SigDukuh.objects.all().order_by("id")
     serializer_class = SigDukuhSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
@@ -736,7 +736,7 @@ class SigDukuhViewSet(CustomView):
 class SigRwViewSet(CustomView):
     queryset = SigRw.objects.all().order_by("id")
     serializer_class = SigRwSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
@@ -764,7 +764,7 @@ class SigRwViewSet(CustomView):
 class SigRtViewSet(CustomView):
     queryset = SigRt.objects.all().order_by("id")
     serializer_class = SigRtSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
