@@ -845,7 +845,7 @@ class KategoriInformasiViewSet(DynamicModelViewSet):
 
 
 class InformasiViewSet(DynamicModelViewSet):
-    queryset = Informasi.objects.all().order_by("-id")
+    queryset = Informasi.objects.all().order_by("id")
     serializer_class = InformasiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -870,13 +870,13 @@ class PotensiViewSet(DynamicModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ["judul"]
 
-    # def get_queryset(self):
-    #     kategori = self.request.query_params.get("kategori")
-    #     if kategori:
-    #         return (
-    #                 Potensi.objects.filter(kategori=kategori).all()
-    #                 )
-    #         return Potensi.objects.all()
+    def get_queryset(self):
+        kategori = self.request.query_params.get("kategori")
+        if kategori:
+            return (
+                    Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+                    )
+            return Potensi.objects.all().order_by("-id")
 
 
 class KategoriPendapatanViewSet(DynamicModelViewSet):
