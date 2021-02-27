@@ -544,15 +544,15 @@ class InformasiSerializer(DynamicModelSerializer):
         exclude = []
 
 
-class PotensiSerializer(DynamicModelSerializer):
-    kategori = DynamicRelationField(
-        "KategoriPotensiSerializer", deferred=True, embed=True
-    )
+# class PotensiSerializer(DynamicModelSerializer):
+#     kategori = DynamicRelationField(
+#         "KategoriPotensiSerializer", deferred=True, embed=True
+#     )
 
-    class Meta:
-        model = Potensi
-        name = "data"
-        exclude = []
+#     class Meta:
+#         model = Potensi
+#         name = "data"
+#         exclude = []
 
 
 class KategoriPendapatanSerializer(DynamicModelSerializer):
