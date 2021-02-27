@@ -840,24 +840,24 @@ class KategoriPotensi(models.Model):
         db_table = "KategoriPotensi"
 
 
-# class Potensi(models.Model):
-#     kategori = models.ForeignKey(
-#         KategoriPotensi, models.DO_NOTHING, blank=True, null=True
-#     )
-#     nama_usaha = models.CharField(max_length=100, blank=True, null=True)
-#     harga = models.CharField(max_length=100, blank=True, null=True)
-#     jenis_promosi = models.CharField(max_length=100, blank=True, null=True)
-#     no_telp = models.CharField(max_length=100, blank=True, null=True)
-#     judul = models.CharField(max_length=100, blank=True, null=True)
-#     isi = models.TextField(blank=True, null=True)
-#     koordinat = models.TextField(blank=True, null=True)
-#     gambar = models.ImageField(
-#         upload_to=file_destination, blank=True, null=True
-#     )
+class Potensi(models.Model):
+    kategori = models.ForeignKey(
+        KategoriPotensi, models.DO_NOTHING, blank=True, null=True
+    )
+    nama_usaha = models.CharField(max_length=100, blank=True, null=True)
+    harga = models.CharField(max_length=100, blank=True, null=True)
+    jenis_promosi = models.CharField(max_length=100, blank=True, null=True)
+    no_telp = models.CharField(max_length=100, blank=True, null=True)
+    judul = models.CharField(max_length=100, blank=True, null=True)
+    isi = models.TextField(blank=True, null=True)
+    koordinat = models.TextField(blank=True, null=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
-    # class Meta:
+    class Meta:
 
-    #     db_table = "Potensi"
+        db_table = "Potensi"
 
 
 class KategoriInformasi(models.Model):
