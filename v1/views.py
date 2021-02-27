@@ -862,21 +862,21 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
     search_fields = ["nama"]
 
 
-class PotensiViewSet(DynamicModelViewSet):
-    queryset = Potensi.objects.all().order_by("-id")
-    serializer_class = PotensiSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+# class PotensiViewSet(DynamicModelViewSet):
+#     queryset = Potensi.objects.all().order_by("-id")
+#     serializer_class = PotensiSerializer
+#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["judul"]
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ["judul"]
 
-    def get_queryset(self):
-        kategori = self.request.query_params.get("kategori")
-        if kategori:
-            return (
-                    Potensi.objects.filter(kategori=kategori).all().order_by("-id")
-                    )
-            return Potensi.objects.all().order_by("-id")
+#     def get_queryset(self):
+#         kategori = self.request.query_params.get("kategori")
+#         if kategori:
+#             return (
+#                     Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+#                     )
+#             return Potensi.objects.all().order_by("-id")
 
 
 class KategoriPendapatanViewSet(DynamicModelViewSet):
