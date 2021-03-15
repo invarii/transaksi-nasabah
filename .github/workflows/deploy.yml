@@ -25,4 +25,4 @@ jobs:
             pipenv run python manage.py makemigrations --merge
             pipenv run python manage.py migrate
             pipenv run python manage.py collectstatic --noinput
-            sudo supervisorctl restart all
+            echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all 
