@@ -18,17 +18,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2.3.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd ${{ secrets.TARGET }}
+        run: |
             echo "${{ secrets.DOTENV }}" > api_sad_sig/.env
             pipenv install
             pipenv run python manage.py makemigrations --merge
             pipenv run python manage.py migrate
             pipenv run python manage.py collectstatic --noinput
             supervisorctl restart all
-
