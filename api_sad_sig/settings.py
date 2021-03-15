@@ -62,7 +62,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:8080",
     "http://nettools-01.diskominfo.klatenkab.go.id",
-    # "https://nettools-01.diskominfo.klatenkab.go.id/",
+    "https://nettools-01.diskominfo.klatenkab.go.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
