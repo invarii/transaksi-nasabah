@@ -61,7 +61,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
     "http://localhost:8080",
-    "https://desajurangjero.istudios.id"
+    "https://desajurangjero.istudios.id",
     "http://api-v2-n10-jurangjero-desapintar.klatenkab.go.id",
     "https://api-v2-n10-jurangjero-desapintar.klatenkab.go.id",
 ]
