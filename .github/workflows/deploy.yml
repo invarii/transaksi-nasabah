@@ -6,7 +6,25 @@ name: Deploy
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches:
+    - main
+    - brangkal
+    - gempol
+    # - gledeg
+    # - jambeyan
+    # - jeblok
+    # - jungkare
+    # - jurangjero
+    # - kadirejo
+    # - karangan
+    # - karanganom
+    # - kunden
+    # - ngabeyan
+    # - padas
+    # - pondok
+    # - tarubasan
+    # - troso
+    # - soropaten
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,11 +36,24 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2.3.3
-      - name: Build and Deploy 
+      - name: Build
+        if: contains(github.ref, 'refs/heads/main')
         run: |
-            echo "${{ secrets.DOTENV }}" > api_sad_sig/.env
-            pipenv install
-            pipenv run python manage.py makemigrations --merge
-            pipenv run python manage.py migrate
-            pipenv run python manage.py collectstatic --noinput
-            echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all 
+          echo "${{ secrets.DOTENV_MAIN}}" > api_sad_sig/.env
+      - name: Build Gempol
+        if: contains(github.ref, 'refs/heads/gempol')
+        run: |
+          echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
+      - name: Build Brangkal
+        if: contains(github.ref, 'refs/heads/brangkal')
+        run: |
+          echo "${{ secrets.DOTENV_BRANGKAL}}" > api_sad_sig/.env
+      - name: Deploy 
+        run: |
+          rsync -av ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
+          cd ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
