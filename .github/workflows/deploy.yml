@@ -8,23 +8,24 @@ on:
   push:
     branches:
     - main
+    - blanciran
     - brangkal
     - gempol
-    - gledeg
-    - jambeyan
-    - jeblok
-    - jungkare
-    - jurangjero
-    - kadirejo
-    - karangan
-    - karanganom
-    - kunden
-    - ngabeyan
-    - padas
-    - pondok
-    - tarubasan
-    - troso
-    - soropaten
+    # - gledeg
+    # - jambeyan
+    # - jeblok
+    # - jungkare
+    # - jurangjero
+    # - kadirejo
+    # - karangan
+    # - karanganom
+    # - kunden
+    # - ngabeyan
+    # - padas
+    # - pondok
+    # - tarubasan
+    # - troso
+    # - soropaten
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,14 +44,18 @@ jobs:
         if: contains(github.ref, 'refs/heads/main')
         run: |
           echo "${{ secrets.DOTENV_MAIN}}" > api_sad_sig/.env
-      - name: Build Gempol
-        if: contains(github.ref, 'refs/heads/gempol')
+      - name: Build Blanciran
+        if: contains(github.ref, 'refs/heads/blanciran')
         run: |
-          echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
+          echo "${{ secrets.DOTENV_BRANCILAN}}" > api_sad_sig/.env
       - name: Build Brangkal
         if: contains(github.ref, 'refs/heads/brangkal')
         run: |
           echo "${{ secrets.DOTENV_BRANGKAL}}" > api_sad_sig/.env
+      - name: Build Gempol
+        if: contains(github.ref, 'refs/heads/gempol')
+        run: |
+          echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
       - name: Deploy 
         run: |
           rsync -av ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
