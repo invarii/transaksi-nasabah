@@ -49,7 +49,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Brangkal
         run: |
@@ -60,7 +59,7 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+          
       
       - name: Build Gempol
         run: |
@@ -71,7 +70,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Gledeg
         run: |
@@ -82,7 +80,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
 
       - name: Build Jambeyan
         run: |
@@ -93,7 +90,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Jeblok
         run: |
@@ -104,7 +100,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Jungkare
         run: |
@@ -115,7 +110,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Jurangjero
         run: |
@@ -126,7 +120,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Kadirejo
         run: |
@@ -137,7 +130,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Karangan
         run: |
@@ -148,7 +140,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Karanganom
         run: |
@@ -159,7 +150,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Kunden
         run: |
@@ -170,7 +160,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Ngabeyan
         run: |
@@ -181,7 +170,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Padas
         run: |
@@ -192,7 +180,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Pondok
         run: |
@@ -203,7 +190,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Tarubasan
         run: |
@@ -214,7 +200,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Troso
         run: |
@@ -225,7 +210,6 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
       
       - name: Build Soropaten
         run: |
@@ -236,4 +220,5 @@ jobs:
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
-          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+
+          # echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
