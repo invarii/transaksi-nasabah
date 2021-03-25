@@ -1,0 +1,212 @@
+api-v2-n10-jurangjero-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8080
+}
+
+api-v2-n10-blanciran-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8081
+}
+
+api-v2-n10-brangkal-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8082
+}
+
+api-v2-n10-gempol-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8083
+}
+
+api-v2-n10-gledeg-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8084
+}
+
+api-v2-n10-jambeyan-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8085
+}
+
+api-v2-n10-kadirejo-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8086
+}
+
+api-v2-n10-karangan-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8087
+}
+
+api-v2-n10-karanganom-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8088
+}
+
+api-v2-n10-kunden-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8089
+}
+
+api-v2-n10-ngabeyan-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8090
+}
+
+api-v2-n10-padas-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8091
+}
+
+api-v2-n10-pondok-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8092
+}
+
+api-v2-n10-tarubasan-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8093
+}
+
+api-v2-n10-troso-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8094
+}
+
+api-v2-n10-soropaten-desapintar.klatenkab.go.id {
+   handle_path /media* {
+      root * /home/informa/media
+      file_server
+   }
+   reverse_proxy 127.0.0.1:8095
+}
+
+http://blanciran.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/blanciran
+     file_server
+}
+
+http://brangkal.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/brangkal
+     file_server
+}
+
+http://gempol.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/gempol
+     file_server
+}
+
+http://gledeg.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/gledeg
+     file_server
+}
+
+http://jambeyan.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/jambeyan
+     file_server
+}
+
+http://jeblok.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/jeblok
+     file_server
+}
+
+http://jungkare.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/jungkare
+     file_server
+}
+
+http://jurangjero.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/jurangjero
+     file_server
+}
+
+http://kadirejo.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/kadirejo
+     file_server
+}
+
+http://karangan.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/karangan
+     file_server
+}
+
+http://karanganom.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/karanganom
+     file_server
+}
+
+http://kunden.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/kunden
+     file_server
+}
+
+http://ngabeyan.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/ngabeyan
+     file_server
+}
+
+http://padas.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/padas
+     file_server
+}
+
+http://pondok.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/pondok
+     file_server
+}
+
+http://tarubasan.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/tarubasan
+     file_server
+}
+
+http://troso.karanganom.klatenkab.go.id {
+     root * /home/informa/fe-app/troso
+     file_server
+}
