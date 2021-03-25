@@ -11,21 +11,21 @@ on:
     - blanciran
     - brangkal
     - gempol
-    # - gledeg
-    # - jambeyan
-    # - jeblok
-    # - jungkare
-    # - jurangjero
-    # - kadirejo
-    # - karangan
-    # - karanganom
-    # - kunden
-    # - ngabeyan
-    # - padas
-    # - pondok
-    # - tarubasan
-    # - troso
-    # - soropaten
+    - gledeg
+    - jambeyan
+    - jeblok
+    - jungkare
+    - jurangjero
+    - kadirejo
+    - karangan
+    - karanganom
+    - kunden
+    - ngabeyan
+    - padas
+    - pondok
+    - tarubasan
+    - troso
+    - soropaten
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -56,6 +56,66 @@ jobs:
         if: contains(github.ref, 'refs/heads/gempol')
         run: |
           echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
+      - name: Build Gledeg
+        if: contains(github.ref, 'refs/heads/gledeg')
+        run: |
+          echo "${{ secrets.DOTENV_GLEDEG}}" > api_sad_sig/.env
+      - name: Build Jambeyan
+        if: contains(github.ref, 'refs/heads/jambeyan')
+        run: |
+          echo "${{ secrets.DOTENV_JAMBEYAN}}" > api_sad_sig/.env
+      - name: Build Jeblok
+        if: contains(github.ref, 'refs/heads/jeblok')
+        run: |
+          echo "${{ secrets.DOTENV_JEBLOK}}" > api_sad_sig/.env
+      - name: Build Jungkare
+        if: contains(github.ref, 'refs/heads/jungkare')
+        run: |
+          echo "${{ secrets.DOTENV_JUNGKARE}}" > api_sad_sig/.env
+      - name: Build Jurangjero
+        if: contains(github.ref, 'refs/heads/jurangjero')
+        run: |
+          echo "${{ secrets.DOTENV_JURANGJERO}}" > api_sad_sig/.env
+      - name: Build Kadirejo
+        if: contains(github.ref, 'refs/heads/kadirejo')
+        run: |
+          echo "${{ secrets.DOTENV_KADIREJO}}" > api_sad_sig/.env
+      - name: Build Karangan
+        if: contains(github.ref, 'refs/heads/karangan')
+        run: |
+          echo "${{ secrets.DOTENV_KARANGAN}}" > api_sad_sig/.env
+      - name: Build Karanganom
+        if: contains(github.ref, 'refs/heads/karanganom')
+        run: |
+          echo "${{ secrets.DOTENV_KARANGANOM}}" > api_sad_sig/.env
+      - name: Build Kunden
+        if: contains(github.ref, 'refs/heads/kunden')
+        run: |
+          echo "${{ secrets.DOTENV_KUNDEN}}" > api_sad_sig/.env
+      - name: Build Ngabeyan
+        if: contains(github.ref, 'refs/heads/ngabeyan')
+        run: |
+          echo "${{ secrets.DOTENV_NGABEYAN}}" > api_sad_sig/.env
+      - name: Build Padas
+        if: contains(github.ref, 'refs/heads/padas')
+        run: |
+          echo "${{ secrets.DOTENV_PADAS}}" > api_sad_sig/.env
+      - name: Build Pondok
+        if: contains(github.ref, 'refs/heads/pondok')
+        run: |
+          echo "${{ secrets.DOTENV_PONDOK}}" > api_sad_sig/.env
+      - name: Build Tarubasan
+        if: contains(github.ref, 'refs/heads/tarubasan')
+        run: |
+          echo "${{ secrets.DOTENV_TARUBASAN}}" > api_sad_sig/.env
+      - name: Build Troso
+        if: contains(github.ref, 'refs/heads/troso')
+        run: |
+          echo "${{ secrets.DOTENV_TROSO}}" > api_sad_sig/.env
+      - name: Build Soropaten
+        if: contains(github.ref, 'refs/heads/soropaten')
+        run: |
+          echo "${{ secrets.DOTENV_SOROPATEN}}" > api_sad_sig/.env
       - name: Deploy 
         run: |
           rsync -avR ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
