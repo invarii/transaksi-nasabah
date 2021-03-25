@@ -40,86 +40,198 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2.3.3
-      - name: Build
-        if: contains(github.ref, 'refs/heads/main')
-        run: |
-          echo "${{ secrets.DOTENV_MAIN}}" > api_sad_sig/.env
       - name: Build Blanciran
-        if: contains(github.ref, 'refs/heads/blanciran')
         run: |
           echo "${{ secrets.DOTENV_BRANCILAN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/blanciran;
+          cd ~/be-app/blanciran;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Brangkal
-        if: contains(github.ref, 'refs/heads/brangkal')
         run: |
           echo "${{ secrets.DOTENV_BRANGKAL}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/brangkal;
+          cd ~/be-app/brangkal;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Gempol
-        if: contains(github.ref, 'refs/heads/gempol')
         run: |
           echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/gempol;
+          cd ~/be-app/gempol;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Gledeg
-        if: contains(github.ref, 'refs/heads/gledeg')
         run: |
           echo "${{ secrets.DOTENV_GLEDEG}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/gledeg;
+          cd ~/be-app/gledeg;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+
       - name: Build Jambeyan
-        if: contains(github.ref, 'refs/heads/jambeyan')
         run: |
           echo "${{ secrets.DOTENV_JAMBEYAN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/jambeyan;
+          cd ~/be-app/jambeyan;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Jeblok
-        if: contains(github.ref, 'refs/heads/jeblok')
         run: |
           echo "${{ secrets.DOTENV_JEBLOK}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/jeblok;
+          cd ~/be-app/jeblok;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Jungkare
-        if: contains(github.ref, 'refs/heads/jungkare')
         run: |
           echo "${{ secrets.DOTENV_JUNGKARE}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/jungkare;
+          cd ~/be-app/jungkare;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Jurangjero
-        if: contains(github.ref, 'refs/heads/jurangjero')
         run: |
           echo "${{ secrets.DOTENV_JURANGJERO}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/jurangjero;
+          cd ~/be-app/jurangjero;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Kadirejo
-        if: contains(github.ref, 'refs/heads/kadirejo')
         run: |
           echo "${{ secrets.DOTENV_KADIREJO}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/kadirejo;
+          cd ~/be-app/kadirejo;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Karangan
-        if: contains(github.ref, 'refs/heads/karangan')
         run: |
           echo "${{ secrets.DOTENV_KARANGAN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/karangan;
+          cd ~/be-app/karangan;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Karanganom
-        if: contains(github.ref, 'refs/heads/karanganom')
         run: |
           echo "${{ secrets.DOTENV_KARANGANOM}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/karanganom;
+          cd ~/be-app/karanganom;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Kunden
-        if: contains(github.ref, 'refs/heads/kunden')
         run: |
           echo "${{ secrets.DOTENV_KUNDEN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/kunden;
+          cd ~/be-app/kunden;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Ngabeyan
-        if: contains(github.ref, 'refs/heads/ngabeyan')
         run: |
           echo "${{ secrets.DOTENV_NGABEYAN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/ngabeyan;
+          cd ~/be-app/ngabeyan;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Padas
-        if: contains(github.ref, 'refs/heads/padas')
         run: |
           echo "${{ secrets.DOTENV_PADAS}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/padas;
+          cd ~/be-app/padas;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Pondok
-        if: contains(github.ref, 'refs/heads/pondok')
         run: |
           echo "${{ secrets.DOTENV_PONDOK}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/pondok;
+          cd ~/be-app/pondok;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Tarubasan
-        if: contains(github.ref, 'refs/heads/tarubasan')
         run: |
           echo "${{ secrets.DOTENV_TARUBASAN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/tarubasan;
+          cd ~/be-app/tarubasan;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Troso
-        if: contains(github.ref, 'refs/heads/troso')
         run: |
           echo "${{ secrets.DOTENV_TROSO}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/troso;
+          cd ~/be-app/troso;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
+          echo "${{ secrets.PASSWORD }}" | sudo -S supervisorctl restart all
+      
       - name: Build Soropaten
-        if: contains(github.ref, 'refs/heads/soropaten')
         run: |
           echo "${{ secrets.DOTENV_SOROPATEN}}" > api_sad_sig/.env
-      - name: Deploy 
-        run: |
-          rsync -avR ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
-          cd ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
+          rsync -avR ./ ~/be-app/soropaten;
+          cd ~/be-app/soropaten;
           pipenv install
           pipenv run python manage.py makemigrations --merge
           pipenv run python manage.py migrate
