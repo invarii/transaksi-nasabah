@@ -58,7 +58,7 @@ jobs:
           echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
       - name: Deploy 
         run: |
-          rsync -av ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
+          rsync -avR ./ ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
           cd ~/be-app/"$(echo $GITHUB_REF | cut -d'/' -f 3)";
           pipenv install
           pipenv run python manage.py makemigrations --merge
