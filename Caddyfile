@@ -128,85 +128,102 @@ api-v2-n10-soropaten-desapintar.klatenkab.go.id {
 
 http://blanciran.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/blanciran
+     try_files {path} /index.html
      file_server
 }
 
 http://brangkal.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/brangkal
+     try_files {path} /index.html
      file_server
 }
 
 http://gempol.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/gempol
+     try_files {path} /index.html
      file_server
 }
 
 http://gledeg.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/gledeg
+     try_files {path} /index.html
      file_server
 }
 
 http://jambeyan.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/jambeyan
+     try_files {path} /index.html
      file_server
 }
 
 http://jeblok.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/jeblok
+     try_files {path} /index.html
      file_server
 }
 
 http://jungkare.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/jungkare
+     try_files {path} /index.html
      file_server
 }
 
 http://jurangjero.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/jurangjero
+     try_files {path} /index.html
      file_server
 }
 
 http://kadirejo.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/kadirejo
+     try_files {path} /index.html
      file_server
 }
 
 http://karangan.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/karangan
+     try_files {path} /index.html
      file_server
 }
 
 http://karanganom.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/karanganom
+     try_files {path} /index.html
      file_server
 }
 
 http://kunden.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/kunden
+     try_files {path} /index.html
      file_server
 }
 
 http://ngabeyan.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/ngabeyan
+     try_files {path} /index.html
      file_server
 }
 
 http://padas.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/padas
+     try_files {path} /index.html
      file_server
 }
 
 http://pondok.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/pondok
+     try_files {path} /index.html
      file_server
 }
 
 http://tarubasan.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/tarubasan
+     try_files {path} /index.html
      file_server
 }
 
 http://troso.karanganom.klatenkab.go.id {
      root * /home/informa/fe-app/troso
+     try_files {path} /index.html
      file_server
 }
