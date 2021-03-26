@@ -223,4 +223,4 @@ jobs:
 
       - name: Restart Supervisor
         run: |
-          sudo supervisorctl restart all
+          sudo -S <<< echo "${{ secrets.PASSWORD }}" supervisorctl restart all
