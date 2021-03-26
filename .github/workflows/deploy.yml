@@ -223,5 +223,4 @@ jobs:
 
       - name: Restart Supervisor
         run: |
-          echo "${{ secrets.PASSWORD }}" | sudo -S sleep 1 && sudo su - informa
-          supervisorctl restart all
+          echo "${{ secrets.PASSWORD }}" | sudo -S sleep 1 && sudo su - informa && supervisorctl restart all
