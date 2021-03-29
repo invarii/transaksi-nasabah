@@ -17,7 +17,7 @@ def load_initial_data(apps, schema_editor):
         klasifikasi_pindahs = []
 
         for row in reader:
-            klasifikasi_pindah = KlasifikasiPindah(nama=row[4],label=row[5])
+            klasifikasi_pindah = KlasifikasiPindah(id=row[3],nama=row[4],label=row[5])
             
             klasifikasi_pindahs.append(klasifikasi_pindah)
 
