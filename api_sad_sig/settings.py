@@ -45,7 +45,7 @@ LOGGING = {
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # This Desa
-DESA_ID = 3310200014
+DESA_ID = env("DESA_ID")
 # DESA_ID = 7505020008
 # DESA_ID = 3515140008
 
