@@ -17,7 +17,7 @@ def load_initial_data(apps, schema_editor):
         status_kk_pindahs = []
 
         for row in reader:
-            status_kk_pindah = StatusKkPindah(nama=row[4],label=row[5])
+            status_kk_pindah = StatusKkPindah(id=row[3],nama=row[4],label=row[5])
             
             status_kk_pindahs.append(status_kk_pindah)
 
