@@ -189,6 +189,11 @@ class SadKeluargaViewSet(DynamicModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ["no_kk", "anggota__nama"]
 
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SadKeluarga.objects.all().delete()
+        return Response()
+
     def get_queryset(self):
         user = self.request.user
 
@@ -297,6 +302,11 @@ class SadPendudukViewSet(CustomView):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ["nama", "nik", "chip_ektp"]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SadPenduduk.objects.all().delete()
+        return Response()
 
     def get_queryset(self):
         keluarga = self.request.query_params.get("keluarga")
