@@ -17,7 +17,7 @@ def load_initial_data(apps, schema_editor):
         kategori_lapors = []
 
         for row in reader:
-            kategori_lapor = KategoriLapor(nama=row[1])
+            kategori_lapor = KategoriLapor(nama=row[1],gambar=row[2])
             
             kategori_lapors.append(kategori_lapor)
 
