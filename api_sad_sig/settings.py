@@ -45,7 +45,7 @@ LOGGING = {
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # This Desa
-DESA_ID = env("DESA_ID")
+DESA_ID = env.str("DESA_ID")
 # DESA_ID = 7505020008
 # DESA_ID = 3515140008
 
@@ -134,6 +134,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://api-v2-n10-troso-desapintar.klatenkab.go.id",
     "http://troso.karanganom.klatenkab.go.id",
     "https://troso.karanganom.klatenkab.go.id",
+    "http://api-v2-n10-beku-desapintar.klatenkab.go.id",
+    "https://api-v2-n10-beku-desapintar.klatenkab.go.id",
+    "http://beku.karanganom.klatenkab.go.id",
+    "https://beku.karanganom.klatenkab.go.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 

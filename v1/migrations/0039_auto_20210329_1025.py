@@ -60,7 +60,6 @@ def load_initial_data(apps, schema_editor):
         # header = next(reader)
 
         for row in reader:
-            print(row[3],row[5],row[15])
             if row:
                 bulk_mgr.add(SadDesa(id=row[3],nama_desa=row[5],kecamatan_id=row[15]))
         bulk_mgr.done()
