@@ -211,8 +211,9 @@ class Alamat(CustomModel):
         rt = get_object_or_404(SadRt, pk=rt_id)
         self.rt = rt
         self.rw = rt.rw
-        self.dusun = rt.rw.dusun
-        self.desa = rt.rw.dusun.desa
+        self.dukuh = rt.rw.dukuh
+        self.dusun = rt.rw.dukuh.dusun
+        self.desa = rt.rw.dukuh.dusun.desa
 
     def set_from_dusun(self, dusun_id):
         dusun = get_object_or_404(SadDusun, pk=dusun_id)
