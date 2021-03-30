@@ -195,13 +195,13 @@ class Alamat(CustomModel):
     def alamat_lengkap(self):
         if self.rt:
             return f"""RT {self.rt.rt} RT {self.rw.rw},
-        Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"""
-        elif self.dusun:
-            return f"Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"
+        Dukuh {self.dukuh.nama}, Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"""
+        # elif self.dusun:
+        #     return f"Dusun {self.dusun.nama}, Desa {self.desa.nama_desa}"
         return None
 
     def alamat_id(self):
-        data = {"desa_id": self.desa.id, "dusun_id": self.dusun.id}
+        data = {"desa_id": self.desa.id, "dusun_id": self.dusun.id, "dukuh_id": self.dukuh.id}
         if self.rt:
             data["rw_id"] = self.rw.id
             data["rt_id"] = self.rt.id

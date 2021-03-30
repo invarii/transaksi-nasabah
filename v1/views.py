@@ -868,25 +868,19 @@ class KategoriPotensiViewSet(DynamicModelViewSet):
     serializer_class = KategoriPotensiSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
-
 
 class PotensiViewSet(DynamicModelViewSet):
     queryset = Potensi.objects.all().order_by("-id")
     serializer_class = PotensiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["judul"]
-
-    # def get_queryset(self):
-    #     kategori = self.request.query_params.get("kategori")
-    #     if kategori:
-    #         return (
-    #                 Potensi.objects.filter(kategori=kategori).all().order_by("-id")
-    #                 )
-    #         return Potensi.objects.all().order_by("-id")
+    def get_queryset(self):
+        kategori = self.request.query_params.get("kategori")
+        if kategori:
+            return (
+                    Potensi.objects.filter(kategori=kategori).all().order_by("-id")
+                    )
+            return Potensi.objects.all().order_by("-id")
 
 
 class KategoriPendapatanViewSet(DynamicModelViewSet):
@@ -894,17 +888,12 @@ class KategoriPendapatanViewSet(DynamicModelViewSet):
     serializer_class = KategoriPendapatanSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
 
 
 class KategoriBelanjaViewSet(DynamicModelViewSet):
     queryset = KategoriBelanja.objects.all().order_by("id")
     serializer_class = KategoriBelanjaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
 
 
 class KategoriTahunViewSet(DynamicModelViewSet):
@@ -917,9 +906,6 @@ class PendapatanViewSet(DynamicModelViewSet):
     queryset = Pendapatan.objects.all().order_by("id")
     serializer_class = PendapatanSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
 
     def get_queryset(self):
         tahun = self.request.query_params.get("tahun")
@@ -936,9 +922,6 @@ class BelanjaViewSet(DynamicModelViewSet):
     queryset = Belanja.objects.all().order_by("id")
     serializer_class = BelanjaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
 
     def get_queryset(self):
         tahun = self.request.query_params.get("tahun")
