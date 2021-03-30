@@ -855,6 +855,7 @@ class Potensi(models.Model):
     gambar = models.ImageField(
         upload_to=file_destination, blank=True, null=True
     )
+    is_approvement = models.BooleanField(default=False)
 
     class Meta:
 
@@ -928,6 +929,7 @@ class Lapor(CustomModel):
     status = models.ForeignKey(
         StatusLapor, models.DO_NOTHING, blank=True, null=True
     )
+    is_approvement = models.BooleanField(default=False)
 
     class Meta:
 
