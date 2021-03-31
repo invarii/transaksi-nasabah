@@ -25,7 +25,7 @@ on:
     - pondok
     - tarubasan
     - troso
-    # - soropaten
+    - soropaten
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -211,15 +211,15 @@ jobs:
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
       
-      # - name: Build Soropaten
-      #   run: |
-      #     echo "${{ secrets.DOTENV_SOROPATEN}}" > api_sad_sig/.env
-      #     rsync -avR ./ ~/be-app/soropaten;
-      #     cd ~/be-app/soropaten;
-      #     pipenv install
-      #     pipenv run python manage.py makemigrations --merge
-      #     pipenv run python manage.py migrate
-      #     pipenv run python manage.py collectstatic --noinput
+      - name: Build Soropaten
+        run: |
+          echo "${{ secrets.DOTENV_SOROPATEN}}" > api_sad_sig/.env
+          rsync -avR ./ ~/be-app/soropaten;
+          cd ~/be-app/soropaten;
+          pipenv install
+          pipenv run python manage.py makemigrations --merge
+          pipenv run python manage.py migrate
+          pipenv run python manage.py collectstatic --noinput
 
       - name: Restart Supervisor
         run: |
