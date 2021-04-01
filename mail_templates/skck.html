@@ -169,7 +169,10 @@
 							&nbsp;
 						</td>
 						<td style="text-align: center;">
-							Kepala Desa Pontolo
+							{% if surat.pegawai.jabatan != 'Kepala Desa' %}
+							a.n. Kepala Desa Jurang Jero
+							{% endif %}
+							{{ surat.pegawai.jabatan.title()}} Pontolo
 							<p style="margin-top:80px;">
 							<b><u>{{surat.pegawai.nama}}</u></b>
 							</p>
