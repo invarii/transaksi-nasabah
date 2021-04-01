@@ -96,7 +96,7 @@
 					<tr class="data-row">
 						<td>Kewarganegaraan</td>
 						<td>:</td>
-						<td>{{surat.penduduk.kewarganegaraan}}</td>
+						<td>{{surat.penduduk.kewarganegaraan if surat.penduduk.kewarganegaraan else ""}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Agama</td>
@@ -136,7 +136,7 @@
 					<tr class="data-row">
 						<td>Keterangan</td>
 						<td>:</td>
-						<td>{{surat.keterangan}}</td>
+						<td>{{ surat.keterangan if surat.keterangan else "" }}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Surat Keterangan ini digunakan untuk</td>
