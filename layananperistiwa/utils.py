@@ -4,6 +4,7 @@ import pdfkit
 
 from django.conf import settings
 from django.utils import timezone
+from v1.models import SadDesa
 
 
 def render_mail(mail_type, data):
@@ -14,8 +15,9 @@ def render_mail(mail_type, data):
     template_name = mail_type + ".html"
     logo_path = template_folder + "/logo.png"
     template = template_env.get_template(template_name)
+    desa = SadDesa.objects.get(pk=settings.DESA_ID)
     output = template.render(
-        surat=data, logo=logo_path, tanggal=timezone.now().strftime("%d %B %Y")
+        desa=desa, surat=data, logo=logo_path, tanggal=timezone.now().strftime("%d %B %Y")
     )
     
     pdf = pdfkit.from_string(output, False)
