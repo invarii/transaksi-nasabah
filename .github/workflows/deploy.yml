@@ -222,10 +222,6 @@ jobs:
           pipenv run python manage.py migrate
           pipenv run python manage.py collectstatic --noinput
 
-      - name: Restart Supervisor
-        run: |
-          sudo supervisorctl restart all
-
       - name: Build Beku
         run: |
           echo "${{ secrets.DOTENV_BEKU}}" > api_sad_sig/.env
