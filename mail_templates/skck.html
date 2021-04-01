@@ -39,9 +39,9 @@
 					<center>
 						<h3>Pemerintah Kabupaten Klaten</h3>
 						<h3>Kecamatan Karanganom</h3>
-						<h2>{{desa.nama_desa}}</h2>
-						<p>Alamat: Jalan Karang Anom, Jurangjero, Karanganom, Dusun I, Jurangjero, Klaten, Kabupaten Klaten, Jawa Tengah 57475</p>
-						<p>Telp:021-2345678</p>
+						<h2>DESA {{desa.nama_desa}}</h2>
+						<p>Alamat: {{desa.alamat}}</p>
+						<p>Telp: {{desa.no_telp}}</p>
 					</center>
 				</div>
 			</header>
@@ -155,7 +155,7 @@
 							&nbsp;
 						</td>
 						<td style="text-align: center;">
-							Pontolo, {{tanggal}}
+							{{desa.nama_desa.title()}}, {{tanggal}}
 						</td>
 					</tr>
 					<tr>

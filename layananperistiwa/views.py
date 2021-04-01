@@ -521,9 +521,6 @@ class SadPindahKeluarViewSet(CustomView):
     serializer_class = SadPindahKeluarSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["nomor_kk", "nik_pemohon"]
-
     def retrieve(self, request, pk=None):
         queryset = SadPindahKeluar.objects.all()
         sad_pindah = get_object_or_404(queryset, pk=pk)
@@ -553,9 +550,6 @@ class SadPecahKKViewSet(CustomView):
     queryset = SadPecahKK.objects.order_by("id").all()
     serializer_class = SadPecahKKSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["keluarga", "penduduk"]
 
     def get_serializer_class(self):
         if self.action in ["update", "retrieve", "delete"]:
