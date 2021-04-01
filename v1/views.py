@@ -71,9 +71,6 @@ class SadKabKotaViewSet(CustomView):
     serializer_class = SadKabKotaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["id", "nama_kab_kota"]
-
     def get_queryset(self):
         provinsi = self.request.query_params.get("provinsi")
         if provinsi:
@@ -90,9 +87,6 @@ class SadKecamatanViewSet(CustomView):
     serializer_class = SadKecamatanSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["id", "nama_kecamatan"]
-
     def get_queryset(self):
         kabkota = self.request.query_params.get("kabkota")
         if kabkota:
@@ -104,9 +98,6 @@ class SadDesaViewSet(CustomView):
     queryset = SadDesa.objects.all().order_by("id")
     serializer_class = SadDesaSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["id", "nama_desa"]
 
     def get_queryset(self):
         kecamatan = self.request.query_params.get("kecamatan")
