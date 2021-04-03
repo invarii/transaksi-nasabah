@@ -138,6 +138,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://api-v2-n10-beku-desapintar.klatenkab.go.id",
     "http://beku.karanganom.klatenkab.go.id",
     "https://beku.karanganom.klatenkab.go.id",
+    "http://api-v2-n10-demo-desapintar.klatenkab.go.id",
+    "https://api-v2-n10-demo-desapintar.klatenkab.go.id",
+    "http://demo.karanganom.klatenkab.go.id",
+    "https://demo.karanganom.klatenkab.go.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
