@@ -83,7 +83,7 @@ class SuratSkckViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
+    search_fields = ["penduduk__nama"]
 
     def get_serializer_class(self):
         if self.request.user.groups.first().name == "admin":
@@ -102,7 +102,7 @@ class SuratDomisiliViewSet(DynamicModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ["nama"]
+    search_fields = ["penduduk__nama"]
 
     def get_serializer_class(self):
         if self.request.user.groups.first().name == "admin":
