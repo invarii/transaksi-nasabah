@@ -23,8 +23,8 @@
 				float:left;
 			}
 			#logo img{
-				width:150px;
-				height: 125px;
+				width:130px;
+				height: 115px;
 			}
 		</style>
 	</head>
@@ -79,52 +79,52 @@
 					<tr class="data-row">
 						<td>Nama</td>
 						<td>:</td>
-						<td>{{surat.nama}}</td>
+						<td>{{surat.nama if surat.nama is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Jenis Kelamin</td>
 						<td>:</td>
-						<td>{{surat.jk}}</td>
+						<td>{{surat.jk if surat.jk is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Tempat Dilahirkan</td>
 						<td>:</td>
-						<td>{{surat.keterangan_tempat_dilahirkan}}</td>
+						<td>{{surat.keterangan_tempat_dilahirkan if surat.keterangan_tempat_dilahirkan is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Tempat Kelahiran</td>
 						<td>:</td>
-						<td>{{surat.tempat_kelahiran}}</td>
+						<td>{{surat.tempat_kelahiran if surat.tempat_kelahiran is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Jenis Kelahiran</td>
 						<td>:</td>
-						<td>{{surat.keterangan_jenis_kelahiran}}</td>
+						<td>{{surat.keterangan_jenis_kelahiran if surat.keterangan_jenis_kelahiran is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Penolong Kelahiran</td>
 						<td>:</td>
-						<td>{{surat.keterangan_penolong_kelahiran}}</td>
+						<td>{{surat.keterangan_penolong_kelahiran if surat.keterangan_penolong_kelahiran is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Berat</td>
 						<td>:</td>
-						<td>{{surat.berat}}</td>
+						<td>{{surat.berat if surat.berat is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Panjang</td>
 						<td>:</td>
-						<td>{{surat.panjang}}</td>
+						<td>{{surat.panjang if surat.panjang is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Saksi I</td>
 						<td>:</td>
-						<td>{{surat.saksi1.nama}}</td>
+						<td>{{surat.saksi1.nama if surat.saksi1.nama is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Saksi II</td>
 						<td>:</td>
-						<td>{{surat.saksi2.nama}}</td>
+						<td>{{surat.saksi2.nama if surat.saksi2 is not none else '-'}}</td>
 					</tr>
 					<tr>
 						<td colspan=3>
@@ -134,17 +134,17 @@
 					<tr class="data-row">
 						<td>Nama Ayah Kandung</td>
 						<td>:</td>
-						<td>{{surat.ayah}}</td>
+						<td>{{surat.ayah if surat.ayah is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Nama Ibu Kandung</td>
 						<td>:</td>
-						<td>{{surat.ibu}}</td>
+						<td>{{surat.ibu if surat.ibu is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Anak Ke</td>
 						<td>:</td>
-						<td>{{surat.kelahiran_ke}}</td>
+						<td>{{surat.kelahiran_ke if surat.kelahiran_ke is not none else '-'}}</td>
 					</tr>
 				</table>
 				Demikianlah surat keterangan kelahiran ini dibuat untuk dipergunakan sebagaimana semestinya.
@@ -165,7 +165,7 @@
 						<td style="text-align:center;">
 							Pemohon
 							<p style="margin-top:80px;">
-							<b><u>{{surat.ayah}}</u></b>
+							<b><u>{{surat.ayah.nama}}</u></b>
 							</p>
 						</td>
 						<td style="width:40%">

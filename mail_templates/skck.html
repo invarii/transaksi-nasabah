@@ -101,12 +101,12 @@
 					<tr class="data-row">
 						<td>Agama</td>
 						<td>:</td>
-						<td>{{surat.penduduk.agama}}</td>
+						<td>{{surat.penduduk.agama if surat.penduduk.agama is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Status Perkawinan</td>
 						<td>:</td>
-						<td>{{surat.penduduk.status_kawin}}</td>
+						<td>{{surat.penduduk.status_kawin if surat.penduduk.status_kawin is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Pekerjaan</td>
@@ -116,7 +116,7 @@
 					<tr class="data-row">
 						<td>Pendidikan</td>
 						<td>:</td>
-						<td>{{surat.penduduk.pendidikan}}</td>
+						<td>{{surat.penduduk.pendidikan if surat.penduduk.pendidikan is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Nomor KTP</td>
@@ -126,17 +126,17 @@
 					<tr class="data-row">
 						<td>Nomor KK</td>
 						<td>:</td>
-						<td>{{surat.penduduk.keluarga.no_kk}}</td>
+						<td>{{surat.penduduk.keluarga.no_kk if surat.penduduk.keluarga.no_kk is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Alamat</td>
 						<td>:</td>
-						<td>{{surat.penduduk.alamat}}</td>
+						<td>{{surat.penduduk.alamat if surat.penduduk.alamat is not none else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Keterangan</td>
 						<td>:</td>
-						<td>{{ surat.keterangan if surat.keterangan else "" }}</td>
+						<td>{{ surat.keterangan if surat.keterangan is not none else '-' }}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Surat Keterangan ini digunakan untuk</td>
