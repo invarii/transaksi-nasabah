@@ -23,8 +23,8 @@
 				float:left;
 			}
 			#logo img{
-				width:150px;
-				height: 125px;
+				width:140px;
+				height: 120px;
 			}
 		</style>
 	</head>
@@ -96,7 +96,7 @@
 					<tr class="data-row">
 						<td>Kewarganegaraan</td>
 						<td>:</td>
-						<td>{{surat.penduduk.kewarganegaraan if surat.penduduk.kewarganegaraan else ""}}</td>
+						<td>{{surat.penduduk.kewarganegaraan if surat.penduduk.kewarganegaraan is not none else '-' }}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Agama</td>
@@ -111,7 +111,7 @@
 					<tr class="data-row">
 						<td>Pekerjaan</td>
 						<td>:</td>
-						<td>{{surat.penduduk.pekerjaan}}</td>
+						<td>{{surat.penduduk.pekerjaan if surat.penduduk.pekerjaan is not null else '-'}}</td>
 					</tr>
 					<tr class="data-row">
 						<td>Pendidikan</td>
