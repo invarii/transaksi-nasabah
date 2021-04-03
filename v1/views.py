@@ -426,6 +426,46 @@ class SadSarprasViewSet(CustomView):
     filter_backends = [filters.SearchFilter]
     search_fields = ["nama_sarpras", "asal"]
 
+    @action(detail=False, methods=["get"])
+    def ekspor(self, request):
+        extras = {
+            "Nama Sarana Prasarana": "nama_sarpras",
+            "Asal": "asal",
+            "Tanggal": "tgl_awal",
+            "Keadaan Awal": "keadaan_awal",
+            "Keterangan": "keterangan",
+            "Tahun": "tahun",
+            "Url Foto": "foto"
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="DataSaranaPrasarana.xlsx"'
+        return response
+
 
 class SadInventarisViewSet(CustomView):
     queryset = SadInventaris.objects.all().order_by("id")
@@ -434,6 +474,46 @@ class SadInventarisViewSet(CustomView):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ["nama_inventaris", "asal"]
+
+    @action(detail=False, methods=["get"])
+    def ekspor(self, request):
+        extras = {
+            "Nama Inventaris": "nama_inventaris",
+            "Asal": "asal",
+            "Tanggal": "tgl_awal",
+            "Keadaan Awal": "keadaan_awal",
+            "Keterangan": "keterangan",
+            "Tahun": "tahun",
+            "Url Foto": "foto"
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="DataInventaris.xlsx"'
+        return response
 
 
 class SadSuratViewSet(CustomView):
@@ -931,6 +1011,47 @@ class SuratMasukViewSet(DynamicModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ["perihal", "keterangan"]
 
+    @action(detail=False, methods=["get"])
+    def ekspor(self, request):
+        extras = {
+            "No Surat": "no_surat",
+            "Tanggal Terima": "tgl_terima",
+            "Tanggal Surat": "tgl_surat",
+            "Pengirim": "pengirim",
+            "Kepada": "kepada",
+            "Perihal": "perihal",
+            "Keterangan": "keterangan",
+            "Url Surat": "arsip_suratmasuk"
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="ArsipSuratMasuk.xlsx"'
+        return response
+
 
 class SuratKeluarViewSet(DynamicModelViewSet):
     queryset = SuratKeluar.objects.all().order_by("id")
@@ -939,6 +1060,47 @@ class SuratKeluarViewSet(DynamicModelViewSet):
 
     filter_backends = [filters.SearchFilter]
     search_fields = ["perihal", "keterangan"]
+
+    @action(detail=False, methods=["get"])
+    def ekspor(self, request):
+        extras = {
+            "No Surat": "no_surat",
+            "Tanggal Kirim": "tgl_kirim",
+            "Tanggal Surat": "tgl_surat",
+            "Pengirim": "pengirim",
+            "Kepada": "kepada",
+            "Perihal": "perihal",
+            "Keterangan": "keterangan",
+            "Url Surat": "arsip_suratkeluar"
+        }
+        data = (
+            self.get_queryset()
+            .extra(select=extras)
+            .values(*extras.keys())
+            .all()
+        )
+
+        workbook = Workbook()
+        sheet = workbook.active
+
+        headers = [i for i in extras.keys()]
+        for index, value in enumerate(headers):
+            sheet.cell(row=1, column=index + 1).value = value
+
+        for i, x in enumerate(data):
+            for idx, value in enumerate(x.values()):
+                sheet.cell(row=i + 2, column=idx + 1).value = value
+
+        output = BytesIO()
+        workbook.save(output)
+        response = HttpResponse(
+            output.getvalue(),
+            content_type="application/vnd.ms-excel",
+        )
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="ArsipSuratKeluar.xlsx"'
+        return response
 
 
 class PekerjaanViewSet(DynamicModelViewSet):
