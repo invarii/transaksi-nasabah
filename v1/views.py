@@ -6,7 +6,7 @@ import numpy as np
 from rest_framework import permissions
 from django.conf import settings
 from django.db.utils import IntegrityError
-from django.db.models import F, Count, Avg
+from django.db.models import F, Count, Avg, Sum
 from django.http import HttpResponse
 from dynamic_rest.viewsets import DynamicModelViewSet
 from rest_framework.decorators import action
@@ -15,6 +15,8 @@ from rest_framework import filters, viewsets
 from rest_framework.exceptions import NotFound, APIException
 import pytz
 from datetime import datetime
+from openpyxl import Workbook
+from rest_framework.permissions import AllowAny
 
 
 
@@ -1232,7 +1234,7 @@ class TenagaKesehatanViewSet(DynamicModelViewSet):
 class AbsensiViewSet(DynamicModelViewSet):
     queryset = Absensi.objects.all().order_by("-id")
     serializer_class = AbsensiSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [AllowAny]
 
 
 class AlasanIzinViewSet(DynamicModelViewSet):
