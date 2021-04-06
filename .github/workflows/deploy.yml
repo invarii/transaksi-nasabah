@@ -4,7 +4,7 @@ name: Deploy
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +24,7 @@ jobs:
           remote_host: ${{ secrets.HOST }}
           remote_user: ${{ secrets.USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - uses: appleboy/ssh-action@master
+      - uses: appleboy/ssh-action@main
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
