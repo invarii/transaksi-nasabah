@@ -794,3 +794,16 @@ class CctvSerializer(DynamicModelSerializer):
         model = Cctv
         name = "data"
         exclude = []
+
+
+class BiayaKunjunganSerializer(DynamicModelSerializer):
+    class Meta:
+        model = BiayaKunjungan
+        name = "data"
+        exclude = []
+
+class KunjunganSerializer(DynamicModelSerializer):
+    class Meta:
+        model = Kunjungan
+        name = "data"
+        exclude = []

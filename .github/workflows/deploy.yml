@@ -1,250 +1,40 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Deploy
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches:
-    - main
-    - blanciran
-    - brangkal
-    - gempol
-    - gledeg
-    - jambeyan
-    - jeblok
-    - jungkare
-    - jurangjero
-    - kadirejo
-    - karangan
-    - karanganom
-    - kunden
-    - ngabeyan
-    - padas
-    - pondok
-    - tarubasan
-    - troso
-    - soropaten
-    - beku
-    - demo
-
-    
+    branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: self-hosted
-
-    env: 
-      CI: false
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2.3.3
-      - name: Build Blanciran
-        run: |
-          echo "${{ secrets.DOTENV_BLANCIRAN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/blanciran;
-          cd ~/be-app/blanciran;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Brangkal
-        run: |
-          echo "${{ secrets.DOTENV_BRANGKAL}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/brangkal;
-          cd ~/be-app/brangkal;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-          
-      
-      - name: Build Gempol
-        run: |
-          echo "${{ secrets.DOTENV_GEMPOL}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/gempol;
-          cd ~/be-app/gempol;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Gledeg
-        run: |
-          echo "${{ secrets.DOTENV_GLEDEG}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/gledeg;
-          cd ~/be-app/gledeg;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-
-      - name: Build Jambeyan
-        run: |
-          echo "${{ secrets.DOTENV_JAMBEYAN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/jambeyan;
-          cd ~/be-app/jambeyan;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Jeblok
-        run: |
-          echo "${{ secrets.DOTENV_JEBLOK}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/jeblok;
-          cd ~/be-app/jeblok;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Jungkare
-        run: |
-          echo "${{ secrets.DOTENV_JUNGKARE}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/jungkare;
-          cd ~/be-app/jungkare;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Jurangjero
-        run: |
-          echo "${{ secrets.DOTENV_JURANGJERO}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/jurangjero;
-          cd ~/be-app/jurangjero;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Kadirejo
-        run: |
-          echo "${{ secrets.DOTENV_KADIREJO}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/kadirejo;
-          cd ~/be-app/kadirejo;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Karangan
-        run: |
-          echo "${{ secrets.DOTENV_KARANGAN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/karangan;
-          cd ~/be-app/karangan;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Karanganom
-        run: |
-          echo "${{ secrets.DOTENV_KARANGANOM}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/karanganom;
-          cd ~/be-app/karanganom;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Kunden
-        run: |
-          echo "${{ secrets.DOTENV_KUNDEN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/kunden;
-          cd ~/be-app/kunden;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Ngabeyan
-        run: |
-          echo "${{ secrets.DOTENV_NGABEYAN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/ngabeyan;
-          cd ~/be-app/ngabeyan;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Padas
-        run: |
-          echo "${{ secrets.DOTENV_PADAS}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/padas;
-          cd ~/be-app/padas;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Pondok
-        run: |
-          echo "${{ secrets.DOTENV_PONDOK}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/pondok;
-          cd ~/be-app/pondok;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Tarubasan
-        run: |
-          echo "${{ secrets.DOTENV_TARUBASAN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/tarubasan;
-          cd ~/be-app/tarubasan;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Troso
-        run: |
-          echo "${{ secrets.DOTENV_TROSO}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/troso;
-          cd ~/be-app/troso;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-      
-      - name: Build Soropaten
-        run: |
-          echo "${{ secrets.DOTENV_SOROPATEN}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/soropaten;
-          cd ~/be-app/soropaten;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-
-      - name: Build Beku
-        run: |
-          echo "${{ secrets.DOTENV_BEKU}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/beku;
-          cd ~/be-app/beku;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-
-      - name: Build Demo
-        run: |
-          echo "${{ secrets.DOTENV_DEMO}}" > api_sad_sig/.env
-          rsync -avR ./ ~/be-app/demo;
-          cd ~/be-app/demo;
-          pipenv install
-          pipenv run python manage.py makemigrations --merge
-          pipenv run python manage.py migrate
-          pipenv run python manage.py collectstatic --noinput
-
-      - name: Restart Supervisor
-        run: |
-          sudo supervisorctl restart all
+      - uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: .
+          remote_path: ${{ secrets.TARGET }}
+          remote_host: ${{ secrets.HOST }}
+          remote_user: ${{ secrets.USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - uses: appleboy/ssh-action@main
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.TARGET }}
+            echo "${{ secrets.DOTENV }}" > api_sad_sig/.env
+            pipenv install
+            pipenv run python manage.py makemigrations --merge
+            pipenv run python manage.py migrate
+            pipenv run python manage.py collectstatic --noinput
+            supervisorctl restart all

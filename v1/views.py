@@ -1396,3 +1396,15 @@ class CctvViewSet(DynamicModelViewSet):
             Cctv.objects.create(**item)
 
         return Response()
+
+
+class BiayaKunjunganViewSet(DynamicModelViewSet):
+    queryset = BiayaKunjungan.objects.all().order_by("id")
+    serializer_class = BiayaKunjunganSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class KunjunganViewSet(DynamicModelViewSet):
+    queryset = Kunjungan.objects.all().order_by("id")
+    serializer_class = KunjunganSerializer
+    permission_classes = [permissions.IsAuthenticated]

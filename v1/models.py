@@ -5,6 +5,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.db.models import Sum
 
 from api_sad_sig.util import CustomModel, file_destination
 
@@ -1213,3 +1214,48 @@ class Cctv(models.Model):
 
     class Meta:
         db_table = "cctv"
+
+
+class BiayaKunjungan(models.Model):
+    peserta = models.DecimalField ( max_digits = 12, decimal_places=2 )
+    narasumber = models.DecimalField ( max_digits = 12, decimal_places=2 )
+
+    class Meta:
+        db_table = "biaya_kunjungan"
+
+class Kunjungan(models.Model):
+    desa = models.ForeignKey(
+        "SadDesa", models.DO_NOTHING, blank=True, null=True
+    )
+    pic = models.CharField(max_length=100, null=True, blank=True)
+    selaku_apa = models.CharField(max_length=100, null=True, blank=True)
+    nama_eo = models.CharField(max_length=100, null=True, blank=True)
+    perusahaan = models.CharField(max_length=100, null=True, blank=True)
+    tgl = models.DateField(blank=True, null=True)
+    no_hp = models.CharField(max_length=100, null=True, blank=True)
+    surat = models.FileField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    jumlah = models.DecimalField ( max_digits = 5, decimal_places=0, null=True, blank=True )
+    # biaya_peserta
+    # biaya_narasumber
+    # total_biaya
+    pemateri1 = models.ForeignKey(
+        "Pegawai",
+        to_field="id",
+        on_delete=models.DO_NOTHING,
+        related_name="pemateri1",
+        blank=True,
+        null=True,
+    )
+    pemateri2 = models.ForeignKey(
+        "Pegawai",
+        to_field="id",
+        on_delete=models.DO_NOTHING,
+        related_name="pemateri2",
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        db_table = "kunjungan"
