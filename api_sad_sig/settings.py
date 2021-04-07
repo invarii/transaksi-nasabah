@@ -57,8 +57,8 @@ DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
 CORS_ALLOWED_ORIGINS = [
-    "https://desaponggok.id",
-    "https://api.desaponggok.id",
+    "https://tibayan.istudios.id",
+    "https://api-tibayan.istudios.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
