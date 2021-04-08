@@ -17,7 +17,7 @@ def load_initial_data(apps, schema_editor):
         sad_kab_kotas = []
 
         for row in reader:
-            sad_kab_kota = SadKabKota(id=row[0],nama_kab_kota=row[5])
+            sad_kab_kota = SadKabKota(id=row[0],nama_kab_kota=row[5],provinsi_id=row[8])
             
             sad_kab_kotas.append(sad_kab_kota)
 

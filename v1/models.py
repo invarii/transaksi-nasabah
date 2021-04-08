@@ -35,12 +35,12 @@ class Absensi(models.Model):
         blank=True,
         null=True,
     )
-    # jam_masuk = models.DateTimeField(blank=True,
-    # auto_now_add=True, null=True)
-    # jam_keluar = models.DateTimeField(blank=True,
-    # auto_now=True, null=True)
-    jam_masuk = models.DateTimeField(blank=True, null=True)
-    jam_keluar = models.DateTimeField(blank=True, null=True)
+    jam_masuk = models.DateTimeField(blank=True,
+    auto_now_add=True, null=True)
+    jam_keluar = models.DateTimeField(blank=True,
+    auto_now=True, null=True)
+    # jam_masuk = models.DateTimeField(blank=True, null=True)
+    # jam_keluar = models.DateTimeField(blank=True, null=True)
     alasan_izin = models.ForeignKey(
         "AlasanIzin", models.DO_NOTHING, blank=True, null=True
     )
@@ -1224,13 +1224,10 @@ class BiayaKunjungan(models.Model):
         db_table = "biaya_kunjungan"
 
 class Kunjungan(models.Model):
-    desa = models.ForeignKey(
-        "SadDesa", models.DO_NOTHING, blank=True, null=True
-    )
+    nama = models.CharField(max_length=100, null=True, blank=True)
     pic = models.CharField(max_length=100, null=True, blank=True)
     selaku_apa = models.CharField(max_length=100, null=True, blank=True)
     nama_eo = models.CharField(max_length=100, null=True, blank=True)
-    perusahaan = models.CharField(max_length=100, null=True, blank=True)
     tgl = models.DateField(blank=True, null=True)
     no_hp = models.CharField(max_length=100, null=True, blank=True)
     surat = models.FileField(

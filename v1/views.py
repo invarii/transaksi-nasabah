@@ -832,8 +832,8 @@ class SigRwViewSet(CustomView):
         data = json.load(file)
 
         for item in data["features"]:
-            dukuh = SigDukuh.objects.get(
-                    nama_dukuh=item["properties"]["topo_dukuh"]
+            dusun = SigDusun.objects.get(
+                    nama_dukuh=item["properties"]["topo_dusun"]
                     )
             item = {
                     "sig_dukuh": dukuh,
