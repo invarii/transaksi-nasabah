@@ -833,7 +833,7 @@ class SigRwViewSet(CustomView):
 
         for item in data["features"]:
             dusun = SigDusun.objects.get(
-                    nama_dukuh=item["properties"]["topo_dusun"]
+                    nama_dusun=item["properties"]["topo_dusun"]
                     )
             item = {
                     "sig_dusun": dusun,
