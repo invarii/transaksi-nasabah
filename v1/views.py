@@ -843,6 +843,29 @@ class SigRwViewSet(CustomView):
             SigRw.objects.create(**item)
         return Response()
 
+class SigPotensiViewSet(CustomView):
+    queryset = SigPotensi.objects.all().order_by("id")
+    serializer_class = SigPotensiSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigPotensi.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                    "nama": item["properties"]["nama"],
+                    "geometry": item["geometry"],
+                    }
+            SigPotensi.objects.create(**item)
+
+        return Response()
 
 class SigRtViewSet(CustomView):
     queryset = SigRt.objects.all().order_by("id")

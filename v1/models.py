@@ -734,6 +734,14 @@ class SigKawasanHutan(CustomModel):
         db_table = "sig_kawasan_hutan"
 
 
+class SigPotensi(CustomModel):
+    nama = models.CharField(max_length=100, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_potensi"
+
 class SigPenggunaanTanah(CustomModel):
     dusun = models.CharField(max_length=100, blank=True, null=True)
     penggunaan = models.CharField(max_length=100, blank=True, null=True)

@@ -335,6 +335,12 @@ class SigKawasanHutanSerializer(CustomSerializer):
         name = "data"
         exclude = []
 
+class SigPotensiSerializer(CustomSerializer):
+    class Meta:
+        model = SigPotensi
+        name = "data"
+        exclude = []
+
 
 class SigPenggunaanTanahSerializer(CustomSerializer):
     class Meta:
