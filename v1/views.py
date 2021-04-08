@@ -836,7 +836,7 @@ class SigRwViewSet(CustomView):
                     nama_dukuh=item["properties"]["topo_dusun"]
                     )
             item = {
-                    "sig_dukuh": dukuh,
+                    "sig_dusun": dusun,
                     "rw": item["properties"]["RW"],
                     "geometry": item["geometry"],
                     }

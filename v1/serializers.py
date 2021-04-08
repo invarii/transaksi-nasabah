@@ -310,8 +310,8 @@ class SigDukuhSerializer(CustomSerializer):
 
 
 class SigRwSerializer(CustomSerializer):
-    sig_dukuh = DynamicRelationField(
-        "SigDukuhSerializer", deferred=True, embed=True
+    sig_dusun = DynamicRelationField(
+        "SigDusunSerializer", deferred=True, embed=True
     )
 
     class Meta:
