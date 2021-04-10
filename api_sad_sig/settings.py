@@ -45,9 +45,9 @@ LOGGING = {
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # This Desa
-DESA_ID = env.str("DESA_ID")
+# DESA_ID = env.str("DESA_ID")
 # DESA_ID = 7505020008
-# DESA_ID = 3515140008
+DESA_ID = 3515140008
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
@@ -57,8 +57,8 @@ DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", [])
 CORS_ALLOWED_ORIGINS = [
-    "https://tibayan.istudios.id",
-    "https://api-tibayan.istudios.id",
+    "https://demo.istudios.id",
+    "https://api-demo.istudios.id",
 ]
 # CORS_ALLOW_ALL_ORIGINS = True
 
