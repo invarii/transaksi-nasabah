@@ -107,6 +107,10 @@ class SadDesa(CustomModel):
     logo = models.ImageField(upload_to=file_destination, blank=True, null=True)
     center = JSONField(blank=True, null=True)
     zoom = models.IntegerField(blank=True, null=True)
+    facebook = models.CharField(max_length=150, blank=True, null=True)
+    twitter = models.CharField(max_length=150, blank=True, null=True)
+    instagram = models.CharField(max_length=150, blank=True, null=True)
+    youtube = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
