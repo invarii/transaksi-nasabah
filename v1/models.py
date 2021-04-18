@@ -106,6 +106,7 @@ class SadDesa(CustomModel):
     sejarah = models.TextField(blank=True, null=True)
     logo = models.ImageField(upload_to=file_destination, blank=True, null=True)
     center = JSONField(blank=True, null=True)
+    zoom = models.IntegerField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
