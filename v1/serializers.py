@@ -354,7 +354,7 @@ class SigPajakSerializer(CustomSerializer):
     class Meta:
         model = SigPajak
         name = "data"
-        fields = ["id", "no_kk", "keterangan", "count_belum_pajak", "count_sudah_pajak", "biaya_belum_pajak", "biaya_sudah_pajak", "count", "total_biaya", "geometry"]
+        fields = ["id", "no_kk", "keterangan", "count_belum_pajak", "count_sudah_pajak", "biaya_belum_pajak", "biaya_sudah_pajak", "geometry"]
 
 
 class SigPenggunaanTanahSerializer(CustomSerializer):
