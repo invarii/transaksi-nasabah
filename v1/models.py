@@ -795,6 +795,8 @@ class SigPajak(CustomModel):
     count_sudah_pajak = models.CharField(max_length=250, blank=True, null=True)
     biaya_belum_pajak = models.CharField(max_length=250, blank=True, null=True)
     biaya_sudah_pajak = models.CharField(max_length=250, blank=True, null=True)
+    count = models.CharField(max_length=250, blank=True, null=True)
+    total_biaya = models.CharField(max_length=250, blank=True, null=True)
     geometry = JSONField(blank=True, null=True)
 
     class Meta(CustomModel.Meta):

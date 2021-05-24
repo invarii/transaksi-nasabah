@@ -942,6 +942,8 @@ class SigPajakViewSet(CustomView):
                     "count_sudah_pajak": item["properties"]["count_sudah"],
                     "biaya_belum_pajak": item["properties"]["biaya_belum"],
                     "biaya_sudah_pajak": item["properties"]["biaya_sudah"],
+                    "count": item["properties"]["count"],
+                    "total_biaya": item["properties"]["total_biaya"],
                     "geometry": item["geometry"],
                     }
             SigPajak.objects.create(**item)
