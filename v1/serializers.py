@@ -1,3 +1,4 @@
+from django.contrib.postgres import fields
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from dynamic_rest.serializers import DynamicModelSerializer
@@ -346,14 +347,14 @@ class SigUmkmSerializer(CustomSerializer):
     class Meta:
         model = SigUmkm
         name = "data"
-        exclude = []
+        fields = ["id", "nama_usaha", "nama_pemilik", "no_telp", "geometry"]
 
 
 class SigPajakSerializer(CustomSerializer):
     class Meta:
         model = SigPajak
         name = "data"
-        exclude = []
+        fields = ["id", "no_kk", "keterangan", "count_belum_pajak", "count_sudah_pajak", "biaya_belum_pajak", "biaya_sudah_pajak", "geometry"]
 
 
 class SigPenggunaanTanahSerializer(CustomSerializer):
