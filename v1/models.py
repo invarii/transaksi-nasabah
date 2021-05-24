@@ -778,6 +778,28 @@ class SigArahan(CustomModel):
 
         db_table = "sig_arahan"
 
+class SigUmkm(CustomModel):
+    nama_usaha = models.CharField(max_length=250, blank=True, null=True)
+    nama_pemilik = models.CharField(max_length=250, blank=True, null=True)
+    no_telp = models.CharField(max_length=250, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_umkm"
+
+class SigPajak(CustomModel):
+    no_kk = models.CharField(max_length=250, blank=True, null=True)
+    keterangan = models.CharField(max_length=250, blank=True, null=True)
+    count_belum_pajak = models.CharField(max_length=250, blank=True, null=True)
+    count_sudah_pajak = models.CharField(max_length=250, blank=True, null=True)
+    biaya_belum_pajak = models.CharField(max_length=250, blank=True, null=True)
+    biaya_sudah_pajak = models.CharField(max_length=250, blank=True, null=True)
+    geometry = JSONField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+
+        db_table = "sig_pajak"
 
 class SigSadDesa(CustomModel):
     sad_desa = models.ForeignKey(

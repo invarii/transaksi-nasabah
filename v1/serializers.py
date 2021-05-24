@@ -342,6 +342,20 @@ class SigPotensiSerializer(CustomSerializer):
         exclude = []
 
 
+class SigUmkmSerializer(CustomSerializer):
+    class Meta:
+        model = SigUmkm
+        name = "data"
+        exclude = []
+
+
+class SigPajakSerializer(CustomSerializer):
+    class Meta:
+        model = SigPajak
+        name = "data"
+        exclude = []
+
+
 class SigPenggunaanTanahSerializer(CustomSerializer):
     class Meta:
         model = SigPenggunaanTanah

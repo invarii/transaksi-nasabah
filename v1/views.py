@@ -892,6 +892,61 @@ class SigRtViewSet(CustomView):
             SigRt.objects.create(**item)
         return Response()
 
+class SigUmkmViewSet(CustomView):
+    queryset = SigUmkm.objects.all().order_by("id")
+    serializer_class = SigUmkmSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigUmkm.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                    "nama_usaha": item["properties"]["NAMA_USAHA"],
+                    "nama_pemilik": item["properties"]["NAMA_PEMIL"],
+                    "no_telp": item["properties"]["TELP"],
+                    "geometry": item["geometry"],
+                    }
+            SigUmkm.objects.create(**item)
+
+        return Response()
+
+
+class SigPajakViewSet(CustomView):
+    queryset = SigPajak.objects.all().order_by("id")
+    serializer_class = SigPajakSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=["get"])
+    def delete_all(self, request):
+        SigPajak.objects.all().delete()
+        return Response()
+
+    @action(detail=False, methods=["post"])
+    def upload(self, request):
+        file = request.FILES["file"]
+        data = json.load(file)
+
+        for item in data["features"]:
+            item = {
+                    "no_kk": item["properties"]["KK1"],
+                    "keterangan": item["properties"]["Pajak"],
+                    "count_belum_pajak": item["properties"]["count_belum"],
+                    "count_sudah_pajak": item["properties"]["count_sudah"],
+                    "biaya_belum_pajak": item["properties"]["biaya_belum"],
+                    "biaya_sudah_pajak": item["properties"]["biaya_sudah"],
+                    "geometry": item["geometry"],
+                    }
+            SigPajak.objects.create(**item)
+
+        return Response()
 
 class KategoriArtikelViewSet(DynamicModelViewSet):
     queryset = KategoriArtikel.objects.all().order_by("id")
