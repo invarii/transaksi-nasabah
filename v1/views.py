@@ -1072,7 +1072,7 @@ class PendapatanViewSet(DynamicModelViewSet):
 
 
 class BelanjaViewSet(DynamicModelViewSet):
-    queryset = Belanja.objects.all().order_by("id")
+    queryset = Belanja.objects.all().order_by("-id")
     serializer_class = BelanjaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
