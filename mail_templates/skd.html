@@ -119,7 +119,7 @@
 						<td>{{surat.keterangan if surat.keterangan is not none else '-'}}</td>
 					</tr>
 				</table>
-				<p> Adalah benar-benar warga penduduk Desa Pontolo yang berdomisili dan bertempat tinggal di alamat tersebut.</p>
+				<p> Adalah benar-benar warga penduduk Desa Maju Jaya yang berdomisili dan bertempat tinggal di alamat tersebut.</p>
 				<p>Demikian surat keterangan ini dibuat dengan sebenarnya dan untuk dipergunakan sebagaimana semestinya.</p>
 
 				<table style="margin-top:40px;width:100%;">
@@ -131,7 +131,7 @@
 							&nbsp;
 						</td>
 						<td style="text-align: center;">
-							{{desa.nama_desa.title()}}, {{tanggal}}
+							Maju Jaya, {{tanggal}}
 						</td>
 					</tr>
 					<tr>
@@ -146,7 +146,7 @@
 						</td>
 						<td style="text-align: center;">
 							{% if surat.pegawai.jabatan != 'Kepala Desa' %}
-							a.n. Kepala Desa {{desa.nama_desa.title()}}
+							a.n. Kepala Desa Maju Jaya
 							{% endif %}
 							<br>
 							{{ surat.pegawai.jabatan.title()}}
