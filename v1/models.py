@@ -1320,11 +1320,7 @@ class KategoriProduk(models.Model):
 class Produk(CustomModel):
     nama = models.CharField(max_length=100, null=True, blank=True)
     gambar = ArrayField(
-        ArrayField(
-            models.ImageField(upload_to=file_destination, blank=True, null=True),
-            size=8,
-        ),
-        size=8,
+        models.ImageField(upload_to=file_destination), blank=True, null=True,
     )
     deskripsi = models.TextField(blank=True, null=True)
     harga = models.CharField(max_length=100, null=True, blank=True)
