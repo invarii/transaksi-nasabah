@@ -828,3 +828,34 @@ class KunjunganSerializer(DynamicModelSerializer):
         model = Kunjungan
         name = "data"
         exclude = []
+
+
+class KategoriProdukSerializer(DynamicModelSerializer):
+
+    class Meta:
+        model = KategoriProduk
+        name = "data"
+        exclude = []
+
+class TokoSerializer(CustomSerializer):
+    class Meta:
+        model = Toko
+        name = "data"
+        exclude = []
+
+
+class ProdukSerializer(CustomSerializer):
+    gambar = serializers.ListField(
+        child=serializers.ImageField()
+    )
+    toko = DynamicRelationField(
+        "AbsensiSerializer", many=True, deferred=True, embed=True
+    )
+    kategori = DynamicRelationField(
+        "KategoriProdukSerializer", deferred=True, embed=True
+    )
+
+    class Meta:
+        model = Produk
+        name = "data"
+        exclude = []

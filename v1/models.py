@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db.models import Sum
 
 from api_sad_sig.util import CustomModel, file_destination
@@ -1293,3 +1293,50 @@ class Kunjungan(models.Model):
 
     class Meta:
         db_table = "kunjungan"
+
+
+class Toko(CustomModel):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
+    deskripsi = models.TextField(blank=True, null=True)
+    no_telp = models.CharField(max_length=100, null=True, blank=True)
+    alamat = models.CharField(max_length=250, null=True, blank=True)
+    koordinat = JSONField(blank=True, null=True)
+
+    class Meta(CustomModel.Meta):
+        db_table = "toko"
+
+class KategoriProduk(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "kategori_produk"
+
+class Produk(CustomModel):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+    gambar = ArrayField(
+        ArrayField(
+            models.ImageField(blank=True, null=True),
+            size=8,
+        ),
+        size=8,
+    )
+    deskripsi = models.TextField(blank=True, null=True)
+    harga = models.CharField(max_length=100, null=True, blank=True)
+    toko = models.ForeignKey(
+        "Toko",
+        to_field="id",
+        on_delete=models.DO_NOTHING,
+        related_name="produk",
+        blank=True,
+        null=True,
+    )
+    kategori = models.ForeignKey(
+        KategoriProduk, models.DO_NOTHING, blank=True, null=True
+    )
+
+
+    class Meta(CustomModel.Meta):
+        db_table = "produk"

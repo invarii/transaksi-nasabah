@@ -54,7 +54,7 @@ class SadProvinsiViewSet(CustomView):
 
 
 class PegawaiViewSet(CustomView):
-    queryset = Pegawai.objects.all().order_by("id")
+    querysroduk.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -1488,3 +1488,29 @@ class KunjunganViewSet(DynamicModelViewSet):
     queryset = Kunjungan.objects.all().order_by("id")
     serializer_class = KunjunganSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class KategoriProdukViewSet(DynamicModelViewSet):
+    queryset = KategoriProduk.objects.all().order_by("id")
+    serializer_class = KategoriProdukSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+
+class TokoViewSet(CustomView):
+    queryset = Toko.objects.all().order_by("id")
+    serializer_class = TokoSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class ProdukViewSet(CustomView):
+    queryset = Produk.objects.all().order_by("-id")
+    serializer_class = ProdukSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        kategori = self.request.query_params.get("kategori")
+        if kategori:
+            return (
+                    Produk.objects.filter(kategori=kategori).all().order_by("id")
+                    )
+            return Produk.objects.all().order_by("-id")
