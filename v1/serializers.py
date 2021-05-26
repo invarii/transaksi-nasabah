@@ -846,10 +846,10 @@ class TokoSerializer(CustomSerializer):
 
 class ProdukSerializer(CustomSerializer):
     gambar = serializers.ListField(
-        child=serializers.ImageField(), required=False
+        child=serializers.ImageField()
     )
     toko = DynamicRelationField(
-        "TokoSerializer", many=True, deferred=True, embed=True
+        "TokoSerializer", deferred=True, embed=True
     )
     kategori = DynamicRelationField(
         "KategoriProdukSerializer", deferred=True, embed=True
