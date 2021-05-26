@@ -1507,10 +1507,18 @@ class ProdukViewSet(CustomView):
     serializer_class = ProdukSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    # def get_queryset(self):
+    #     kategori = self.request.query_params.get("kategori")
+    #     if kategori:
+    #         return (
+    #                 Produk.objects.filter(kategori=kategori).all().order_by("-id")
+    #                 )
+    #         return Produk.objects.all().order_by("-id")
+    
     def get_queryset(self):
         kategori = self.request.query_params.get("kategori")
         if kategori:
             return (
-                    Produk.objects.filter(kategori=kategori).all().order_by("id")
-                    )
-            return Produk.objects.all().order_by("-id")
+                Produk.objects.filter(kategori=kategori).all().order_by("-id")
+            )
+        return Produk.objects.all().order_by("-id")
