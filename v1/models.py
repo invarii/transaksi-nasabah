@@ -111,6 +111,8 @@ class SadDesa(CustomModel):
     twitter = models.CharField(max_length=150, blank=True, null=True)
     instagram = models.CharField(max_length=150, blank=True, null=True)
     youtube = models.CharField(max_length=150, blank=True, null=True)
+    gambar_sejarah = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_visimisi = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
@@ -125,6 +127,7 @@ class BatasDesa(CustomModel):
     selatan = models.CharField(max_length=50, blank=True, null=True)
     timur = models.CharField(max_length=50, blank=True, null=True)
     barat = models.CharField(max_length=50, blank=True, null=True)
+    gambar = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
