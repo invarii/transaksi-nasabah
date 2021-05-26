@@ -1493,7 +1493,7 @@ class KunjunganViewSet(DynamicModelViewSet):
 class KategoriProdukViewSet(DynamicModelViewSet):
     queryset = KategoriProduk.objects.all().order_by("id")
     serializer_class = KategoriProdukSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class TokoViewSet(CustomView):
