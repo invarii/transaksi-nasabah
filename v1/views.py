@@ -54,7 +54,7 @@ class SadProvinsiViewSet(CustomView):
 
 
 class PegawaiViewSet(CustomView):
-    querysroduk.objects.all().order_by("id")
+    queryset = Pegawai.objects.all().order_by("id")
     serializer_class = PegawaiSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
