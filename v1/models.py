@@ -113,6 +113,7 @@ class SadDesa(CustomModel):
     youtube = models.CharField(max_length=150, blank=True, null=True)
     gambar_sejarah = models.ImageField(upload_to=file_destination, blank=True, null=True)
     gambar_visimisi = models.ImageField(upload_to=file_destination, blank=True, null=True)
+    gambar_batasdesa = models.ImageField(upload_to=file_destination, blank=True, null=True)
 
     class Meta(CustomModel.Meta):
 
