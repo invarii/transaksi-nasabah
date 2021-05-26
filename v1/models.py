@@ -1310,6 +1310,9 @@ class Toko(CustomModel):
 
 class KategoriProduk(models.Model):
     nama = models.CharField(max_length=100, null=True, blank=True)
+    gambar = models.ImageField(
+        upload_to=file_destination, blank=True, null=True
+    )
 
     class Meta:
         db_table = "kategori_produk"
@@ -1318,7 +1321,7 @@ class Produk(CustomModel):
     nama = models.CharField(max_length=100, null=True, blank=True)
     gambar = ArrayField(
         ArrayField(
-            models.ImageField(blank=True, null=True),
+            models.ImageField(upload_to=file_destination, blank=True, null=True),
             size=8,
         ),
         size=8,
