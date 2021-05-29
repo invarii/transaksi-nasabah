@@ -1,6 +1,7 @@
 from django.db import models
 
 from api_sad_sig.util import CustomModel
+from django.contrib.postgres.fields import JSONField
 from v1.models import SadPenduduk
 
 
@@ -332,3 +333,15 @@ class SadPindahMasuk(CustomModel):
 class SadPecahKK(CustomModel):
     keluarga = models.ForeignKey("v1.SadKeluarga", models.DO_NOTHING)
     penduduk = models.ManyToManyField("v1.SadPenduduk")
+
+
+class LayananSurat(CustomModel):
+    jenis = models.CharField(max_length=16)
+    no_surat = models.CharField(max_length=50, blank=True, null=True)
+    pegawai = models.ForeignKey(
+        "v1.Pegawai", models.DO_NOTHING, blank=True, null=True
+    )
+    penduduk = models.ForeignKey(
+        "v1.SadPenduduk", models.DO_NOTHING, blank=True, null=True
+    )
+    atribut = JSONField()

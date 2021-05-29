@@ -18,10 +18,12 @@ from .views import (
     LaporanKelahiranViewSet,
     LaporanKematianViewSet,
     LaporanMonografiViewSet,
+    LayananSuratViewSet,
 )
 
 router = routers.DefaultRouter()
 
+router.register(r"layanansurat/(?P<jenis_surat>[^/.]+)", LayananSuratViewSet)
 router.register(r"suratkelahiran", SuratKelahiranViewSet)
 router.register(r"suratskck", SuratSkckViewSet)
 router.register(r"domisili", SuratDomisiliViewSet)

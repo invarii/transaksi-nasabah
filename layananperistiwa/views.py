@@ -9,7 +9,7 @@ from openpyxl import Workbook
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, APIException
 from dynamic_rest.viewsets import DynamicModelViewSet
@@ -18,7 +18,7 @@ from api_sad_sig.util import CustomView
 from users.permissions import IsAdminUserOrReadOnly
 from v1.models import SadPenduduk
 
-from .utils import render_mail
+from .utils import render_mail, render_new_mail
 from .models import (
     SuratDomisili,
     SuratKelahiran,
@@ -34,6 +34,7 @@ from .models import (
     SadPindahKeluar,
     SadPindahMasuk,
     SadPecahKK,
+    LayananSurat,
 )
 from .serializers import (
     AdminSuratDomisiliSerializer,
@@ -57,7 +58,57 @@ from .serializers import (
     LaporanKematianSerializer,
     LaporanMonografiSerializer,
 )
+from .surat_serializers import serializer_list, ListSuratSerializer
 
+
+@api_view()
+def list_layanan_surat(request):
+    hostname = request.headers["Host"]
+    schema = "https" if request.is_secure() else "http"
+    data = {
+        i: {
+            "title": serializer_list[i][2],
+            "image": f"{schema}://{hostname}/media/layanan/{i}.png",
+        }
+        for i in serializer_list
+    }
+
+    return Response({"data": data})
+
+
+class LayananSuratViewSet(CustomView):
+    queryset = LayananSurat.objects.all().order_by("-id")
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = serializer_list["skck"][0]
+
+    def get_serializer_class(self):
+        jenis_surat = self.kwargs["jenis_surat"]
+        if self.action == "list":
+            return ListSuratSerializer
+        if self.request.method == "GET":
+            return serializer_list[jenis_surat][0]
+        if self.request.user.groups.first().name == "admin":
+            return serializer_list[jenis_surat][0]
+        return serializer_list[jenis_surat][1]
+
+    def get_queryset(self):
+        return self.queryset.filter(jenis=self.kwargs["jenis_surat"])
+
+    def destroy(self, request, pk, format=None, jenis_surat=None):
+        data = self.get_object()
+        data.deleted_by = request.user
+        data.delete()
+        return Response()
+
+    @action(detail=True, methods=["get"])
+    def print(self, request, pk=None, jenis_surat="skck"):
+        data = self.get_object()
+
+        serializer = serializer_list[jenis_surat][0](data)
+        data.serialized_atribut = serializer.data.get("atribut")
+
+        pdf = render_new_mail("layanan/" + jenis_surat, data)
+        return HttpResponse(pdf, content_type="application/pdf")
 
 class SuratKelahiranViewSet(DynamicModelViewSet):
     queryset = SuratKelahiran.objects.all().order_by("-id")

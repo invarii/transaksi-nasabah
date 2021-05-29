@@ -1,0 +1,143 @@
+{% extends 'layanan/base_no_header.html' %}
+
+{% block content %}
+
+	<center><h3>SURAT PERNYATAAN PEMBAGIAN HARTA WARISAN</h3></center>
+	<br><br><br>
+
+	<p>
+	Kami anak-anak dari Almarhum {{surat.serialized_atribut['kematian']['penduduk']['nama'].upper()}} Dengan {{surat.serialized_atribut['pasangan']['nama']}}   
+	{% if surat.serialized_atribut['pasangan'].get('tanggal_meninggal', None) %}
+	{% set tanggal_meninggal = datetime.strptime(surat.serialized_atribut['pasangan']['tanggal_meninggal'], '%Y-%m-%d') %}
+	yang juga telah meninggal pada {{ tanggal_meninggal.strftime('%A, %d %B %Y')}}
+	{% endif %}
+	masing-masing adalah :
+	</p>
+
+	<table style="margin-left:30px;">
+		{% for item in surat.serialized_atribut['ahli_waris']%}
+			<tr>
+				<td style="vertical-align:top;" rowspan=2>{{loop.index}}.</td>
+				<td width="150px">Nama</td>
+				<td width="5px">:</td>
+				<td>{{item['nama']}}</td>
+			</tr>
+			<tr>
+				<td width="50px">Umur</td>
+				<td width="5px">:</td>
+				<td>{{item['umur']}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	<p>
+	{% set tanggal_sepakat = datetime.strptime(surat.serialized_atribut['tanggal_kesepakatan'], '%Y-%m-%d') %}
+	Pada hari ini {{tanggal_sepakat.strftime('%A, %d %B %Y')}}  bertempat di {{ surat.serialized_atribut['tempat_kesepakatan']}}  
+	telah bermusyawarah mufakat untuk membagi Harta Warisan dari peninggalan Almarhum yakni berupa :
+	</p>
+
+	<ol>
+		{% for item in surat.serialized_atribut['item_warisan'] %}
+		<li>{{item}}</li>
+		{% endfor %}
+	</ol>
+
+	<p>dengan pembagian sebagai berikut:</p>
+	<table  style="width:100%;" id="bordered">
+		<thead>
+			<tr>
+				<th>No</th>
+				<th>Nama</th>
+				<th>Pembagian</th>
+				<th>Keterangan</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in surat.serialized_atribut['pembagian_warisan'] %}
+			<tr>
+				<td rowspan="{{item['items'].__len__()}}">{{loop.index}}</td>
+				<td rowspan="{{item['items'].__len__()}}">{{item['nama']}}</td>
+				<td>{{item['items'][0]['nama']}}</td>
+				<td>{{item['items'][0].get('keterangan', '')}}</td>
+			</tr>
+			{% if item['items'].__len__() > 1 %}
+				{% for i in item['items'][1:] %}
+				<tr>
+					<td>{{i['nama']}}</td>
+					<td>{{i.get('keterangan', '')}}</td>
+				</tr>
+				{% endfor %}
+			{% endif %}
+			{% endfor %}
+		</tbody>
+	</table>
+	<br>
+
+	<p class="justify">Demikian Surat Keterangan Pembagian Harta Warisan ini kami buat tanpa ada paksaan dandorongan dari   pihak  manapun untuk digunakan seperlunya</p>
+	<br>
+
+	<table style="margin-top:40px;width:100%;">
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td width="30px">
+				&nbsp;
+			</td>
+			<td>
+				{{desa.nama_desa.title()}}, {{tanggal}}
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top;">
+				<center>Mengetahui</center>
+				<br>
+				<center>Kepala Desa {{desa.nama_desa.title()}}</center>
+				<br><br><br><br><br>
+				<center>{{surat.pegawai.nama.upper()}}</center>
+
+			</td>
+			<td width="80px">&nbsp;</td>
+			<td>
+				<center>Pembuat Pernyataan</center>
+				<table width="100%">
+					{% if not surat.serialized_atribut['pasangan'].get('tanggal_meninggal', None) %}
+					{% set mulai_ahli_waris = 1 %}
+					<tr style="line-height:3;">
+						<td>1.</td>
+						<td>{{surat.serialized_atribut['pasangan']['nama'].title()}}</td>
+						<td><pre>(			)</pre></td>
+					</tr>
+					{% else %}
+					{% set mulai_ahli_waris = 0 %}
+					{% endif %}
+
+					{% for item in surat.serialized_atribut['ahli_waris'] %}
+					<tr style="line-height:3;">
+						<td>{{loop.index + mulai_ahli_waris}}</td>
+						<td>{{item['nama'].title()}}</td>
+						<td><pre>(			)</pre></td>
+					</tr>
+					{% endfor %}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<center>SAKSI-SAKSI</center>
+				<center>
+					<table>
+						{% for item in surat.serialized_atribut['saksi'] %}
+						<tr style="line-height:3;">
+							<td>{{loop.index}}</td>
+							<td>{{item.title()}}</td>
+							<td><pre>(			)</pre></td>
+						</tr>
+						{% endfor %}
+					</table>
+				</center>
+			</td>
+		</tr>
+	</table>
+
+{% endblock %}

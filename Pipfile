@@ -26,6 +26,7 @@ pdfkit = "*"
 wkhtmltopdf = "*"
 jinja2 = "*"
 django-cors-headers = "*"
+midtransclient = "*"
 
 [requires]
 python_version = "3.8"

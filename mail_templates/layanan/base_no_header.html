@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<style>
+			#container {
+				width: 85%;
+				margin: auto;
+			}
+			header{
+				margin-top: 30px;
+			}
+			h2, h3, p{
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			table{
+				border-collapse: separate;
+				border-spacing: 0 0.5em;
+			}
+			.data-row td:first-child {
+				padding-left: 35px;	
+			}
+			#logo{
+				float:left;
+			}
+			#logo img{
+				width:150px;
+				height: 120px;
+			}
+			#bordered {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			#bordered th{
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			#bordered td{
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			p {
+				text-align: justify;
+				text-justify: inter-word;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div style="width:80%;margin:auto;">
+		{% block content %}
+		{% endblock %}
+		</div>
+
+	</body>
+</html>

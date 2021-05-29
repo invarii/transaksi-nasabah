@@ -1,0 +1,134 @@
+{% extends 'layanan/base.html' %}
+
+{% block content %}
+	<br>
+	<center>
+		<h3><u>SURAT KETERANGAN KEMATIAN</u></h3>
+		<p>{{surat.no_surat}}</p>
+	</center>
+
+	<br>
+	<table style="width:100%;">
+		<tr>
+			<td colspan=3>
+				Yang bertanda tangan dibawah ini Kepala Desa {{desa.nama_desa.title()}}, Kec. {{desa.kecamatan.nama_kecamatan.title()}}, {{desa.kecamatan.kab_kota.nama_kab_kota.title()}} menerangkan kepada :
+			</td>
+		</tr>
+		<tr class="data-row">
+			<td>Nama</td>
+			<td>:</td>
+			<td>{{surat.serialized_atribut['kematian']['penduduk']['nama']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Tempat / Tanggal Lahir</td>
+			<td>:</td>
+			<td>{{surat.serialized_atribut['kematian']['penduduk']['tempat_lahir']}},
+				{{surat.serialized_atribut['kematian']['penduduk']['tgl_lahir']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Jenis Kelamin</td>
+			<td>:</td>
+			<td>{{surat.serialized_atribut['kematian']['penduduk']['jk']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Pekerjaan</td>
+			<td>:</td>
+			<td>{{surat.serialized_atribut['kematian']['penduduk']['pekerjaan']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Alamat</td>
+			<td>:</td>
+			<td>{{surat.serialized_atribut['kematian']['penduduk']['alamat_lengkap']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Meninggal Di</td>
+			<td>:</td>
+			<td>Desa {{desa.nama_desa.title()}} Kecamatan {{desa.kecamatan.nama_kecamatan.title()}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Pada Pukul/Hari/Tanggal</td>
+			<td>:</td>
+			{% set tanggal_meninggal = datetime.strptime(surat.serialized_atribut['kematian']['tanggal_kematian'], '%Y-%m-%d') %}
+			<td>Pukul {{surat.serialized_atribut['kematian']['jam']}} Hari {{tanggal_meninggal.strftime('%A, %d %B %Y')}}</td>
+		</tr>
+	</table>
+
+	<p class="justify">
+	Bahwa yang bersangkutan diatas benar-benar Penduduk 
+	Desa {{desa.nama_desa.title()}} Kecamatan {{desa.kecamatan.nama_kecamatan.title()}} {{desa.kecamatan.kab_kota.nama_kab_kota.title()}}, 
+	dan termasuk pada keluarga miskin atau keluarga tidak mampu bersumber pada data base desa ( BDT ).
+	</p>
+	<br>
+
+	<table style="width:100%;" id="bordered">
+		<thead>
+			<tr>
+				<th>No</th>
+				<th>Nama</th>
+				<th>Hubungan Keluarga</th>
+				<th>Tempat, Tanggal Lahir</th>
+				<th>NIK</th>
+				<th>Keterangan</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1.</td>
+				<td>
+					{{surat.serialized_atribut['kematian']['penduduk']['nama'].title()}}
+				</td>
+				<td>
+					{{surat.serialized_atribut['kematian']['penduduk']['status_dalam_keluarga'].title()}}
+				</td>
+				<td>
+					{{surat.serialized_atribut['kematian']['penduduk']['tempat_lahir']}}, {{surat.serialized_atribut['kematian']['penduduk']['tgl_lahir']}}
+				</td>
+				<td>
+					{{surat.serialized_atribut['kematian']['penduduk']['nik']}}
+				</td>
+				<td>Meninggal</td>
+			</tr>
+			{% for item in surat.serialized_atribut['keluarga'] %}
+			<tr class="data-row">
+				<td>{{loop.index +1 }}</td>
+				<td>{{item['nama']}}</td>
+				<td>{{item['status_dalam_keluarga']}}</td>
+				<td>{{item['ttl']}}</td>
+				<td>{{item['nik']}}</td>
+				<td>Ahli Waris</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<br>
+	
+	<p>Demikian Surat Keterangan ini dibuat untuk digunakan seperlunya.</p>
+
+	<table style="margin-top:40px;width:100%;">
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td style="width:40%">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				{{desa.nama_desa.title()}}, {{tanggal}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td style="width:40%;">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				Kepala Desa {{desa.nama_desa.title()}}
+				<p style="margin-top:80px;">
+				<b><u>{{surat.pegawai.nama}}</u></b>
+				</p>
+			</td>
+		</tr>
+	</table>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'layanan/base_no_header.html' %}
+
+{% block content %}
+	<center><h3>DAFTAR RINCIAN PENGELUARAN RILL</h3></center>
+
+	<p>Yang bertanda tangan dibawah ini:</p>
+	<table style="width:100%;">
+		<tr class="data-row">
+			<td>Nama</td>
+			<td>:</td>
+			<td>{{surat.penduduk.nama}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>NIK</td>
+			<td>:</td>
+			<td>{{surat.penduduk.nik}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Tempat / Tgl. Lahir</td>
+			<td>:</td>
+			<td>{{surat.penduduk.tempat_lahir}}, {{surat.penduduk.tgl_lahir}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Pekerjaan</td>
+			<td>:</td>
+			<td>{{surat.penduduk.pekerjaan}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Hub Keluarga</td>
+			<td>:</td>
+			<td>{{surat.atribut['hubungan_keluarga']}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Alamat</td>
+			<td>:</td>
+			<td>{{surat.penduduk.keluarga.alamat_lengkap}}</td>
+		</tr>
+	</table>
+
+	<p class="justify">
+	Dengan ini saya menerangkan sesungguhnya bahwa jumlah uang sebesar Rp. {{surat.atribut['uang_nominal']}} ( {{surat.atribut['uang_kalimat']}} ) 
+	adalah benar dipergunakan untuk pelaksanaan biaya Pemakaman dan Proses Duka dari Almarhum " {{surat.atribut['nama_almarhum']}}  " 
+	dan kami bertanggungjawab penuh atas penggunaan dan tersebut dengan rincian penggunaan sebagai berikut :
+	</p>
+	<br>
+
+	<table id="bordered" style="width:100%;">
+		<thead>
+			<tr>
+				<th>NO.</th>
+				<th>URAIAN</th>
+				<th>VOLUME</th>
+				<th>SATUAN</th>
+				<th>HARGA</th>
+				<th>JUMLAH</th>
+				<th>KETERANGAN</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in surat.serialized_atribut['item_pemakaman'] %}
+			<tr>
+				<td>{{loop.index}}</td>
+				<td>{{item['nama']}}</td>
+				<td>{{item['volume']}}</td>
+				<td>{{item['satuan']}}</td>
+				<td>{{thousand_delimiter(item['harga'])}}</td>
+				<td>{{thousand_delimiter(item['jumlah'])}}</td>
+				<td>{{item.get('keterangan', '')}}</td>
+			</tr>
+			{% endfor %}
+			<tr>
+				<td>&nbsp;</td>
+				<td colspan=4><center><b>JUMLAH</b></center></td>
+				<td>
+					<b>{{thousand_delimiter(surat.serialized_atribut['total'])}}</b>
+				</td>
+				<td>&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+
+	<p class="justify">Demikian rincian penggunaan dana santunan duka  saya buat dengan benar dan pertanggungjawabkan atas penggunaanya</p>
+
+	<table style="margin-top:40px;width:100%;">
+		<tr>
+			<td style="text-align:center;">
+				&nbsp;
+			</td>
+			<td style="width:40%">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				{{desa.nama_desa.title()}}, {{tanggal}}
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center;">
+				&nbsp;
+			</td>
+			<td style="width:40%">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				Ahli Waris
+				<p style="margin-top:80px;">
+					<b><u>{{surat.penduduk.nama}}</u></b>
+				</p>
+			</td>
+		</tr>
+	</table>
+{% endblock %}

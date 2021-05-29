@@ -1,0 +1,80 @@
+{% extends 'layanan/base.html' %}
+
+{% block content %}
+<div>
+	<br>
+	<center>
+		<h3><u>SURAT KETERANGAN</u></h3>
+		<p>{{surat.no_surat}}</p>
+	</center>
+
+	<br>
+	<table style="width:100%;">
+		<tr>
+			<td colspan=3>
+				Yang bertanda tangan dibawah ini Kepala Desa {{desa.nama_desa.title()}}, Kec. {{desa.kecamatan.nama_kecamatan.title()}}, {{desa.kecamatan.kab_kota.nama_kab_kota.title()}} menerangkan kepada :
+			</td>
+		</tr>
+		<tr class="data-row">
+			<td>Nama</td>
+			<td>:</td>
+			<td>{{surat.penduduk.nama}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Tempat / Tanggal Lahir</td>
+			<td>:</td>
+			<td>{{surat.penduduk.tempat_lahir}},
+				{{surat.penduduk.tgl_lahir}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Jenis Kelamin</td>
+			<td>:</td>
+			<td>{{surat.penduduk.jk}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Pekerjaan</td>
+			<td>:</td>
+			<td>{{surat.penduduk.pekerjaan}}</td>
+		</tr>
+		<tr class="data-row">
+			<td>Alamat</td>
+			<td>:</td>
+			<td>{{surat.penduduk.keluarga.alamat_lengkap}}</td>
+		</tr>
+	</table>
+	<p>
+	Bahwa yang bersangkutan diatas benar-benar Penduduk  Desa {{desa.nama_desa.title()}}, Kec. {{desa.kecamatan.nama_kecamatan.title()}}, {{desa.kecamatan.kab_kota.nama_kab_kota.title()}} dan Benar-benar sedang melakukan {{surat.atribut['jenis_perjalanan']}} di luar daerah ( {{surat.atribut['nama_daerah']}})  dalam rangka melakukan {{surat.atribut['jenis_rangka_perjalanan']}}.
+	</p>
+	<p>
+	Demikianlah surat keterangan ini dibuat untuk dipergunakan sebagaimana semestinya.
+	</p>
+
+	<table style="margin-top:40px;width:100%;">
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td style="width:40%">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				{{desa.nama_desa.title()}}, {{tanggal}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td style="width:40%;">
+				&nbsp;
+			</td>
+			<td style="text-align: center;">
+				{{surat.pegawai.jabatan.title()}} {{desa.nama_desa.title()}}
+				<p style="margin-top:80px;">
+				<b><u>{{surat.pegawai.nama}}</u></b>
+				</p>
+			</td>
+		</tr>
+	</table>
+</div>
+{% endblock %}

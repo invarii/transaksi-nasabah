@@ -22,6 +22,7 @@ from rest_framework import routers
 import v1.urls as v1_urls
 import users.urls as users_urls
 import layananperistiwa.urls as layanan_urls
+from layananperistiwa.views import list_layanan_surat
 
 router = routers.DefaultRouter()
 router.registry.extend(users_urls.router.registry)
@@ -35,6 +36,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("v1/", include(router.urls + url_collections)),
     path("swagger/", include("rest_framework.urls")),
+    path("v1/daftarlayanansurat", list_layanan_surat),
     path("v1/dashboard", v1_urls.DashboardViewSet.as_view({"get": "get"})),
     path("v1/demografi", v1_urls.DemografiViewSet.as_view({"get": "get"})),
 ]
