@@ -879,3 +879,19 @@ class ProdukSerializer(CustomSerializer):
         model = Produk
         name = "data"
         exclude = []
+
+
+class JenisSuratSerializer(DynamicModelSerializer):
+    class Meta:
+        model = JenisSurat
+        name = "data"
+        exclude = []
+
+class PersyaratanSuratSerializer(DynamicModelSerializer):
+    jenis_surat = DynamicRelationField(
+        "JenisSuratSerializer", deferred=True, embed=True
+    )
+    class Meta:
+        model = PersyaratanSurat
+        name = "data"
+        exclude = []

@@ -1530,3 +1530,13 @@ class ProdukViewSet(CustomView):
                 Produk.objects.filter(kategori=kategori).all().order_by("-id")
             )
         return Produk.objects.all().order_by("-id")
+
+class JenisSuratViewSet(DynamicModelViewSet):
+    queryset = JenisSurat.objects.all().order_by("id")
+    serializer_class = JenisSuratSerializer
+    permission_classes = [AllowAny]
+
+class PersyaratanSuratViewSet(DynamicModelViewSet):
+    queryset = PersyaratanSurat.objects.all().order_by("id")
+    serializer_class = PersyaratanSuratSerializer
+    permission_classes = [AllowAny]

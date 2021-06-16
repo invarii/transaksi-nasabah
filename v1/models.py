@@ -367,11 +367,10 @@ class SadPenduduk(CustomModel):
 class SadSarpras(CustomModel):
     nama_sarpras = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
-    tgl_awal = models.DateField(blank=True, null=True)
-    keadaan_awal = models.CharField(max_length=50, blank=True, null=True)
-    tgl_hapus = models.DateField(blank=True, null=True)
-    ket_hapus = models.CharField(max_length=50, blank=True, null=True)
-    keadaan_akhir = models.CharField(max_length=50, blank=True, null=True)
+    tgl_masuk = models.DateField(blank=True, null=True)
+    tgl_keluar = models.DateField(blank=True, null=True)
+    kondisi = models.CharField(max_length=50, blank=True, null=True)
+    lokasi = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
     foto = models.ImageField(upload_to=file_destination, blank=True, null=True)
@@ -384,11 +383,10 @@ class SadSarpras(CustomModel):
 class SadInventaris(CustomModel):
     nama_inventaris = models.CharField(max_length=100, blank=True, null=True)
     asal = models.CharField(max_length=50, blank=True, null=True)
-    tgl_awal = models.DateField(blank=True, null=True)
-    keadaan_awal = models.CharField(max_length=50, blank=True, null=True)
-    tgl_hapus = models.DateField(blank=True, null=True)
-    ket_hapus = models.CharField(max_length=50, blank=True, null=True)
-    keadaan_akhir = models.CharField(max_length=50, blank=True, null=True)
+    tgl_masuk = models.DateField(blank=True, null=True)
+    tgl_keluar = models.DateField(blank=True, null=True)
+    kondisi = models.CharField(max_length=50, blank=True, null=True)
+    lokasi = models.CharField(max_length=50, blank=True, null=True)
     keterangan = models.TextField(blank=True, null=True)
     tahun = models.CharField(max_length=4, blank=True, null=True)
     foto = models.ImageField(upload_to=file_destination, blank=True, null=True)
@@ -1352,3 +1350,21 @@ class Produk(CustomModel):
 
     class Meta(CustomModel.Meta):
         db_table = "produk"
+
+class JenisSurat(models.Model):
+    nama = models.CharField(max_length=100, null=True, blank=True)
+
+    class Meta:
+        db_table = "jenissurat"
+
+class PersyaratanSurat(models.Model):
+    jenis_surat = models.ForeignKey(
+        "JenisSurat", models.DO_NOTHING, blank=True, null=True
+    )
+    persyaratan = models.TextField(blank=True, null=True)
+    alur = models.TextField(blank=True, null=True)
+    biaya = models.TextField(blank=True, null=True)
+    waktu = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = "persyaratansurat"
