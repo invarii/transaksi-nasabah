@@ -14,7 +14,7 @@ class Pegawai(CustomModel):
     nip = models.CharField(max_length=18, blank=True, null=True)
     chip_ektp = models.CharField(max_length=20, blank=True, null=True)
     nama = models.CharField(max_length=100, blank=True, null=True)
-    jabatan = models.CharField(max_length=30, blank=True, null=True)
+    jabatan = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=30, blank=True, null=True)
     golongan = models.CharField(max_length=30, blank=True, null=True)
     gambar = models.ImageField(
