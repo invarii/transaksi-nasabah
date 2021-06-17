@@ -1001,7 +1001,7 @@ serializer_list = {
     "keluarga_miskin": (
         AdminKeteranganKeluargaMiskin,
         PendudukKeteranganKeluargaMiskin,
-        "Surat Keteranga Keluarga Miskin (Santunan Duka)",
+        "Surat Keterangan Keluarga Miskin (Santunan Duka)",
     ),
     "bagi_warisan": (
         AdminPembagianWarisanSerializer,
