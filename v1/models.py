@@ -918,6 +918,7 @@ class Informasi(models.Model):
     kategori = models.ForeignKey(
         KategoriInformasi, models.DO_NOTHING, blank=True, null=True
     )
+    deskripsi = models.TextField(blank=True, null=True)
     judul = models.CharField(max_length=100, blank=True, null=True)
     tempat = models.CharField(max_length=100, blank=True, null=True)
     tanggal = models.DateField(blank=True, null=True)
