@@ -1463,7 +1463,7 @@ class DashboardViewSet(viewsets.ViewSet):
 class CctvViewSet(DynamicModelViewSet):
     queryset = Cctv.objects.all().order_by("-id")
     serializer_class = CctvSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     @action(detail=False, methods=["get"])
     def delete_all(self, request):
