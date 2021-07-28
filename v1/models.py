@@ -14,7 +14,8 @@ class Nasabah(models.Model):
 
 
 class Transaksi(models.Model):
-    transaction_date = models.DateTimeField(blank=True, auto_now_add=True, null=True)
+    nasabah = models.ForeignKey(Nasabah, models.CASCADE, null=True, blank=True)
+    transaction_date = models.DateField(blank=True, auto_now_add=True, null=True)
     description = models.CharField(max_length=200)
     debit_credit_status = models.CharField(max_length=5)
     amount = models.IntegerField()
